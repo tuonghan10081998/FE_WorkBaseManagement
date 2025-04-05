@@ -77,17 +77,20 @@ const ProjectColumn = ({
       priority: d.priority.toString(),
       note: d.note,
       idRequester: d.idRequester,
-      lstIDImplementer: d.idImplementer.split(","),
-      implementDate: moment(d.implementDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      completeDate: moment(d.completeDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      createDate: moment().format("YYYY-MM-DD"),
+      fromDate: moment(d.fromDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      toDate: moment(d.toDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      completeDate: moment().format("YYYY-MM-DD"),
+      idApprover: "",
       statusHT: 1,
+      lstIDImlement: d.idImplementer.split(","),
     };
     arrHT.push(object);
-    PostSave(arrHT);
+    PostSave(object);
   };
   const PostSave = async (arrPost) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Work/Post?action=PostHT`,
+      `${process.env.REACT_APP_URL_API}Task/Post?action=PostHT`,
       {
         method: "POST",
         headers: {
