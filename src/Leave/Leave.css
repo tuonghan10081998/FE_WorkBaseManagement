@@ -1,0 +1,62 @@
+.addtaskleave {
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  right: 10px;
+  color: #fff;
+  font-size: 21px;
+  font-weight: bold;
+}
+.editCart {
+  display: flex;
+  align-items: center;
+}
+.editCart .carticon {
+  margin-bottom: 6px;
+  margin-left: auto;
+  display: flex;
+  gap: 18px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.popupModalCreateLeave .modal-body {
+  width: 100%;
+  padding: 10px;
+}
+.popupModalCreateLeave .modal-body .card-body {
+  padding-top: 0px;
+}
+.popupModalCreateLeave .modal-header {
+  padding: 6px 20px;
+}
+.thoigianleave {
+  height: 37px;
+  border-radius: 5px;
+  border: 1px solid #cccc;
+  outline: none;
+  padding: 0 10px;
+}
+.popupModalCreateLeave label {
+  color: #000;
+  margin: 0;
+  padding: 0 0 5px 0;
+  font-size: 15px;
+  font-family: "Roboto";
+  font-weight: bold;
+}
+.form-group label {
+  font-weight: bold;
+}
+.form-control {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.itemsaveLeave {
+  margin-left: auto;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}

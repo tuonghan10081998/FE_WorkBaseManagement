@@ -1,0 +1,140 @@
+body {
+  overflow-x: hidden;
+}
+.menutable {
+  margin-right: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar {
+  transition: width 0.3s;
+  width: 250px;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background-color: #343a40;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.sidebar.collapsed {
+  width: 65px;
+  align-items: center;
+}
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+.expanded .brand {
+  justify-content: left;
+}
+.collapsed .brand {
+  justify-content: center;
+}
+.sidebar .brand span {
+  transition: opacity 0.3s;
+}
+.sidebar.collapsed .brand span {
+  display: none;
+}
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  padding: 10px;
+}
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+}
+.sidebar.collapsed .nav-link span {
+  display: none;
+}
+.sidebar .nav {
+}
+.sidebar.collapsed .nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#mainContent {
+  margin-left: 250px;
+  transition: margin-left 0.3s;
+  position: relative;
+  min-height: 100vh;
+}
+.sidebar.collapsed + #mainContent {
+  margin-left: 65px;
+}
+.nav-item {
+  cursor: pointer;
+}
+#toggleSidebar img {
+  width: 40px;
+  height: 35px;
+  border-radius: 6px;
+}
+.title {
+  font-size: 22px;
+  padding: 12px 5px;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #0079e3 0%, #6d8bcf 100%);
+  color: #fff;
+  height: 55px;
+  font-family: "Roboto";
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 0px;
+}
+.collapsed .fa-bars {
+  padding-left: 7px;
+}
+@media (max-width: 800px) {
+  .sidebar {
+    width: 65px;
+    align-items: center;
+  }
+  .sidebar .brand span,
+  .sidebar .nav-link span {
+    display: none;
+  }
+  #mainContent {
+    margin-left: 0;
+  }
+  .sidebar.expanded {
+    width: 250px;
+    position: absolute;
+    z-index: 1050;
+    background: #343a40;
+  }
+  .sidebar.expanded .brand span,
+  .sidebar.expanded .nav-link span {
+    display: inline;
+  }
+  .menutable {
+    display: initial;
+  }
+  .collapsed {
+    left: -65px;
+  }
+  .sidebar.collapsed + #mainContent {
+    margin-left: 0;
+  }
+  #sidebar.expanded {
+    left: 0;
+  }
+}
+@media (max-width: 600px) {
+}

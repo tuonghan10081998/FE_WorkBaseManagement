@@ -1,0 +1,319 @@
+.task-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.task-title {
+  color: #333;
+  font-weight: bold;
+  font-size: 13px;
+  word-wrap: break-word;
+  margin-bottom: 6px;
+}
+.user-names {
+  display: flex;
+  flex-wrap: wrap;
+}
+.user-names p {
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+.overColumn {
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
+  transition: max-height 0.3s ease;
+}
+.overColumn.active {
+  max-height: 0;
+}
+.task-column .bg-info,
+.task-column .bg-success,
+.task-column .bg-warning {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+/* Custom scrollbar styles */
+.overColumn::-webkit-scrollbar,
+.employee-list::-webkit-scrollbar {
+  width: 2px; /* Width of the scrollbar */
+}
+.overColumn::-webkit-scrollbar-track,
+.employee-list::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+.overColumn::-webkit-scrollbar-thumb,
+.employee-list::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners of the scrollbar thumb */
+}
+.overColumn::-webkit-scrollbar-thumb:hover,
+.employee-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar thumb on hover */
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 2px; /* Width of the scrollbar */
+}
+.modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners of the scrollbar thumb */
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar thumb on hover */
+}
+
+.headerTong::-webkit-scrollbar {
+  width: 2px; /* Width of the scrollbar */
+}
+.headerTong::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+.headerTong::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners of the scrollbar thumb */
+}
+.headerTong::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar thumb on hover */
+}
+.overColumn p {
+  margin-bottom: 6px !important;
+}
+.overColumn .fa-clock {
+  color: #c16262;
+}
+.overColumn .fa-user {
+  color: #256a9d;
+}
+.overColumn .duan {
+  font-weight: bold;
+  font-size: 15px;
+  color: #333;
+  font-family: roboto;
+}
+.fa-square-plus {
+  padding-left: 5px;
+  font-size: 32px;
+  cursor: pointer;
+  color: #fff;
+}
+.modal-fullscreen {
+  width: 100% !important;
+  max-width: none;
+  height: calc(100vh - 200px);
+  margin: 0;
+}
+.modal-body {
+  width: 90%;
+  padding: 0;
+}
+.modal-fullscreen .modal-content {
+  /* height: 100%; */
+  border: 0;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50px;
+}
+.addtask {
+  position: fixed;
+  right: 78px;
+  top: 11px;
+  z-index: 999999999;
+}
+@media (max-width: 800px) {
+  .modal-body {
+    width: 100%;
+  }
+}
+@media (max-height: 300px) {
+  .modal-fullscreen {
+    width: 100% !important;
+    max-width: none;
+    height: 300px;
+    margin: 0;
+  }
+}
+.toggle-btn {
+  position: relative;
+  width: 39px;
+  height: 37px;
+  background-color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-btn:hover {
+  background-color: #0056b3;
+}
+
+.toggle-btn span {
+  position: absolute;
+  font-size: 36px;
+  color: #000;
+  transition: all 0.3s ease;
+}
+
+/* Dấu + ban đầu với màu xanh */
+.toggle-btn span:nth-child(1) {
+  content: "+";
+  color: #000;
+  top: -13px;
+}
+
+/* Khi nhấn vào, chuyển từ dấu + thành dấu x và đổi màu thành đỏ */
+.toggle-btn.active span:nth-child(1) {
+  content: "×";
+  transform: rotate(45deg);
+  color: red;
+  right: 4px;
+  top: -11px;
+}
+.contactButton {
+  background: rgba(88, 101, 242, 1);
+  color: white;
+  font-family: inherit;
+  padding: 0.45em;
+  padding-left: 1em;
+  font-size: 17px;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  height: 52px;
+  margin-left: auto;
+  padding-right: 3em;
+  font-weight: bold;
+}
+
+.iconButton {
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #7a8cf3;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.contactButton:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em #5566c2;
+}
+
+.contactButton:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em #5566c2;
+}
+
+.tab-table {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 5px 12px 0;
+  border-bottom: 1px solid #ccc;
+}
+.tab-table .item-table {
+  padding: 5px 12px;
+  cursor: pointer;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px 6px 0px 0px;
+  border-bottom: 0px;
+}
+.tab-table .item-table.active {
+  border-radius: 6px 6px 0px 0px;
+  background: #157cdf;
+  color: #fff;
+  font-weight: bold;
+}
+.item-tab {
+  display: initial;
+}
+.item-tab.active {
+  display: none;
+}
+.task_item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.form-control {
+  display: block;
+  /* width: 200px !important; */
+}
+.col_search {
+  padding: 2px !important;
+}
+.col_searchPB {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 2px;
+}
+.col_searchPB label {
+  white-space: nowrap;
+  margin: 0px;
+  color: #016b69;
+}
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__placeholder {
+  color: #837878; /* Màu chữ của placeholder */
+  font-size: 16px; /* Kích thước chữ */
+  font-style: ; /* Kiểu chữ nghiêng */
+}
+.date-picker-container {
+  position: relative;
+}
+#dateRangePicker {
+  padding: 5px;
+  font-size: 15px;
+  height: 38px;
+  padding-right: 23px;
+}
+.date-picker-container i {
+  cursor: pointer;
+  position: absolute;
+  right: 8px;
+  top: 11px;
+}
+.div-select {
+  margin-top: 2px !important;
+  padding-top: 2px !important;
+}
+.user-iconLayout {
+  font-size: 22px;
+  color: #bbff88;
+}
+.user-name {
+  margin-left: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+.icon-userName {
+  margin-left: auto;
+  gap: 6px;
+  margin-right: 6px;
+}
