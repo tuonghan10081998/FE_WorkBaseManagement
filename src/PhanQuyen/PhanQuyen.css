@@ -30,7 +30,7 @@
   justify-content: left;
   align-items: center;
 }
-.list-group-item > div {
+.list-group-item .sttPQ {
   width: 50px;
   height: 100%;
   display: flex;
@@ -274,6 +274,17 @@
 .btn-close-custom:hover {
   background-color: #ff1a1a;
 }
+.pqul {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
+  height: 45px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
 @media (max-width: 1400px) {
   .custom-modal-dialog {
     max-width: 70% !important;

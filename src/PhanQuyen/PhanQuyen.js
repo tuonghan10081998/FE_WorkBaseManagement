@@ -155,7 +155,7 @@ const PhanQuyen = () => {
     <div className="py-2 px-2">
       <div className="row g-2">
         {/* Danh sách tài khoản */}
-        <div className="col-12 col-md-4 position-relative">
+        <div className="col-md-12 col-lg-6 position-relative">
           <div className="card">
             <div className="">
               <div className="h5 d-flex m-0 titlePQ">
@@ -179,8 +179,12 @@ const PhanQuyen = () => {
               </div>
               <div>
                 <li className="list-group-item ">
-                  <div className="tilteLI">Stt</div>
-                  <span className="tilteLI">Tên tài khoản</span>
+                  <div className="tilteLI sttPQ">Stt</div>
+                  <div className="gridUL row m-0 p-0  w-100">
+                    <span className="tilteLI pqul col-4"> Họ tên</span>
+                    <span className="tilteLI pqul col-4"> Tài khoản</span>
+                    <span className="tilteLI pqul col-4"> Email</span>
+                  </div>
                 </li>
               </div>
               <div className="listTK">
@@ -196,8 +200,17 @@ const PhanQuyen = () => {
                       setID(account.userID);
                     }}
                   >
-                    <div>{index + 1}</div>
-                    <span> {account.fullName}</span>
+                    <div className="sttPQ">{index + 1}</div>
+                    <div className="gridUL row m-0 p-0  w-100">
+                      <span className=" pqul col-4">
+                        {account.fullName || ""}
+                      </span>
+                      <span className="pqul col-4">
+                        {" "}
+                        {account.userName || ""}{" "}
+                      </span>
+                      <span className="pqul col-4">{account.Email || ""}</span>
+                    </div>
                   </li>
                 ))}
               </div>
@@ -210,7 +223,7 @@ const PhanQuyen = () => {
         </div>
 
         {/* Chi tiết tài khoản */}
-        <div className="col-12 col-md-8">
+        <div className="col-md-12 col-lg-6">
           <div className="card" style={{ height: "50px" }}>
             <div className="card-header d-flex justify-content-between align-items-center">
               <h2 className="h5 mb-0 ">Chi tiết </h2>
