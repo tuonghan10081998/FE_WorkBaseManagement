@@ -55,21 +55,22 @@ const PhanQuyen = () => {
       console.error(error.message);
     }
   };
-  const handleCheckPB = (Id, isChecked) => {
+  const handleCheckPB = (dep_Code, isChecked) => {
     const updatedData = islstUserDep.map((item) =>
-      item.id == Id ? { ...item, isChecked: isChecked } : item
+      item.dep_Code == dep_Code ? { ...item, isChecked: isChecked } : item
     );
     setlstUserDep(updatedData);
   };
-  const handleCheckRole = (Id, isChecked) => {
+  const handleCheckRole = (roleID, isChecked) => {
+    console.log(roleID);
     const updatedData = islstUserRole.map((item) =>
-      item.id == Id ? { ...item, isChecked: isChecked } : item
+      item.roleID == roleID ? { ...item, isChecked: isChecked } : item
     );
     setlstUserRole(updatedData);
   };
-  const handleCheckModule = (Id, isChecked) => {
+  const handleCheckModule = (pageID, isChecked) => {
     const updatedData = islstUserPage.map((item) =>
-      item.id == Id ? { ...item, isChecked: isChecked } : item
+      item.pageID == pageID ? { ...item, isChecked: isChecked } : item
     );
     setlstUserPage(updatedData);
   };
@@ -236,7 +237,7 @@ const PhanQuyen = () => {
                 >
                   {" "}
                   <i class="fa-solid fa-server"></i>
-                  Module
+                  Trang
                 </div>
                 <div
                   onClick={() => setTab(3)}

@@ -16,7 +16,7 @@ const PQRole = ({ isData, onchange }) => {
                 <td className="text-center theadSpan tilteLI">
                   <div>Chọn</div>
                 </td>
-                <td className="tilteLI">Chứng năng</td>
+                <td className="tilteLI">Chức năng</td>
               </tr>
             </thead>
             <tbody className="tbody">
@@ -27,7 +27,7 @@ const PQRole = ({ isData, onchange }) => {
                       <div>
                         <input
                           onChange={(e) =>
-                            onchange(row.id, row.isChecked == 1 ? 0 : 1)
+                            onchange(row.roleID, row.isChecked == 1 ? 0 : 1)
                           }
                           type="checkbox"
                           checked={row.isChecked == 1}

@@ -6,7 +6,7 @@
 }
 .task-title {
   color: #333;
-  font-weight: bold;
+  /* font-weight: bold; */
   font-size: 13px;
   word-wrap: break-word;
   margin-bottom: 6px;
@@ -305,15 +305,22 @@
 }
 .user-iconLayout {
   font-size: 22px;
-  color: #bbff88;
+  color: #fff;
 }
 .user-name {
-  margin-left: 10px;
+  margin-left: 5px;
   font-size: 15px;
   font-weight: bold;
 }
 .icon-userName {
   margin-left: auto;
-  gap: 6px;
   margin-right: 6px;
+}
+.div_act {
+  display: flex;
+  justify-content: left;
+  gap: 15px;
+}
+.item_detail {
+  margin-bottom: 8px;
 }

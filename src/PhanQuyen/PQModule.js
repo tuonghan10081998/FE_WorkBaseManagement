@@ -16,7 +16,7 @@ const PQModule = ({ isData, onchange }) => {
                 <td className="text-center theadSpan">
                   <div className="tilteLI">Chọn</div>
                 </td>
-                <td className="tilteLI">Module</td>
+                <td className="tilteLI">Trang</td>
               </tr>
             </thead>
             <tbody className="tbody">
@@ -27,7 +27,7 @@ const PQModule = ({ isData, onchange }) => {
                       <div>
                         <input
                           onChange={(e) =>
-                            onchange(row.id, row.isChecked == 1 ? 0 : 1)
+                            onchange(row.pageID, row.isChecked == 1 ? 0 : 1)
                           }
                           type="checkbox"
                           checked={row.isChecked == 1}

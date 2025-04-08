@@ -40,6 +40,14 @@ const LeaveCart = ({
   const handleClickDelete = (value) => {
     setIDDeleteColumn(isIDData);
     setShow(false);
+    handleSave("Delete");
+  };
+  const handleClickScroll = (e) => {
+    const parent = e.currentTarget.closest(".task-column");
+    const child = parent.querySelector(".overColumn");
+    if (child) {
+      child.classList.toggle("active");
+    }
   };
   const handleClick = (e) => {
     const parent = e.currentTarget.closest(".carticon");
@@ -58,7 +66,6 @@ const LeaveCart = ({
       }
     });
   };
-  console.log(setPQDuyen);
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
 
@@ -68,9 +75,9 @@ const LeaveCart = ({
   }, []);
   const handlesSubmit = () => {
     isCheckHandle == 0 && handleClickDelete();
-    isCheckHandle == 1 && handleSave();
+    isCheckHandle == 1 && handleSave("PostApprove");
   };
-  const handleSave = () => {
+  const handleSave = (NamePort) => {
     const data = tasks.filter((x) => x.id == isIDData);
     const d = data[0];
     let arrLeave = [];
@@ -81,15 +88,17 @@ const LeaveCart = ({
       fromDate: moment(d.fromDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
       toDate: moment(d.toDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
       status: isCheckPhieu.toString(),
+      createDate: moment().format("YYYY-MM-DD"),
       idRequester: "",
       idManager: isUser,
+      approvalDate: null,
     };
     arrLeave.push(object);
-    PostSave(arrLeave);
+    PostSave(object, NamePort);
   };
-  const PostSave = async (arrPost) => {
+  const PostSave = async (arrPost, NamePort) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Leave/Post?action=UpdateStatus`,
+      `${process.env.REACT_APP_URL_API}Leave/${NamePort}`,
       {
         method: "POST",
         headers: {
@@ -120,7 +129,7 @@ const LeaveCart = ({
     <div className="col-md-4 col-lg-4" style={{ padding: "0 10px" }}>
       <div className="task-column">
         <div
-          onClick={(e) => handleClick(e)}
+          onClick={(e) => handleClickScroll(e)}
           className={`bg-${statusClass} text-white p-2 rounded d-flex justify-content-between align-items-center`}
         >
           <span>{statusText}</span>
@@ -146,7 +155,7 @@ const LeaveCart = ({
                 <div className="carticon position-relative">
                   <i
                     data-id={task.id}
-                    onClick={handleClick}
+                    onClick={(e) => handleClick(e)}
                     className="fa-solid fa-gear"
                     style={{ color: "#89915e" }}
                   ></i>
@@ -195,7 +204,6 @@ const LeaveCart = ({
                               action: 2,
                               id: task.id,
                             });
-                            handleClick(e);
                           }
                         }}
                       >
@@ -259,14 +267,15 @@ const LeaveCart = ({
                     Người duyệt: {task.manager}
                   </p>
                 </div>
-                <div className="task_item">
-                  <div className="user-names">
-                    <p>
-                      <i className="fas fa-user me-1"></i>Viết phiếu:{" "}
-                      {task.requester}
-                    </p>
-                  </div>
+              </div>
+              <div className="task_item">
+                <div className="user-names">
+                  <p>
+                    <i className="fas fa-user me-1"></i>Viết phiếu:{" "}
+                    {task.requester}
+                  </p>
                 </div>
+
                 <div className="user-names">
                   {" "}
                   <p

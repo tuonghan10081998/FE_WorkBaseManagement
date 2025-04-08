@@ -129,7 +129,7 @@ h1 {
 #mainContent .itemtableName .item-table {
   overflow: auto;
   width: 100%;
-  max-height: calc(100vh - 190px);
+  height: calc(100vh - 200px);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 .tbody span {
@@ -150,7 +150,7 @@ h1 {
   font-size: 15px;
 }
 .status-pending {
-  background-color: #ffc107;
+  background-color: #d58a00;
 }
 .status-in-progress {
   background-color: #17a2b8;
@@ -203,7 +203,7 @@ td p {
 .task_item p {
   font-size: 14px;
   color: #333;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 .text-duan {
   margin-top: 2px !important;
@@ -213,10 +213,11 @@ td p {
   align-items: center;
   color: white;
   border: none;
-  padding: 5px 17px;
+  padding: 5px 20px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  justify-content: space-between;
 }
 .btn-approve {
   background-color: #17a2b8;

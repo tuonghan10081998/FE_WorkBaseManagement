@@ -21,6 +21,7 @@ const Createleave = ({
   const [isStatus, setStatus] = useState("");
   const [isID, setID] = useState("");
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const [isDisable, setDisable] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -72,6 +73,7 @@ const Createleave = ({
       handleNotifi("nhập lí do nghỉ");
       return;
     }
+    setDisable(true);
     let arrLeave = [];
     const object = {
       id: isID,
@@ -80,12 +82,14 @@ const Createleave = ({
       fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
       toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
       status: isSave.toString(),
+      createDate: moment().format("YYYY-MM-DD"),
       idRequester: checkSave == 0 ? isUser : "",
       idManager: checkSave != 0 ? isUser : "",
+      approvalDate: null,
     };
     const namePost = checkSave == 0 ? "Post" : "UpdateStatus";
     arrLeave.push(object);
-    await PostSave(arrLeave, namePost);
+    await PostSave(object, namePost);
   };
   const handleNotifi = (value) => {
     iziToast.warning({
@@ -107,6 +111,7 @@ const Createleave = ({
     );
     let response = await fetch(request);
     let data = await response.json();
+    setDisable(false);
     if (data.status == "OK") {
       iziToast.success({
         title: "Success",
@@ -219,6 +224,7 @@ const Createleave = ({
                     <i className="fas fa-times"></i> Không duyệt
                   </button>
                   <button
+                    disabled={isDisable}
                     onClick={(e) => handleSave(e, isStatus, 0)}
                     type="submit"
                     className={`btn btn-primary itemsaveLeave ${

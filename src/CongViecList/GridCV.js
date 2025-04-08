@@ -22,6 +22,7 @@ const GridWork = ({
   const [isIDData, setIDDate] = useState(null);
   const [isCheckHandle, setCheckHandle] = useState(null);
   const [isCheckPhieu, setCheckPhieu] = useState(null);
+  const [isLable, setLable] = useState(null);
   const handleClose = () => setShow(false);
   const handleShow = (e) => {
     let ID = e.currentTarget.dataset.id;
@@ -31,12 +32,13 @@ const GridWork = ({
   const handleClickDelete = (value) => {
     setIDDeleteColumn(isIDData);
     setShow(false);
+    handleSave("Delete");
   };
   const handlesSubmit = () => {
     isCheckHandle == 0 && handleClickDelete();
-    isCheckHandle == 1 && handleSave();
+    isCheckHandle == 1 && handleSave("PostHT");
   };
-  const handleSave = () => {
+  const handleSave = (NamePort) => {
     const data = setDataGrid.filter((x) => x.id == isIDData);
     const d = data[0];
     var arrHT = [];
@@ -48,16 +50,18 @@ const GridWork = ({
       note: d.note,
       idRequester: d.idRequester,
       lstIDImplementer: d.idImplementer.split(","),
-      implementDate: moment(d.implementDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      completeDate: moment(d.completeDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      fromDate: moment(d.fromDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      toDate: moment(d.toDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      remindDate: moment(d.remindDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      idApprover: "",
       statusHT: 1,
     };
     arrHT.push(object);
-    PostSave(arrHT);
+    PostSave(object, NamePort);
   };
-  const PostSave = async (arrPost) => {
+  const PostSave = async (arrPost, NamePort) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Work/Post?action=PostHT`,
+      `${process.env.REACT_APP_URL_API}Work/${NamePort}`,
       {
         method: "POST",
         headers: {
@@ -83,6 +87,13 @@ const GridWork = ({
         message: `Lưu thất bại`,
         position: "topRight",
       });
+    }
+  };
+  const handleClick = (e) => {
+    const parent = e.currentTarget.closest(".carticon");
+    const child = parent.querySelector(".popupsettingCart");
+    if (child) {
+      child.classList.toggle("active");
     }
   };
   const getStatusSpan = (status) => {
@@ -123,13 +134,13 @@ const GridWork = ({
     } else if (priority == "1") {
       return (
         <span className="status-icon status-in-progress">
-          <i className="fas fa-exclamation-circle"></i> Thấp
+          <i className="fas fa-exclamation-circle"></i> Trung bình
         </span>
       );
     } else {
       return (
         <span className="status-icon status-pending">
-          <i className="fas fa-exclamation-triangle"></i> Trung bình
+          <i className="fas fa-exclamation-triangle"></i> Thấp
         </span>
       );
     }
@@ -142,14 +153,15 @@ const GridWork = ({
       { Header: "Tên công việc", accessor: "workName" },
       { Header: "Mô tả ", accessor: "description" },
       { Header: "Ưu tiên", accessor: "priority" },
-      // { Header: "Ghi chú", accessor: "note" },
+      { Header: "Ghi chú", accessor: "note" },
+      { Header: "Ghi chú", accessor: "fromDate" },
+      { Header: "Ghi chú", accessor: "completeDate" },
       { Header: "Trạng thái", accessor: "status" },
       { Header: "Người thực hiện", accessor: "requester" },
       { Header: "Người giao việc", accessor: "implementer" },
-      { Header: "Deadline", accessor: "completeDate" },
-      { Header: "H.Thành", accessor: "complete" },
-      { Header: "Sửa", accessor: "edit" },
-      { Header: "Xóa", accessor: "delete" },
+      { Header: "Deadline", accessor: "toDate" },
+      { Header: "Hành động", accessor: "complete" },
+      { Header: "Hành động", accessor: "remindDate" },
     ],
     []
   );
@@ -157,32 +169,53 @@ const GridWork = ({
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data: setDataGrid }, useSortBy);
   const getColumnStyle = (column) => {
-    // Kiểm tra nếu column là "priority", "edit" hoặc "complete"
-    if (["priority", "edit", "complete"].includes(column.id)) {
+    if (["priority"].includes(column.id)) {
       return {
         maxWidth: "80px",
         minWidth: "80px",
       };
     }
-    if (["id", "statusHT"].includes(column.id)) {
+    if (["status"].includes(column.id)) {
+      return {
+        maxWidth: "130px",
+        minWidth: "130px",
+      };
+    }
+    if (["complete"].includes(column.id)) {
+      return {
+        maxWidth: "120px",
+        minWidth: "120px",
+      };
+    }
+    if (
+      [
+        "id",
+        "statusHT",
+        "note",
+        "fromDate",
+        "completeDate",
+        "remindDate",
+      ].includes(column.id)
+    ) {
       return {
         display: "none",
       };
     }
-    if (["delete"].includes(column.id.trim()) && isIDLogin.trim() != "VNManh") {
+    if (["workName"].includes(column.id)) {
       return {
-        display: "none",
-      };
-    } else {
-      return {
-        maxWidth: "80px",
-        minWidth: "80px",
+        maxWidth: "145px",
+        minWidth: "145px",
       };
     }
-    // Nếu không phải 3 cột trên, áp dụng chiều rộng mặc định
+    if (["description"].includes(column.id)) {
+      return {
+        maxWidth: "350px",
+        minWidth: "350px",
+      };
+    }
     return {
       maxWidth: column.id === "taskName" ? "200px" : "auto", // Tùy chỉnh chiều rộng cột "taskName"
-      minWidth: "150px", // Mặc định cho các cột khác
+      minWidth: "190px", // Mặc định cho các cột khác
     };
   };
   return (
@@ -236,7 +269,7 @@ const GridWork = ({
               {rows.map((row) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr className="position-relative" {...row.getRowProps()}>
                     <td className="box-wrap">{row.values.workName}</td>
                     <td
                       style={{ maxWidth: "300px", minWidth: "250px" }}
@@ -250,7 +283,7 @@ const GridWork = ({
                     {/* <td style={{ maxWidth: "200px" }} className="box-cv">
                       <p> {row.values.note || ""} </p>
                     </td> */}
-                    <td className="box-wrap">
+                    <td style={{ maxWidth: "200px" }} className="box-wrap">
                       {getStatusSpan(row.values.status)}
                     </td>
                     <td className="box-cv" style={{ maxWidth: "125px" }}>
@@ -260,60 +293,163 @@ const GridWork = ({
                       <p>{row.values.requester}</p>
                     </td>
                     <td style={{ maxWidth: "70px" }} className="box-wrap">
-                      {row.values.completeDate}
+                      {row.values.toDate}
                     </td>
-                    <td style={{ maxWidth: "50px" }} className="box-wrap">
-                      {setPQDuyen &&
-                        row.values.status != 1 &&
-                        row.values.statusHT != 1 && (
-                          <button
+                    <td style={{ maxWidth: "50px" }} className="box-wrap"></td>
+                    <div
+                      className="carticon "
+                      style={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "73px",
+                        fontSize: "26px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <i
+                        data-id={row.values.id}
+                        onClick={(e) => handleClick(e)}
+                        className="fa-solid fa-gear"
+                        style={{ color: "#89915e" }}
+                      ></i>
+                      <div
+                        style={{
+                          top: "10px",
+                          right: "27px",
+                          zIndex: "9999",
+                        }}
+                        data-id={row.values.id}
+                        className="popupsettingCart popupsettingCV"
+                      >
+                        {setPQDuyen && row.values.statusHT != 1 && (
+                          <div
                             data-id={row.values.id}
                             onClick={(e) => {
                               handleShow(e);
                               setTiTleBody(
-                                "Bạn xác nhận hoàn thành công việc này"
+                                "<p>Bạn xác nhận hoàn thành công việc này</p>"
                               );
+                              setLable("Thông báo");
                               setCheckHandle(1);
                             }}
-                            style={{ padding: "5px 4px" }}
-                            class="btn-customGrid btn-approve"
                           >
-                            <i class="fas fa-check-circle"></i> H.Thành
-                          </button>
+                            <i className="fa-solid fa-street-view me-1"></i>
+                            <span>Hoàn thành</span>
+                          </div>
                         )}
-                    </td>
-                    <td style={{ maxWidth: "50px" }} className="box-wrap">
-                      {" "}
-                      <button
-                        onClick={(e) => {
-                          if (handleSetting) {
-                            handleSetting({
-                              action: 2,
-                              id: row.values.id,
-                            });
-                            // handleClick(e);
-                          }
-                        }}
-                        class="btn-customGrid btn-edit mr-3"
-                      >
-                        <i class="fas fa-edit"></i> Sửa
-                      </button>
-                    </td>
-                    {isIDLogin == "VNManh" && (
-                      <td style={{ maxWidth: "50px" }} className="box-wrap">
-                        <button
+
+                        <div
                           data-id={row.values.id}
                           onClick={(e) => {
                             handleShow(e);
-                            setTiTleBody("Bạn xác nhận xóa công việc này");
+                            setTiTleBody(`<div>
+                          <p class="duan" style="font-size: 17px;font-weight: bold;">
+                            <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
+                            Công việc: ${row.values.workName}
+                          </p>
+
+                         <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i class="fa-solid fa-splotch me-1" style="color: #9b88fd;"></i>
+                            Mô tả: ${row.values.description}
+                              </div>
+                            </div>
+                          </div>    
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #8ec311;" class="fas fa-user me-1"></i>
+                                Giao việc: ${row.values.requester}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <fiv>
+                                <i style="color: #256A9D;"  class="fas fa-user me-1"></i> Thực hiện: ${
+                                  row.values.implementer
+                                }
+                              </fiv>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${
+                                row.values.fromDate
+                              } - ${row.values.toDate}
+                            </div>
+                          </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                            <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: ${
+                              row.values.remindDate || ""
+                            }
+                            </div>
+                          </div>
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                             <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
+                               row.values.completeDate || ""
+                             }
+                            </div>
+                          </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : 
+                              <div style="margin-left: 20px;">${
+                                row.values.note || ""
+                              }</div> 
+                            </div>
+                          </div>
+                        </div>
+                      `);
+                            setLable("Xem chi tiết công việc");
                             setCheckHandle(0);
                           }}
-                          class="btn-customGrid btn-delete"
                         >
-                          <i class="fas fa-trash"></i> Xóa
-                        </button>
-                      </td>
-                    )}
+                          <i class="fa-solid fa-eye me-1"></i>
+                          <span> Xem </span>
+                        </div>
+
+                        {setPQDuyen && (
+                          <div
+                            onClick={(e) => {
+                              if (handleSetting) {
+                                handleSetting({
+                                  action: 2, // Đặt tên key cho đúng
+                                  id: row.values.id, // Đảm bảo truyền ID đúng
+                                });
+                                handleClick(e);
+                              }
+                            }}
+                          >
+                            <i className="fa-solid fa-pen-to-square me-1"></i>
+                            <span>Sửa</span>
+                          </div>
+                        )}
+                        {isIDLogin == "VNManh" && (
+                          <div
+                            data-id={row.values.id}
+                            onClick={(e) => {
+                              handleShow(e);
+                              setTiTleBody("<p>Bạn muốn xóa công việc này</p>");
+                              setLable("Thông báo");
+                              setCheckHandle(0);
+                            }}
+                            style={{ boxShadow: "none" }}
+                          >
+                            <i
+                              style={{ color: "REd" }}
+                              className="fa-solid fa-trash me-1"
+                            ></i>
+                            <span> Xóa </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </tr>
                 );
               })}
@@ -329,10 +465,10 @@ const GridWork = ({
         className="modalHT"
       >
         <Modal.Header>
-          <Modal.Title id="popupModalLabel">Thông báo</Modal.Title>
+          <Modal.Title id="popupModalLabel">{isLable}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{isTitleBody}</p>
+          <div dangerouslySetInnerHTML={{ __html: isTitleBody }}></div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

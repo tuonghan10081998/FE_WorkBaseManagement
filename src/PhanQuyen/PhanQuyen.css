@@ -161,6 +161,7 @@
   flex-direction: column;
   width: 131px;
   display: none;
+  cursor: pointer;
 }
 .popupsettingCart.active {
   display: flex;

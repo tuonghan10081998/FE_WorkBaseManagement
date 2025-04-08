@@ -31,6 +31,7 @@ const CreateProject = ({
   const selectRef = useRef(null);
   const inputTGBGRef = useRef(null);
   const inputTGKTRef = useRef(null);
+  const inputTGDLRef = useRef(null);
 
   const [selectedValue, setSelectedValue] = useState(null);
   const [isPhongBan, setPhongBan] = useState([]);
@@ -44,6 +45,7 @@ const CreateProject = ({
   const [isTaskName, setTaskName] = useState("");
   const [isThoiGianBD, setThoiGianBD] = useState("");
   const [isThoiGianKT, setThoiGianKT] = useState("");
+  const [isThoiGianBao, setThoiGianBao] = useState("");
   const messageInputRef = useRef(null);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -58,6 +60,7 @@ const CreateProject = ({
   const [isCheckShow, setCheckShow] = useState(null);
   const [preloadedMentions, setpreloadedMentions] = useState([]);
   const [isIDNV, setIDNV] = useState([]);
+  const [isDisable, setDisable] = useState(false);
   useEffect(() => {
     if (selectRef2.current) {
       $(selectRef2.current).select2();
@@ -82,7 +85,7 @@ const CreateProject = ({
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
       isIDLogin != "VNManh" &&
-        (nhanvien = nhanvien.filter((x) => x.dep_Code == isDepCode));
+        (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [
@@ -122,11 +125,16 @@ const CreateProject = ({
       handleNotifi("chọn ngày dự kiến kết thúc");
       return;
     }
-
+    if (isThoiGianBao == "") {
+      handleNotifi("chọn ngày báo deadline");
+      return;
+    }
     if (arrNv == null || arrNv.length == 0) {
       handleNotifi("chọn nhân viên ");
       return;
     }
+
+    setDisable(true);
     const uniqueArray = [...new Set(arrNv.filter((item) => item !== ""))];
     const object = {
       id: isID,
@@ -138,6 +146,7 @@ const CreateProject = ({
       createDate: moment().format("YYYY-MM-DD"),
       fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
       toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      remindDate: moment(isThoiGianBao, "DD/MM/YYYY").format("YYYY-MM-DD"),
       completeDate: null,
       idApprover: "",
       statusHT: value,
@@ -161,6 +170,7 @@ const CreateProject = ({
     );
     let response = await fetch(request);
     let data = await response.json();
+    setDisable(false);
     if (data.status == "OK") {
       iziToast.success({
         title: "Success",
@@ -193,7 +203,7 @@ const CreateProject = ({
     setIcon(<i className="fa-solid fa-plus icontitle"></i>);
   }, []);
   useEffect(() => {
-    InitDate(".thoigian", setThoiGianBD, setThoiGianKT);
+    InitDate(".thoigian", setThoiGianBD, setThoiGianKT, setThoiGianBao);
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
@@ -208,7 +218,9 @@ const CreateProject = ({
       const data = await response.json();
 
       setPhongBan(data);
-      setDepCode(data[0].dep_Code);
+      const depCodeJoin = data.map((x) => x.dep_Code).join(",");
+      const depCodeArray = depCodeJoin.split(",");
+      setDepCode(depCodeArray);
     } catch (error) {
       console.error(error.message);
     }
@@ -252,6 +264,7 @@ const CreateProject = ({
       setTaskName(d.taskName);
       setThoiGianBD(d.fromDate);
       setThoiGianKT(d.toDate);
+      setThoiGianBao(d.remindDate);
       setUuTien(d.priority);
       setGhiChu(d.note);
       setNoiDung(d.description);
@@ -496,7 +509,27 @@ const CreateProject = ({
                 </div>
               </div>
             </div>
-
+            <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
+              <div className="row">
+                <div className="form-group col-12 m-0 p-0 ">
+                  <label htmlFor="startDate">Ngày thông báo deadline</label>
+                  <div className="tgDate">
+                    {" "}
+                    <input
+                      ref={inputTGDLRef}
+                      value={isThoiGianBao}
+                      readOnly
+                      className="thoigian thoigiandeadline form-control"
+                      type="text"
+                    />
+                    <i
+                      onClick={() => handleFocusInput(inputTGDLRef)}
+                      class="fa-duotone fa-solid fa-calendar-days"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
               <div className="row">
                 <div className="p-0">
@@ -542,6 +575,7 @@ const CreateProject = ({
               )}
               {isCheckShow !== 1 && (
                 <button
+                  disabled={isDisable}
                   onClick={(e) => handleAddTask(e, IsHT)}
                   style={{ marginLeft: "auto" }}
                   type="submit"

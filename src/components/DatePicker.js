@@ -2,7 +2,12 @@ import $ from "jquery";
 import "daterangepicker/daterangepicker.css";
 import "daterangepicker";
 
-export function InitDate(selector, setThoiGianBD, setThoiGianKT) {
+export function InitDate(
+  selector,
+  setThoiGianBD,
+  setThoiGianKT,
+  setThoiGianBao
+) {
   $(selector)
     .daterangepicker({
       singleDatePicker: true,
@@ -19,6 +24,8 @@ export function InitDate(selector, setThoiGianBD, setThoiGianKT) {
         setThoiGianBD(formattedDate);
       } else if ($(this).hasClass("thoigiankt")) {
         setThoiGianKT(formattedDate);
+      } else {
+        setThoiGianBao(formattedDate);
       }
     })
     .on("show.daterangepicker", function (ev, picker) {
@@ -33,6 +40,8 @@ export function InitDate(selector, setThoiGianBD, setThoiGianKT) {
           setThoiGianBD("");
         } else if ($(ev.target).hasClass("thoigiankt")) {
           setThoiGianKT("");
+        } else {
+          setThoiGianBao("");
         }
       });
     });

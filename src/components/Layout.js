@@ -159,8 +159,8 @@ const Layout = () => {
           </div>
           {title}{" "}
           <div class="d-flex align-items-center icon-userName">
-            <span class="user-name">{isfullName}</span>
             <i class="fas fa-user user-iconLayout"></i>
+            <span class="user-name">{isfullName}</span>
           </div>
         </div>
         <Outlet />

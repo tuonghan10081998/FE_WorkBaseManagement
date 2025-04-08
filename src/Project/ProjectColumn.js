@@ -39,6 +39,7 @@ const ProjectColumn = ({
   const handleClickDelete = (value) => {
     setIDDelete(isIDData);
     setShow(false);
+    handleHT(isIDData, "Delete");
   };
   const handleClick = (e) => {
     const parent = e.currentTarget.closest(".carticon");
@@ -65,8 +66,8 @@ const ProjectColumn = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const handleHT = async () => {
-    const data = tasks.filter((x) => x.id == isIDHT);
+  const handleHT = async (ID, NameValue) => {
+    const data = tasks.filter((x) => x.id == ID);
     console.log(data);
     const d = data[0];
     var arrHT = [];
@@ -86,11 +87,11 @@ const ProjectColumn = ({
       lstIDImlement: d.idImplementer.split(","),
     };
     arrHT.push(object);
-    PostSave(object);
+    PostSave(object, NameValue);
   };
-  const PostSave = async (arrPost) => {
+  const PostSave = async (arrPost, NameValue) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Task/Post?action=PostHT`,
+      `${process.env.REACT_APP_URL_API}Task/${NameValue}`,
       {
         method: "POST",
         headers: {
@@ -143,10 +144,10 @@ const ProjectColumn = ({
       <div className="task-column">
         <div
           onClick={(e) => handleClickScroll(e)}
-          className={`bg-${statusClass} text-white p-2 rounded d-flex justify-content-between align-items-center`}
+          className={`bg-${statusClass}  text-white p-2 rounded d-flex justify-content-between align-items-center`}
         >
           <span>{statusText}</span>
-          <span className={`badge badge-light text-${statusClass}`}>
+          <span className={`badge bg-white badge-light text-${statusClass}`}>
             {tasks.length}
           </span>
         </div>
@@ -192,8 +193,73 @@ const ProjectColumn = ({
                       data-id={task.id}
                       onClick={(e) => {
                         handleShow(e);
-                        setLableBody(task.note);
-                        setLable("Xem chi tiết công việc");
+                        setLableBody(`
+                        <div>
+                          <p class="duan" style="font-size: 17px;font-weight: bold;">
+                            <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
+                            Dự án: ${task.taskName}
+                          </p>
+
+                         <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i class="fa-solid fa-splotch me-1" style="color: #9b88fd;"></i>
+                            Mô tả: ${task.description}
+                              </div>
+                            </div>
+                          </div>    
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #8ec311;" class="fas fa-user me-1"></i>
+                                Giao việc: ${task.requester}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <fiv>
+                                <i style="color: #256A9D;"  class="fas fa-user me-1"></i> Thực hiện: ${
+                                  task.implementer
+                                }
+                              </fiv>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${
+                                task.fromDate
+                              } - ${task.toDate}
+                            </div>
+                          </div>
+                           </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                            <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: ${
+                              task.remindDate || ""
+                            }
+                            </div>
+                          </div>
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                             <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
+                               task.completeDate || ""
+                             }
+                            </div>
+                          </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết :
+                               <div style="margin-left: 20px;">${
+                                 task.note || ""
+                               }</div> 
+                            </div>
+                          </div>
+                        </div>
+                      `);
+                        setLable("Xem chi tiết dự án");
                         setCheckView(2);
                       }}
                     >
@@ -222,7 +288,7 @@ const ProjectColumn = ({
                         data-id={task.id}
                         onClick={(e) => {
                           handleShow(e);
-                          setLableBody("Bạn muốn xóa công việc này");
+                          setLableBody("Bạn muốn xóa dự án này");
                           setLable("Thông báo");
                           setCheckView(1);
                         }}
@@ -316,7 +382,7 @@ const ProjectColumn = ({
           <Button variant="secondary" onClick={() => setShowHT(false)}>
             Hủy
           </Button>
-          <Button onClick={() => handleHT()} variant="primary">
+          <Button onClick={() => handleHT(isIDHT, "PostHT")} variant="primary">
             Đồng ý
           </Button>
         </Modal.Footer>

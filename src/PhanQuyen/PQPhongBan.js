@@ -6,6 +6,7 @@ import "../CongViecList/GridCV.css";
 import "../PhanQuyen/PhanQuyen.css";
 
 const PQPhongBan = ({ isData, onchange }) => {
+  console.log(isData);
   return (
     <div className="grid-table w-100" style={{ padding: "12px" }}>
       <div className="itemtableNamePQ">
@@ -27,7 +28,7 @@ const PQPhongBan = ({ isData, onchange }) => {
                       <div>
                         <input
                           onChange={(e) =>
-                            onchange(row.id, row.isChecked == 1 ? 0 : 1)
+                            onchange(row.dep_Code, row.isChecked == 1 ? 0 : 1)
                           }
                           type="checkbox"
                           checked={row.isChecked == 1}

@@ -39,6 +39,7 @@ const TaskColumn = ({
   const handleClickDelete = (value) => {
     setIDDelete(isIDData);
     setShow(false);
+    handleHT(isIDData, "Delete");
   };
   const handleClick = (e) => {
     const parent = e.currentTarget.closest(".carticon");
@@ -65,9 +66,8 @@ const TaskColumn = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const handleHT = async () => {
-    const data = tasks.filter((x) => x.id == isIDHT);
-    console.log(data);
+  const handleHT = async (ID, NameValue) => {
+    const data = tasks.filter((x) => x.id == ID);
     const d = data[0];
     var arrHT = [];
     const object = {
@@ -78,16 +78,18 @@ const TaskColumn = ({
       note: d.note,
       idRequester: d.idRequester,
       lstIDImplementer: d.idImplementer.split(","),
-      implementDate: moment(d.implementDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      completeDate: moment(d.completeDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      fromDate: moment(d.fromDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      toDate: moment(d.toDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      remindDate: moment(d.remindDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      idApprover: "",
       statusHT: 1,
     };
     arrHT.push(object);
-    PostSave(arrHT);
+    PostSave(object, NameValue);
   };
-  const PostSave = async (arrPost) => {
+  const PostSave = async (arrPost, NameValue) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Work/Post?action=PostHT`,
+      `${process.env.REACT_APP_URL_API}Work/${NameValue}`,
       {
         method: "POST",
         headers: {
@@ -143,7 +145,7 @@ const TaskColumn = ({
           className={`bg-${statusClass} text-white p-2 rounded d-flex justify-content-between align-items-center`}
         >
           <span>{statusText}</span>
-          <span className={`badge badge-light text-${statusClass}`}>
+          <span className={`badge bg-white badge-light text-${statusClass}`}>
             {tasks.length}
           </span>
         </div>
@@ -154,7 +156,7 @@ const TaskColumn = ({
               data-project={task.workName}
               data-status={task.status}
               data-id={task.id}
-              data-date={`${task.implementDate} - ${task.completeDate}`}
+              data-date={`${task.fromDate} - ${task.toDate}`}
             >
               <div className="editCart">
                 <div>
@@ -189,7 +191,71 @@ const TaskColumn = ({
                       data-id={task.id}
                       onClick={(e) => {
                         handleShow(e);
-                        setLableBody(task.note);
+                        setLableBody(`
+                        <div>
+                          <p class="duan" style="font-size: 17px;font-weight: bold;">
+                            <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
+                            Công việc: ${task.workName}
+                          </p>
+
+                         <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i class="fa-solid fa-splotch me-1" style="color: #9b88fd;"></i>
+                            Mô tả: ${task.description}
+                              </div>
+                            </div>
+                          </div>    
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #8ec311;" class="fas fa-user me-1"></i>
+                                Giao việc: ${task.requester}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <fiv>
+                                <i style="color: #256A9D;"  class="fas fa-user me-1"></i> Thực hiện: ${
+                                  task.implementer
+                                }
+                              </fiv>
+                            </div>
+                          </div>
+
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${
+                                task.fromDate
+                              } - ${task.toDate}
+                            </div>
+                          </div>
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                            <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: ${
+                              task.remindDate || ""
+                            }
+                            </div>
+                          </div>
+                          <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                             <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
+                               task.completeDate || ""
+                             }
+                            </div>
+                          </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div>
+                              <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : ${
+                                task.note || ""
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      `);
+
                         setLable("Xem chi tiết công việc");
                         setCheckView(2);
                       }}
@@ -265,7 +331,7 @@ const TaskColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <p>
                   <i className="fas fa-clock "></i> Ngày:{" "}
-                  {`${task.implementDate} - ${task.completeDate}`}
+                  {`${task.fromDate} - ${task.toDate}`}
                 </p>
               </div>
             </div>
@@ -278,6 +344,8 @@ const TaskColumn = ({
         dialogClassName="modal-dialog-centered"
         aria-labelledby="popupModalLabel"
         className="modalHT"
+        backdrop="static"
+        keyboard={false}
       >
         <Modal.Header closeButton={!show}>
           <Modal.Title id="popupModalLabel">{isLable}</Modal.Title>
@@ -301,6 +369,8 @@ const TaskColumn = ({
         // onHide={false}
         dialogClassName="modal-dialog-centered"
         aria-labelledby="popupModalLabel"
+        backdrop="static"
+        keyboard={false}
         className="modalHT"
       >
         <Modal.Header closeButton={false}>
@@ -313,7 +383,7 @@ const TaskColumn = ({
           <Button variant="secondary" onClick={() => setShowHT(false)}>
             Hủy
           </Button>
-          <Button onClick={() => handleHT()} variant="primary">
+          <Button onClick={() => handleHT(isIDHT, "PostHT")} variant="primary">
             Đồng ý
           </Button>
         </Modal.Footer>

@@ -8,8 +8,9 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
   const [highlightColor, setHighlightColor] = useState("#ffff00");
 
   // Hàm để xử lý các lệnh như bold, italic, underline, justify
-  const handleCommand = (command, value = null) => {
+  const handleCommand = (e, command, value = null) => {
     if (editorRef.current) {
+      e.preventDefault();
       document.execCommand(command, false, value);
     }
   };
@@ -49,6 +50,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
 
   // Hàm xử lý thay đổi màu chữ
   const handleColorChange = (event) => {
+    event.preventDefault();
     const selectedColor = event.target.value; // Lấy giá trị màu sắc đã chọn
     setColor(selectedColor);
     document.execCommand("foreColor", false, selectedColor); // Áp dụng màu sắc vào văn bản
@@ -56,6 +58,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
 
   // Hàm xử lý thay đổi màu highlight (màu nền)
   const handleHighlightChange = (event) => {
+    event.preventDefault();
     const selectedHighlightColor = event.target.value; // Lấy giá trị màu sắc đã chọn cho highlight
     setHighlightColor(selectedHighlightColor);
     document.execCommand("backColor", false, selectedHighlightColor); // Áp dụng màu nền vào văn bản
@@ -69,19 +72,19 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
             <div className="d-flex gap-2">
               <button
                 className="btn btn-primary btn-color"
-                onClick={() => handleCommand("bold")}
+                onClick={(e) => handleCommand(e, "bold")}
               >
                 <i className="fas fa-bold"></i>
               </button>
               <button
                 className="btn btn-success btn-color"
-                onClick={() => handleCommand("italic")}
+                onClick={(e) => handleCommand(e, "italic")}
               >
                 <i style={{ fontSize: "12px" }} className="fas fa-italic"></i>
               </button>
               <button
                 className="btn btn-warning btn-color"
-                onClick={() => handleCommand("underline")}
+                onClick={(e) => handleCommand(e, "underline")}
               >
                 <i
                   style={{ fontSize: "12px" }}
@@ -90,7 +93,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
               </button>
               <button
                 className="btn btn-secondary btn-color"
-                onClick={() => handleCommand("justifyLeft")}
+                onClick={(e) => handleCommand(e, "justifyLeft")}
               >
                 <i
                   style={{ fontSize: "12px" }}
@@ -99,7 +102,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
               </button>
               <button
                 className="btn btn-secondary btn-color"
-                onClick={() => handleCommand("justifyCenter")}
+                onClick={(e) => handleCommand(e, "justifyCenter")}
               >
                 <i
                   style={{ fontSize: "12px" }}
@@ -108,7 +111,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
               </button>
               <button
                 className="btn btn-secondary btn-color"
-                onClick={() => handleCommand("justifyRight")}
+                onClick={(e) => handleCommand(e, "justifyRight")}
               >
                 <i
                   style={{ fontSize: "12px" }}
