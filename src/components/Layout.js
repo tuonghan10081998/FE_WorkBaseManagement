@@ -119,7 +119,7 @@ const Layout = () => {
             </Link>
           </div>
 
-          {isIDLogin == "VNManh" && (
+          {isIDLogin.toLowerCase() == "admin" && (
             <div className="nav-item">
               <Link
                 className="nav-link text-white d-flex justify-content-between align-items-center"
