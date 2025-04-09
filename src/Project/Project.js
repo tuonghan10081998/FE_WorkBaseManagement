@@ -398,6 +398,7 @@ const ListCV = () => {
                 <>
                   {!showPopup && (
                     <button
+                      style={{ marginTop: "26px" }}
                       onClick={() => {
                         setShowPopup(!showPopup);
                         setWorkItem([]);
@@ -409,6 +410,7 @@ const ListCV = () => {
                   )}
                   {showPopup && (
                     <button
+                      style={{ marginTop: "26px" }}
                       onClick={() => setShowPopup(!showPopup)}
                       className="btn btn-danger"
                     >

@@ -50,7 +50,7 @@ const KPIFullMonth = ({ setData }) => {
               <td scope="col">T12</td>
               <td scope="col">T.T.Hiện</td>
               <td scope="col">T.M.Tiêu</td>
-              <td scope="col">Hành động</td>
+              {/* <td scope="col">Hành động</td> */}
             </tr>
           </thead>
           <tbody>
@@ -93,7 +93,7 @@ const KPIFullMonth = ({ setData }) => {
                   <td>{employee.month12}</td>
                   <td>{totalAchieved}</td>
                   <td>{totalTarget}</td>
-                  <td>
+                  {/* <td>
                     <div className="d-flex justify-content-start">
                       <button
                         className="btn btn-target btn-sm mx-1"
@@ -108,7 +108,7 @@ const KPIFullMonth = ({ setData }) => {
                         <i className="fas fa-tasks"></i>
                       </button>
                     </div>
-                  </td>
+                  </td> */}
                 </tr>
               );
             })}

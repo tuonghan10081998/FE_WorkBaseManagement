@@ -41,9 +41,9 @@ const Layout = () => {
         id="sidebar"
       >
         <div className="brand" id="toggleSidebar">
-          <img src="/img/logoNTB.png" className="img" />
+          {/* <img src="/img/logoNTB.png" className="img" /> */}
           <span style={{ whiteSpace: "nowrap" }} className="ms-2">
-            Nam Thanh Bình
+            AZGroup
           </span>
         </div>
         <nav className="nav flex-column">

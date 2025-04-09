@@ -136,7 +136,7 @@ const ListCV = () => {
   }, [showPopup]);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin != "VNManh" &&
+    isIDLogin.toLowerCase() != "admin" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -399,6 +399,7 @@ const ListCV = () => {
                 <>
                   {!showPopup && (
                     <button
+                      style={{ marginTop: "26px" }}
                       onClick={() => {
                         setShowPopup(!showPopup);
                         setWorkItem([]);
@@ -410,6 +411,7 @@ const ListCV = () => {
                   )}
                   {showPopup && (
                     <button
+                      style={{ marginTop: "26px" }}
                       onClick={() => setShowPopup(!showPopup)}
                       className="btn btn-danger"
                     >
