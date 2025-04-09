@@ -212,7 +212,7 @@ const LeaveCart = ({
                       </div>
                     )}
                     {(isUser == task.idRequester && status == 0) ||
-                      (isIDLogin == "VNManh" && (
+                      (isIDLogin.toLowerCase() == "admin" && (
                         <div
                           data-id={task.id}
                           onClick={(e) => {

@@ -433,7 +433,7 @@ const GridTask = ({
                             <span>Sửa</span>
                           </div>
                         )}
-                        {isIDLogin == "VNManh" && (
+                        {isIDLogin.toLowerCase() == "admin" && (
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {

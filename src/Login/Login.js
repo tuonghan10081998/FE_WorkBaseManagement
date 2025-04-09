@@ -295,6 +295,7 @@ const Login = () => {
                   type="text"
                   value={usernameLogin}
                   onChange={(e) => setUsernameLogin(e.target.value)}
+                  autoComplete="off"
                 />
                 <label>Mật khẩu</label>
                 <div className="item_father ">
@@ -303,6 +304,7 @@ const Login = () => {
                     value={ispwLogin}
                     type={!isPPwlogin ? "password" : "text"}
                     onChange={(e) => setpwLogin(e.target.value)}
+                    autoComplete="off"
                   />
                   <i
                     ref={pwlogin}
@@ -321,6 +323,7 @@ const Login = () => {
                         id="check"
                         type="checkbox"
                         className="checkbox"
+                        autoComplete="off"
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -351,6 +354,7 @@ const Login = () => {
                   className="submit"
                   defaultValue="SIGN IN"
                   type="submit"
+                  autoComplete="off"
                 />
               </div>
               <hr />
@@ -369,6 +373,7 @@ const Login = () => {
                   value={username}
                   type="text"
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="off"
                 />
                 <input
                   className="mt-4"
@@ -376,6 +381,7 @@ const Login = () => {
                   value={isHoTen}
                   type="text"
                   onChange={(e) => setHoTen(e.target.value)}
+                  autoComplete="off"
                 />
                 <input
                   className="mt-4"
@@ -383,6 +389,7 @@ const Login = () => {
                   value={email}
                   type="text"
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="off"
                 />
                 <div className="item_father ">
                   <input
@@ -391,6 +398,7 @@ const Login = () => {
                     value={password}
                     type={!isPwSign ? "password" : "text"}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="off"
                   />
                   <i
                     onClick={showpwSign}
@@ -407,6 +415,7 @@ const Login = () => {
                     value={confirmPassword}
                     type={!isPwConfirm ? "password" : "text"}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    autoComplete="off"
                   />
                   <i
                     onClick={showpwComfirm}

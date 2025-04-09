@@ -283,7 +283,7 @@ const ProjectColumn = ({
                         <span>Sửa</span>
                       </div>
                     )}
-                    {isIDLogin == "VNManh" && (
+                    {isIDLogin.toLowerCase() == "admin" && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {

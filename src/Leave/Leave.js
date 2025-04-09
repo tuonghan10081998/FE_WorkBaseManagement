@@ -77,7 +77,7 @@ const Leave = () => {
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin != "VNManh" &&
+    isIDLogin.toLowerCase() != "admin" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -104,7 +104,7 @@ const Leave = () => {
 
       const staffData = await response.json();
       let filteredData = staffData;
-      isIDLogin != "VNManh" &&
+      isIDLogin.toLowerCase() != "admin" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
       setDataNV(filteredData);
     } catch (error) {
@@ -157,13 +157,13 @@ const Leave = () => {
     if (isPhongBan == null || isPhongBan.length == 0) return;
     if (isPQDuyen) {
       var DepCode = isPhongBan[0].dep_Code;
-      if (isIDLogin !== "VNManh") {
+      if (isIDLogin.toLowerCase() !== "admin") {
         filteredData = data.filter((x) => {
           return x.dep_Code == DepCode;
         });
       }
     } else {
-      if (isIDLogin !== "VNManh") {
+      if (isIDLogin.toLowerCase() !== "admin") {
         filteredData = data.filter((x) => {
           return x.idRequester?.includes(isUser);
         });

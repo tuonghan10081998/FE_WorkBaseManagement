@@ -91,7 +91,7 @@ const ListCV = () => {
       const staffData = await response.json();
       let filteredData = staffData;
       setDataNVTt(staffData);
-      isIDLogin != "VNManh" &&
+      isIDLogin.toLowerCase() != "admin" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
 
       setDataNV(filteredData);
@@ -175,7 +175,7 @@ const ListCV = () => {
   }, [isCheckAdd, dateRange]);
   useEffect(() => {
     let filteredData = data;
-    if (isIDLogin !== "VNManh") {
+    if (isIDLogin.toLowerCase() != "admin") {
       filteredData = data.filter((x) => {
         return (
           x.idImplementer?.includes(isUser) ||
@@ -206,8 +206,12 @@ const ListCV = () => {
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
 
-    if (isNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idImplementer?.includes(isNhanVienValue));
+    if (isNhanVienValue !== "All")
+      dataPB = dataPB.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue)
+      );
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
@@ -228,8 +232,12 @@ const ListCV = () => {
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
-    if (isNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idImplementer?.includes(isNhanVienValue));
+    if (isNhanVienValue !== "All")
+      dataPB = dataPB.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue)
+      );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
@@ -244,8 +252,12 @@ const ListCV = () => {
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
-    if (isNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idImplementer?.includes(isNhanVienValue));
+    if (isNhanVienValue !== "All")
+      dataPB = dataPB.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue)
+      );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
@@ -273,9 +285,12 @@ const ListCV = () => {
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
-    if (isNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idImplementer?.includes(isNhanVienValue));
-
+    if (isNhanVienValue !== "All")
+      dataPB = dataPB.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue)
+      );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );

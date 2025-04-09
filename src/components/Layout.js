@@ -47,7 +47,7 @@ const Layout = () => {
           </span>
         </div>
         <nav className="nav flex-column">
-          <div className="nav-item">
+          {/* <div className="nav-item">
             <a
               className="nav-link text-white d-flex justify-content-between align-items-center"
               href="#"
@@ -70,31 +70,7 @@ const Layout = () => {
                 </Link>
               </div>
             )}
-          </div>
-
-          <div className="nav-item">
-            <Link
-              className="nav-link text-white d-flex justify-content-between align-items-center"
-              to="/layout/project"
-            >
-              <div>
-                <i className="fas fa-fire text-lg"></i>
-                <span className="ms-2">Danh sách dự án</span>
-              </div>
-            </Link>
-          </div>
-          <div className="nav-item">
-            <Link
-              className="nav-link text-white d-flex justify-content-between align-items-center"
-              to="/layout/KPI"
-            >
-              <div>
-                <i className="fas fa-fire text-lg"></i>
-                <span className="ms-2">KPI</span>
-              </div>
-            </Link>
-          </div>
-
+          </div> */}
           <div className="nav-item">
             <Link
               className="nav-link text-white d-flex justify-content-between align-items-center"
@@ -103,6 +79,17 @@ const Layout = () => {
               <div>
                 <i className="fas fa-photo-video text-lg"></i>
                 <span className="ms-2">Danh sách công việc</span>
+              </div>
+            </Link>
+          </div>
+          <div className="nav-item">
+            <Link
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              to="/layout/project"
+            >
+              <div>
+                <i className="fas fa-fire text-lg"></i>
+                <span className="ms-2">Danh sách dự án</span>
               </div>
             </Link>
           </div>
@@ -118,8 +105,18 @@ const Layout = () => {
               </div>
             </Link>
           </div>
-
-          {isIDLogin.toLowerCase() == "admin" && (
+          <div className="nav-item">
+            <Link
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              to="/layout/KPI"
+            >
+              <div>
+                <i className="fas fa-fire text-lg"></i>
+                <span className="ms-2">KPI nhân viên</span>
+              </div>
+            </Link>
+          </div>
+          {isIDLogin.toLowerCase() === "admin" && (
             <div className="nav-item">
               <Link
                 className="nav-link text-white d-flex justify-content-between align-items-center"

@@ -84,7 +84,7 @@ const CreateProject = ({
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
-      isIDLogin != "VNManh" &&
+      isIDLogin.toLowerCase() != "admin" &&
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
       const nhanvienNew = Array.from(
         new Map(
@@ -207,7 +207,7 @@ const CreateProject = ({
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin != "VNManh" &&
+    isIDLogin.toLowerCase() != "admin" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
