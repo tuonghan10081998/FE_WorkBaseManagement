@@ -8,6 +8,7 @@ import AddTask from "./components/AddTask";
 import ListWork from "./CongViecList/ListCV";
 import Login from "./Login/Login"; // Trang đăng nhập
 import PhanQuyen from "./PhanQuyen/PhanQuyen";
+import KPI from "./KPI/KPI";
 import Leave from "./Leave/Leave";
 import Project from "./Project/Project";
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/layout/listcongviec" element={<ListWork />} />
             <Route path="/layout/listleave" element={<Leave />} />
             <Route path="/layout/project" element={<Project />} />
+            <Route path="/layout/KPI" element={<KPI />} />
           </Route>
         </Routes>
       </TitleProvider>

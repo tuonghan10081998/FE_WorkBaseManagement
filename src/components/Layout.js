@@ -83,6 +83,17 @@ const Layout = () => {
               </div>
             </Link>
           </div>
+          <div className="nav-item">
+            <Link
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              to="/layout/KPI"
+            >
+              <div>
+                <i className="fas fa-fire text-lg"></i>
+                <span className="ms-2">KPI</span>
+              </div>
+            </Link>
+          </div>
 
           <div className="nav-item">
             <Link

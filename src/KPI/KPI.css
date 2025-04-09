@@ -1,0 +1,60 @@
+th {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+tbody {
+  font-size: 12px;
+}
+.table-responsive table {
+  border-collapse: collapse;
+}
+.table-responsive th,
+.table-responsive td {
+  box-shadow: 0 1px 0 #ddd;
+}
+
+.table-responsive .table th,
+.table-responsive .table td {
+  text-align: center;
+}
+.table-responsive .btn-icon {
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.table-responsive .btn-icon i {
+  font-size: 16px;
+}
+/* Style cho các button */
+.table-responsive .btn-view {
+  color: #007bff; /* Màu xanh dương */
+}
+.table-responsive.btn-target {
+  color: #28a745; /* Màu xanh lá */
+}
+.table-responsive .btn-achieved {
+  color: #dc3545; /* Màu đỏ */
+}
+.task-table .tbodytr td {
+  white-space: nowrap;
+}
+.select_year {
+  height: 37px;
+  border-radius: 5px;
+  text-align: center;
+  outline: none;
+  border: 1px solid #dee2e6;
+}
+.btn-view {
+  color: #007bff; /* Màu xanh dương */
+}
+.btn-target {
+  color: #28a745; /* Màu xanh lá */
+}
+.btn-achieved {
+  color: #dc3545; /* Màu đỏ */
+}

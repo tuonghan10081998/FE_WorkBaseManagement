@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../PhanQuyen/PhanQuyen.css";
 import iziToast from "izitoast";
 const PhanQuyen = () => {
+  const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
+
   const { setTitle, setIcon } = useContext(TitleContext);
   const [activeIndex, setActiveIndex] = useState(null);
   const [isData, setData] = useState([]);
@@ -216,9 +218,29 @@ const PhanQuyen = () => {
               </div>
             </ul>
           </div>
-          {/* <div className="popupsetting">
-            <div>Đổi mật khẩu</div>
-            <div>Xóa tài khảon</div>
+          {/* <div className="popupsettingCart popupsettingCV">
+            <div>
+              <i className="fa-solid fa-pen-to-square me-1"></i>
+              <span>Đổi mật khẩu</span>
+            </div>
+
+            {isIDLogin == "VNManh" && (
+              <div
+                onClick={(e) => {
+                  // handleShow(e);
+                  // setLableBody("Bạn muốn xóa dự án này");
+                  // setLable("Thông báo");
+                  // setCheckView(1);
+                }}
+                style={{ boxShadow: "none" }}
+              >
+                <i
+                  style={{ color: "REd" }}
+                  className="fa-solid fa-trash me-1"
+                ></i>
+                <span> Xóa </span>
+              </div>
+            )}
           </div> */}
         </div>
 
