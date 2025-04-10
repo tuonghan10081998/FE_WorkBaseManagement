@@ -150,6 +150,7 @@ const GridWork = ({
     () => [
       { Header: "id", accessor: "id" },
       { Header: "statusHT", accessor: "statusHT" },
+      { Header: "Mã ticket", accessor: "ticket" },
       { Header: "Tên công việc", accessor: "workName" },
       { Header: "Mô tả ", accessor: "description" },
       { Header: "Ưu tiên", accessor: "priority" },
@@ -158,6 +159,7 @@ const GridWork = ({
       { Header: "Ghi chú", accessor: "completeDate" },
       { Header: "Trạng thái", accessor: "status" },
       { Header: "Người thực hiện", accessor: "requester" },
+      { Header: "Trách nhiệm", accessor: "responsible" },
       { Header: "Người giao việc", accessor: "implementer" },
       { Header: "Deadline", accessor: "toDate" },
       { Header: "Hành động", accessor: "complete" },
@@ -175,7 +177,11 @@ const GridWork = ({
         minWidth: "80px",
       };
     }
-    if (["status"].includes(column.id)) {
+    if (
+      ["status", "ticket", "responsible", "toDate", "requester"].includes(
+        column.id
+      )
+    ) {
       return {
         maxWidth: "130px",
         minWidth: "130px",
@@ -270,6 +276,9 @@ const GridWork = ({
                 prepareRow(row);
                 return (
                   <tr className="position-relative" {...row.getRowProps()}>
+                    <td className="box-cv" style={{ maxWidth: "100px" }}>
+                      <p>{row.values.ticket}</p>
+                    </td>
                     <td className="box-wrap">{row.values.workName}</td>
                     <td
                       style={{ maxWidth: "300px", minWidth: "250px" }}
@@ -280,20 +289,24 @@ const GridWork = ({
                     <td style={{ maxWidth: "100px" }} className="box-wrap">
                       {getStatusSpanUuTien(row.values.priority)}
                     </td>
-                    {/* <td style={{ maxWidth: "200px" }} className="box-cv">
-                      <p> {row.values.note || ""} </p>
-                    </td> */}
+
                     <td style={{ maxWidth: "200px" }} className="box-wrap">
                       {getStatusSpan(row.values.status)}
                     </td>
                     <td className="box-cv" style={{ maxWidth: "125px" }}>
                       <p>{row.values.implementer}</p>
                     </td>
-                    <td style={{ maxWidth: "125px" }} className="box-cv">
+                    <td style={{ maxWidth: "125px" }} className="">
+                      <p>{row.values.responsible}</p>
+                    </td>
+                    <td style={{ maxWidth: "125px" }} className="">
                       <p>{row.values.requester}</p>
                     </td>
-                    <td style={{ maxWidth: "70px" }} className="box-wrap">
-                      {row.values.toDate}
+                    <td style={{ maxWidth: "70px" }} className="">
+                      {moment(row.values.fromDate, "DD/MM/YYYY").format(
+                        "DD/MM"
+                      )}
+                      -{moment(row.values.toDate, "DD/MM/YYYY").format("DD/MM")}
                     </td>
                     <td style={{ maxWidth: "50px" }} className="box-wrap"></td>
                     <div
@@ -321,22 +334,23 @@ const GridWork = ({
                         data-id={row.values.id}
                         className="popupsettingCart popupsettingCV"
                       >
-                        {setPQDuyen && row.values.statusHT != 1 && (
-                          <div
-                            data-id={row.values.id}
-                            onClick={(e) => {
-                              handleShow(e);
-                              setTiTleBody(
-                                "<p>Bạn xác nhận hoàn thành công việc này</p>"
-                              );
-                              setLable("Thông báo");
-                              setCheckHandle(1);
-                            }}
-                          >
-                            <i className="fa-solid fa-street-view me-1"></i>
-                            <span>Hoàn thành</span>
-                          </div>
-                        )}
+                        {row.values.statusHT !== "1" &&
+                          setPQDuyen !== "Member" && (
+                            <div
+                              data-id={row.values.id}
+                              onClick={(e) => {
+                                handleShow(e);
+                                setTiTleBody(
+                                  "<p>Bạn xác nhận hoàn thành công việc này</p>"
+                                );
+                                setLable("Thông báo");
+                                setCheckHandle(1);
+                              }}
+                            >
+                              <i className="fa-solid fa-street-view me-1"></i>
+                              <span>Hoàn thành</span>
+                            </div>
+                          )}
 
                         <div
                           data-id={row.values.id}
@@ -364,11 +378,19 @@ const GridWork = ({
                               </div>
                             </div>
                           </div>
-
+                    <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #894141;
+                            font-size: 21px;" class="fa-solid fa-person-dress me-1"
+                         ></i> Trách nhiệm: ${row.values.responsible}
+                              </div>
+                            </div>
+                          </div>    
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div class="user-names">
                               <fiv>
-                                <i style="color: #256A9D;"  class="fas fa-user me-1"></i> Thực hiện: ${
+                                <i style="color: #256A9D;"  class="fa s fa-user me-1"></i> Thực hiện: ${
                                   row.values.implementer
                                 }
                               </fiv>
@@ -413,8 +435,7 @@ const GridWork = ({
                           <i class="fa-solid fa-eye me-1"></i>
                           <span> Xem </span>
                         </div>
-
-                        {setPQDuyen && (
+                        {setPQDuyen !== "Member" && (
                           <div
                             onClick={(e) => {
                               if (handleSetting) {
@@ -430,7 +451,8 @@ const GridWork = ({
                             <span>Sửa</span>
                           </div>
                         )}
-                        {isIDLogin.toLowerCase() == "admin" && (
+
+                        {setPQDuyen === "Administrator" && (
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {
@@ -474,9 +496,11 @@ const GridWork = ({
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button onClick={() => handlesSubmit()} variant="primary">
-            Đồng ý
-          </Button>
+          {isLable == "Thông báo" && (
+            <Button onClick={() => handlesSubmit()} variant="primary">
+              Đồng ý
+            </Button>
+          )}{" "}
         </Modal.Footer>
       </Modal>
     </div>

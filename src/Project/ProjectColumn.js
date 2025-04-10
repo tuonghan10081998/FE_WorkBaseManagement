@@ -168,7 +168,7 @@ const ProjectColumn = ({
                       style={{ color: "#6ba323" }}
                       className="fa-solid fa-briefcase"
                     ></i>{" "}
-                    Dự án: {task.taskName}
+                    {task.ticket} - {task.taskName}
                   </p>
                 </div>
                 <div className="carticon position-relative">
@@ -182,7 +182,7 @@ const ProjectColumn = ({
                     data-id={task.id}
                     className="popupsettingCart popupsettingCV"
                   >
-                    {setPQDuyen && status != 1 && (
+                    {task.statusHT !== "1" && setPQDuyen !== "Member" && (
                       <div data-id={task.id} onClick={(e) => handleShowHT(e)}>
                         <i className="fa-solid fa-street-view me-1"></i>
                         <span>Hoàn thành</span>
@@ -216,7 +216,15 @@ const ProjectColumn = ({
                               </div>
                             </div>
                           </div>
-
+                            <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #894141;
+                            font-size: 21px;" class="fa-solid fa-person-dress me-1"
+                         ></i> Trách nhiệm: ${task.responsible}
+                              </div>
+                            </div>
+                          </div>
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div class="user-names">
                               <fiv>
@@ -266,8 +274,7 @@ const ProjectColumn = ({
                       <i class="fa-solid fa-eye me-1"></i>
                       <span> Xem </span>
                     </div>
-
-                    {setPQDuyen && (
+                    {setPQDuyen !== "Member" && (
                       <div
                         onClick={(e) => {
                           if (handleSetting) {
@@ -283,7 +290,7 @@ const ProjectColumn = ({
                         <span>Sửa</span>
                       </div>
                     )}
-                    {isIDLogin.toLowerCase() == "admin" && (
+                    {setPQDuyen === "Administrator" && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {
@@ -326,6 +333,17 @@ const ProjectColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <div className="user-names">
                   <p>
+                    <i
+                      style={{ color: "rgb(116 117 133)", fontSize: "18px" }}
+                      class="fa-solid fa-person-dress me-1"
+                    ></i>
+                    Trách nhiệm: {task.responsible}
+                  </p>
+                </div>
+              </div>
+              <div className="task_item" style={{ gap: "2px" }}>
+                <div className="user-names">
+                  <p>
                     <i className="fas fa-user me-1"></i>Thực hiện:{" "}
                     {task.implementer}
                   </p>
@@ -334,7 +352,9 @@ const ProjectColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <p>
                   <i className="fas fa-clock "></i> Ngày:{" "}
-                  {`${task.fromDate} - ${task.toDate}`}
+                  {`${moment(task.fromDate, "DD/MM/YYYY").format(
+                    "DD/MM"
+                  )} - ${moment(task.toDate, "DD/MM/YYYY").format("DD/MM")}`}
                 </p>
               </div>
             </div>

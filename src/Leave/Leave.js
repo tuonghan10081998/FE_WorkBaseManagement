@@ -25,8 +25,13 @@ const Leave = () => {
     }
   }, [isIDLogin, navigate]);
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const [isDepCode, setDepCode] = useState("");
   const [isPQDuyen, setPQDuyen] = useState(false);
   const [isDataPD, setDataPD] = useState([]);
+  const [isRole, setRole] = useState("");
+  const [isdataF, setDataF] = useState([]);
+  const [isopera, setopera] = useState(true);
+  const [isLeader, setLeader] = useState("");
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -36,8 +41,22 @@ const Leave = () => {
       }
 
       const data = await response.json();
-      const dataPQ = data.lstUserRole.filter((x) => x.roleID == 2);
-      if (dataPQ[0].isChecked == 1) setPQDuyen(true);
+      const priorityRoles = data.lstUserRole.map((item) => item.roleID);
+      const currentHighestRole =
+        priorityRoles.find((roleID) =>
+          data.lstUserRole.some(
+            (item) => item.roleID === roleID && item.isChecked === 1
+          )
+        ) || "Member";
+      if (currentHighestRole === "Leader") {
+        const selectedDepCodes = data.lstUserDep
+          .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
+          .map((dep) => dep.dep_Code) // Lấy mã phòng ban
+          .join(",");
+        setLeader(selectedDepCodes);
+      }
+      currentHighestRole === "Member" && setopera(false);
+      setRole(currentHighestRole);
     } catch (error) {
       console.error(error.message);
     }
@@ -77,7 +96,7 @@ const Leave = () => {
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin.toLowerCase() != "admin" &&
+    isRole !== "Administrator" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -87,13 +106,16 @@ const Leave = () => {
 
       const data = await response.json();
       setPhongBan(data);
+      const depCodeJoin = data.map((x) => x.dep_Code).join(",");
+      const depCodeArray = depCodeJoin.split(",");
+      setDepCode(depCodeArray);
     } catch (error) {
       console.error(error.message);
     }
   };
   useEffect(() => {
-    fetchData();
-  }, []);
+    isRole != "" && fetchData();
+  }, [isRole]);
   const fetchData = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=Get`;
     try {
@@ -104,8 +126,13 @@ const Leave = () => {
 
       const staffData = await response.json();
       let filteredData = staffData;
-      isIDLogin.toLowerCase() != "admin" &&
+      isRole !== "Administrator" &&
+        isRole !== "Leader" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
+
+      isRole === "Leader" &&
+        (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
+
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -137,9 +164,7 @@ const Leave = () => {
     getData();
   }, [isCheckAdd, dateRange]);
   const getData = async () => {
-    // console.log(dateRange.from);
-    // console.log(dateRange.to);
-    const url = `${process.env.REACT_APP_URL_API}Leave/Get?action=get`;
+    const url = `${process.env.REACT_APP_URL_API}Leave/Get?action=get&Para1=${dateRange.from}&Para2=${dateRange.to}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -154,43 +179,33 @@ const Leave = () => {
   };
   useEffect(() => {
     var filteredData = data;
-    if (isPhongBan == null || isPhongBan.length == 0) return;
-    if (isPQDuyen) {
-      var DepCode = isPhongBan[0].dep_Code;
-      if (isIDLogin.toLowerCase() !== "admin") {
-        filteredData = data.filter((x) => {
-          return x.dep_Code == DepCode;
-        });
-      }
-    } else {
-      if (isIDLogin.toLowerCase() !== "admin") {
-        filteredData = data.filter((x) => {
-          return x.idRequester?.includes(isUser);
-        });
-      }
-    }
-    setdataFilter(filteredData);
-  }, [data, isPQDuyen, isIDLogin, isUser, isPhongBan]);
-  useEffect(() => {
-    if (data == null || data.length == 0) return;
-    let dataPB = data;
+    if (isRole === "") return;
+    isRole === "Member" &&
+      (filteredData = data.filter((x) => x.idRequester?.includes(isUser)));
 
+    isRole === "Leader" &&
+      (filteredData = data.filter((x) => isDepCode?.includes(x.dep_Code)));
+
+    setDataF(filteredData);
+    setdataFilter(filteredData);
+  }, [data, isRole]);
+  useEffect(() => {
+    let dataPB = isdataF;
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
 
     setdataFilter(dataPB);
-  }, [isPhongBanValue]);
+  }, [isPhongBanValue, isdataF]);
 
   useEffect(() => {
-    console.log(IsNhanVienValue);
-    let dataPB = data;
+    let dataPB = isdataF;
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
 
     if (IsNhanVienValue != "All")
       dataPB = dataPB.filter((x) => x.idRequester?.includes(IsNhanVienValue));
     setdataFilter(dataPB);
-  }, [IsNhanVienValue]);
+  }, [IsNhanVienValue, isdataF]);
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
@@ -205,12 +220,12 @@ const Leave = () => {
   };
   const handleSetting = (leave) => {
     setEdit(leave.action);
-    const dataEdit = data.filter((x) => x.id == leave.id);
+    const dataEdit = isdataF.filter((x) => x.id == leave.id);
     setshowPopup(!showPopup);
     setWorkItem(dataEdit);
   };
   useEffect(() => {
-    const dataDelele = data.filter((x) => x.id != isIDDelete);
+    const dataDelele = isdataF.filter((x) => x.id != isIDDelete);
     setdataFilter(dataDelele);
     setData(dataDelele);
   }, [isIDDelete]);
@@ -258,8 +273,9 @@ const Leave = () => {
             </div>
 
             <div className="col-6 col-md-6 col-lg-3 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
-              {!showPopup && (
+              {isRole !== "Administrator" && (
                 <button
+                  style={{ marginTop: "25px" }}
                   onClick={() => {
                     setshowPopup(!showPopup);
                     setEdit("0");
@@ -267,19 +283,7 @@ const Leave = () => {
                   }}
                   class="btn btn-primary mr-2"
                 >
-                  <i class="fas fa-plus"></i> Add
-                </button>
-              )}
-              {showPopup && (
-                <button
-                  onClick={() => {
-                    setshowPopup(!showPopup);
-                    setEdit("0");
-                    setWorkItem([]);
-                  }}
-                  class="btn btn-danger"
-                >
-                  <i class="fas fa-times"></i> Cancel
+                  <i class="fas fa-plus"></i> Tạo phiếu nghỉ
                 </button>
               )}
             </div>
@@ -291,7 +295,7 @@ const Leave = () => {
           <LeaveCart
             handleSetting={handleSetting}
             status={0}
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             tasks={isdataFilter.filter((task) => task.status == 0)}
             setIDDeleteColumn={setIDDelete}
             setCheckAdd={setCheckAdd}
@@ -299,7 +303,7 @@ const Leave = () => {
           <LeaveCart
             handleSetting={handleSetting}
             status={1}
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             tasks={isdataFilter.filter((task) => task.status == 1)}
             setIDDeleteColumn={setIDDelete}
             setCheckAdd={setCheckAdd}
@@ -307,7 +311,7 @@ const Leave = () => {
           <LeaveCart
             handleSetting={handleSetting}
             status={2}
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             tasks={isdataFilter.filter((task) => task.status == 2)}
             setIDDeleteColumn={setIDDelete}
             setCheckAdd={setCheckAdd}

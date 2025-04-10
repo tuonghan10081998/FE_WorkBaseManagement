@@ -162,6 +162,7 @@
   width: 131px;
   display: none;
   cursor: pointer;
+  z-index: 9999;
 }
 .popupsettingCart.active {
   display: flex;
@@ -284,7 +285,21 @@
   display: flex;
   align-items: center;
 }
-
+.addPB {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 999;
+}
+.canclePQ {
+  font-size: 25px;
+  cursor: pointer;
+  color: red;
+  border: 1px solid #ccc;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #e3fdcc;
+}
 @media (max-width: 1400px) {
   .custom-modal-dialog {
     max-width: 70% !important;

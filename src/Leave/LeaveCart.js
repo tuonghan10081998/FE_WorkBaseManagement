@@ -79,6 +79,7 @@ const LeaveCart = ({
   };
   const handleSave = (NamePort) => {
     const data = tasks.filter((x) => x.id == isIDData);
+    console.log(isCheckPhieu);
     const d = data[0];
     let arrLeave = [];
     const object = {
@@ -160,42 +161,42 @@ const LeaveCart = ({
                     style={{ color: "#89915e" }}
                   ></i>
                   <div className="popupsettingCart">
-                    <div
-                      data-id={task.id}
-                      onClick={(e) => {
-                        handleShow(e);
-                        setTiTleBody(
-                          "Bạn xác nhận duyệt phiếu xin nghỉ việc này"
-                        );
-                        setCheckHandle(1);
-                        setCheckPhieu(1);
-                      }}
-                      className={`${
-                        setPQDuyen && status != 1 && isUser != task.idRequester
-                          ? ""
-                          : "d-none"
-                      }`}
-                    >
-                      <i class="fa-solid fa-street-view me-1"></i>Duyệt
-                    </div>
-                    <div
-                      data-id={task.id}
-                      onClick={(e) => {
-                        handleShow(e);
-                        setTiTleBody(
-                          "Bạn xác nhận không duyệt phiếu xin nghỉ việc này"
-                        );
-                        setCheckHandle(1);
-                        setCheckPhieu(2);
-                      }}
-                      className={`${
-                        setPQDuyen && status != 2 && isUser != task.idRequester
-                          ? ""
-                          : "d-none"
-                      }`}
-                    >
-                      <i class="fa-solid fa-street-view me-1"></i>Không duyệt
-                    </div>
+                    {isUser !== task.idRequester &&
+                      status.toString() !== "1" &&
+                      setPQDuyen !== "Member" && (
+                        <div
+                          data-id={task.id}
+                          onClick={(e) => {
+                            handleShow(e);
+                            setTiTleBody(
+                              "Bạn xác nhận duyệt phiếu xin nghỉ việc này"
+                            );
+                            setCheckHandle(1);
+                            setCheckPhieu(1);
+                          }}
+                        >
+                          <i class="fa-solid fa-street-view me-1"></i>Duyệt
+                        </div>
+                      )}
+                    {isUser !== task.idRequester &&
+                      status.toString() !== "2" &&
+                      setPQDuyen !== "Member" && (
+                        <div
+                          data-id={task.id}
+                          onClick={(e) => {
+                            handleShow(e);
+                            setTiTleBody(
+                              "Bạn xác nhận không duyệt phiếu xin nghỉ việc này"
+                            );
+                            setCheckHandle(1);
+                            setCheckPhieu(2);
+                          }}
+                        >
+                          <i class="fa-solid fa-street-view me-1"></i>Không
+                          duyệt
+                        </div>
+                      )}
+
                     {isUser == task.idRequester && status == 0 && (
                       <div
                         onClick={(e) => {
@@ -211,27 +212,27 @@ const LeaveCart = ({
                         Sửa
                       </div>
                     )}
-                    {(isUser == task.idRequester && status == 0) ||
-                      (isIDLogin.toLowerCase() == "admin" && (
-                        <div
-                          data-id={task.id}
-                          onClick={(e) => {
-                            handleShow(e);
-                            setTiTleBody(
-                              "Bạn xác nhận xóa phiếu xin nghỉ việc này"
-                            );
-                            setCheckHandle(0);
-                          }}
-                          // className={`${!setQP ? "d-none" : ""}`}
-                          style={{ boxShadow: "none" }}
-                        >
-                          <i
-                            style={{ color: "REd" }}
-                            className="fa-solid fa-trash-can me-1"
-                          ></i>
-                          Xóa
-                        </div>
-                      ))}
+                    {(setPQDuyen === "Administrator" ||
+                      (isUser === task.idRequester && status == 0)) && (
+                      <div
+                        data-id={task.id}
+                        onClick={(e) => {
+                          handleShow(e);
+                          setTiTleBody(
+                            "Bạn xác nhận xóa phiếu xin nghỉ việc này"
+                          );
+                          setCheckHandle(0);
+                          setCheckPhieu(0);
+                        }}
+                        style={{ boxShadow: "none" }}
+                      >
+                        <i
+                          style={{ color: "red" }}
+                          className="fa-solid fa-trash-can me-1"
+                        ></i>
+                        Xóa
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

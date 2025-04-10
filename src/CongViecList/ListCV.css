@@ -292,6 +292,7 @@
   font-size: 15px;
   height: 38px;
   padding-right: 23px;
+  text-align: center;
 }
 .date-picker-container i {
   cursor: pointer;

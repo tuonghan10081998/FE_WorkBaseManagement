@@ -81,9 +81,6 @@ h1 {
   padding: 3px 5px;
 }
 
-.task-item .item-table .table tbody {
-}
-
 .task-item .item-table .table tbody tr {
   border: 1px solid #ccc;
 }
@@ -202,8 +199,7 @@ item-table {
   gap: 15px;
   padding: 5px;
 }
-.fromCongViec > div {
-}
+
 .select2-container--default .select2-search--dropdown .select2-search__field {
   border: 1px solid #aaa;
   outline: none;
@@ -296,8 +292,7 @@ item-table {
 .employee-item:hover {
   background-color: #f1f1f1;
 }
-.employee-item input {
-}
+
 .employee-item h5 {
   margin: 0;
   font-size: 1rem;
@@ -415,4 +410,5 @@ item-table {
 }
 #mentionPopup a {
   padding: 5px 12px !important;
+  background-color: #f0f6ff;
 }

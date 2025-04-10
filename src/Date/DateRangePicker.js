@@ -12,6 +12,8 @@ const DateRangePicker = ({ onDateChange }) => {
     const today = moment();
     const startOfMonth = moment().startOf("month"); // Ngày đầu tiên của tháng
     const endOfMonth = moment().endOf("month"); // Ngày cuối cùng của tháng
+    const startOfYear = moment().startOf("year"); // Ngày đầu tiên của năm
+    const endOfYear = moment().endOf("year"); // Ngày cuối cùng của năm
 
     $datePicker.daterangepicker(
       {
@@ -32,6 +34,7 @@ const DateRangePicker = ({ onDateChange }) => {
             moment().subtract(1, "month").startOf("month"),
             moment().subtract(1, "month").endOf("month"),
           ],
+          "Tất cả": [moment("1900-01-01"), moment("1900-01-01")], // "Tất cả" hiển thị nhưng trả về ngày cố định
         },
         locale: {
           format: "DD/MM/YYYY",
@@ -44,12 +47,22 @@ const DateRangePicker = ({ onDateChange }) => {
         const formattedStart = start.format("YYYY-MM-DD");
         const formattedEnd = end.format("YYYY-MM-DD");
 
-        $datePicker.val(
-          `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`
-        );
+        // Nếu lựa chọn là "Tất cả", trả về ngày "1900-01-01"
+        if (start.format("YYYY-MM-DD") === "1900-01-01") {
+          $datePicker.val("Tất cả");
+        } else {
+          $datePicker.val(
+            `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`
+          );
+        }
 
         if (onDateChange) {
-          onDateChange(formattedStart, formattedEnd);
+          // Nếu chọn "Tất cả", gửi ngày cố định "1900-01-01"
+          if (start.format("YYYY-MM-DD") === "1900-01-01") {
+            onDateChange("1900-01-01", "1900-01-01");
+          } else {
+            onDateChange(formattedStart, formattedEnd);
+          }
         }
       }
     );

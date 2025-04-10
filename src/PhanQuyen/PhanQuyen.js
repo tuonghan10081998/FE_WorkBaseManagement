@@ -19,6 +19,7 @@ const PhanQuyen = () => {
   const [islstUserPage, setlstUserPage] = useState([]);
   const [islstUserRole, setlstUserRole] = useState([]);
   const [isNhanVien, setNhanVien] = useState("");
+  const [isCheckAdd, setCheckAdd] = useState(false);
   useEffect(() => {
     setTitle(` Phân quyền `);
     setIcon(<i class="fa-solid fa-window-restore"></i>);
@@ -78,7 +79,7 @@ const PhanQuyen = () => {
   };
   useEffect(() => {
     isID && getPhanQuyen();
-  }, [isID]);
+  }, [isID, isCheckAdd]);
   useEffect(() => {
     let dataNV = isData.filter(
       (x) =>
@@ -284,7 +285,11 @@ const PhanQuyen = () => {
                 </div>
               </div>
               <div className={` ${isTab == 1 ? "d-flex" : "d-none"}`}>
-                <PQPhongBan isData={islstUserDep} onchange={handleCheckPB} />
+                <PQPhongBan
+                  isData={islstUserDep}
+                  onchange={handleCheckPB}
+                  setCheckAdd={setCheckAdd}
+                />
               </div>
               <div className={` ${isTab == 2 ? "d-flex" : "d-none"}`}>
                 <PQModule isData={islstUserPage} onchange={handleCheckModule} />

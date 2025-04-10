@@ -21,6 +21,7 @@ const AddTask = ({
   setCheckAdd,
   setDataAddTask,
   setEdit,
+  setRole,
 }) => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDepCode, setDepCode] = useState("");
@@ -45,8 +46,11 @@ const AddTask = ({
   const [isThoiGianKT, setThoiGianKT] = useState("");
   const [isThoiGianBao, setThoiGianBao] = useState("");
   const messageInputRef = useRef(null);
+  const messageInputRefTN = useRef(null);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [filteredUsersTN, setFilteredUsersTN] = useState([]);
+  const [isPopupVisibleTN, setIsPopupVisibleTN] = useState(false);
   const [isUuTien, setUuTien] = useState("");
   const [isGhiChu, setGhiChu] = useState("");
   const [isNoiDung, setNoiDung] = useState("");
@@ -57,8 +61,13 @@ const AddTask = ({
   const [isID, setID] = useState(0);
   const [isCheckShow, setCheckShow] = useState(null);
   const [preloadedMentions, setpreloadedMentions] = useState([]);
+  const [preloadedMentionsTN, setpreloadedMentionsTN] = useState([]);
   const [isDisable, setDisable] = useState(false);
   const [isIDNV, setIDNV] = useState([]);
+  const [isIDNVTN, setIDNVTN] = useState([]);
+  const [isMaTicket, setMaTicket] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageTN, setMessageTN] = useState("");
 
   useEffect(() => {
     if (selectRef2.current) {
@@ -76,14 +85,14 @@ const AddTask = ({
       }
     };
   }, []);
-  const [message, setMessage] = useState("");
+
   useEffect(() => {
     if (setDataNV?.length > 0) {
       let nhanvien = setDataNV;
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
-      isIDLogin.toLowerCase() != "admin" &&
+      setRole !== "Administrator" &&
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
       const nhanvienNew = Array.from(
         new Map(
@@ -111,9 +120,22 @@ const AddTask = ({
       return namesArray.includes(user.fullName);
     });
     const arrNv = dataNhanVien.map((user) => user.userID);
+
+    const namesArrayTN = messageTN
+      .split(" @") // Tách mảng theo dấu " @"
+      .map((name) => name.replace(/^@/, "").trim()) // Loại bỏ dấu @ và khoảng trắng thừa
+      .filter((name) => name !== "");
+    const dataNhanVienTN = setDataNV.filter((user) => {
+      return namesArrayTN.includes(user.fullName);
+    });
+    const arrNvTN = dataNhanVienTN.map((user) => user.userID).join(", ");
     const arrPost = [];
     if (isWorkName == "") {
       handleNotifi("nhập tên công việc");
+      return;
+    }
+    if (isMaTicket == "") {
+      handleNotifi("nhập mã ticket");
       return;
     }
     if (isThoiGianBD == "") {
@@ -132,25 +154,34 @@ const AddTask = ({
       handleNotifi("chọn nhân viên ");
       return;
     }
+    if (arrNvTN == "") {
+      handleNotifi("chọn người chịu trách nhiệm");
+      return;
+    }
     setDisable(true);
     const uniqueArray = [...new Set(arrNv.filter((item) => item !== ""))];
     const object = {
       id: isID,
+      ticket: isMaTicket.toString(),
       workName: isWorkName,
       description: isNoiDung,
       priority: isUuTien.toString(),
       note: isGhiChu,
       idRequester: isUser,
-      lstIDImplementer: uniqueArray,
+      createDate: moment().format("YYYY-MM-DD"),
       fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
       toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
       remindDate: moment(isThoiGianBao, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      completeDate: null,
+      idResponsible: arrNvTN,
       idApprover: "",
       statusHT: value,
+      lstIDImplementer: uniqueArray,
     };
     setShow(false);
     arrPost.push(object);
     const namePost = isCheckShow === 0 ? "Post" : "Post";
+
     PostSave(object, namePost);
   };
   const PostSave = async (arrPost, namePost) => {
@@ -203,7 +234,7 @@ const AddTask = ({
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin.toLowerCase() != "admin" &&
+    setRole !== "Administrator" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -237,6 +268,8 @@ const AddTask = ({
     setID(0);
     setCheckShow(0);
     setIDNV();
+    setIDNVTN("");
+    setMaTicket("");
   };
   useEffect(() => {
     handleReturn();
@@ -244,7 +277,7 @@ const AddTask = ({
     if (dataSend?.length > 0) {
       let d = dataSend[0];
       const userID = d.idImplementer;
-
+      const responsible = d.idRequester;
       const nhanvienAvaliable = setDataNV
         .map((user) => ({
           userID: user.userID,
@@ -253,6 +286,16 @@ const AddTask = ({
         .filter((x) => {
           // Kiểm tra nếu userID của x có nằm trong danh sách userID của d.idImplementer không
           const userIDs = userID.split(","); // Tạo mảng userID từ chuỗi
+          return userIDs.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
+        });
+      const nhanvienTN = setDataNV
+        .map((user) => ({
+          userID: user.userID,
+          fullName: user.fullName,
+        }))
+        .filter((x) => {
+          // Kiểm tra nếu userID của x có nằm trong danh sách userID của d.idImplementer không
+          const userIDs = responsible.split(","); // Tạo mảng userID từ chuỗi
           return userIDs.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
         });
       setID(d.id);
@@ -264,6 +307,9 @@ const AddTask = ({
       setGhiChu(d.note);
       setNoiDung(d.description);
       setIDNV(d.idImplementer.split(","));
+      setIDNVTN(d.idRequester);
+      setpreloadedMentionsTN(nhanvienTN);
+      setMaTicket(d.ticket);
       setpreloadedMentions(nhanvienAvaliable);
       setCheckShow(setEdit);
       setISHT(d.statusHT);
@@ -283,7 +329,14 @@ const AddTask = ({
       });
     setMessage(preloadedText.trim());
   }, [preloadedMentions]);
-
+  useEffect(() => {
+    let preloadedText = "";
+    preloadedMentionsTN &&
+      preloadedMentionsTN.forEach((user) => {
+        preloadedText += `@${user.fullName} `;
+      });
+    setMessageTN(preloadedText.trim());
+  }, [preloadedMentionsTN]);
   const handleFocusInput = (inputRef) => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -313,6 +366,31 @@ const AddTask = ({
       });
 
       messageInputRef.current.focus();
+    }
+  };
+  const handleMentionSelectTN = (name, id) => {
+    const cursorPosition = messageInputRefTN.current.selectionStart;
+    const textBeforeCursor = messageTN.slice(0, cursorPosition);
+    const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+    if (mentionMatch) {
+      const textAfterCursor = messageTN.slice(cursorPosition);
+      const newText =
+        textBeforeCursor.slice(0, -mentionMatch[0].length) +
+        "@" +
+        name +
+        " " +
+        textAfterCursor;
+      setMessageTN(newText);
+      setIsPopupVisibleTN(false);
+      setIDNVTN((prevIDNV = []) => {
+        if (!prevIDNV.includes(id)) {
+          return [...prevIDNV, id];
+        }
+        return prevIDNV;
+      });
+
+      messageInputRefTN.current.focus();
     }
   };
 
@@ -346,9 +424,51 @@ const AddTask = ({
       setIsPopupVisible(false);
     }
   };
-  useEffect(() => {
-    console.log(isThoiGianBao);
-  }, [isThoiGianBao]);
+  const handleInputChangeTN = (event) => {
+    const text = event.target.value;
+    setMessageTN(text);
+
+    const atCount = (text.match(/@/g) || []).length; // Đếm số lần xuất hiện dấu "@"
+
+    if (atCount > 1) {
+      // Nếu có nhiều hơn một dấu @, xóa dấu @ thứ hai và không hiển thị popup
+      const newText = text.replace(/@[^@]*$/, ""); // Xóa từ dấu @ thứ hai trở đi
+      setMessageTN(newText);
+      setIsPopupVisibleTN(false);
+      return;
+    }
+
+    const namesArray = text
+      .split(" @") // Tách mảng theo dấu " @"
+      .map((name) => name.replace(/^@/, "").trim()) // Loại bỏ dấu @ và khoảng trắng thừa
+      .filter((name) => name !== "");
+
+    const dataNhanVienTN = isNhanVien.filter((user) => {
+      return !namesArray.includes(user.fullName);
+    });
+
+    const cursorPosition = messageInputRefTN.current.selectionStart;
+
+    const textBeforeCursor = text.slice(0, cursorPosition);
+    const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+    if (mentionMatch) {
+      const query = mentionMatch[1].toLowerCase();
+
+      const filtered = dataNhanVienTN.filter((user) => {
+        const normalizedFullName = unorm
+          .nfd(user.fullName)
+          .replace(/[\u0300-\u036f]/g, "");
+        return normalizedFullName.toLowerCase().includes(query);
+      });
+
+      setFilteredUsersTN(filtered);
+      setIsPopupVisibleTN(true);
+    } else {
+      setIsPopupVisibleTN(false);
+    }
+  };
+
   return (
     <div className="">
       <div className="card">
@@ -391,17 +511,16 @@ const AddTask = ({
                   />
                 </div>
                 <div className="form-group col-6 m-0 p-0 ps-1">
-                  <label htmlFor="projectManager">Ưu tiên</label>
-                  <select
-                    value={isUuTien}
-                    onChange={(e) => setUuTien(e.currentTarget.value)}
-                    id="select2_uutien"
-                    className="select_uutien"
-                  >
-                    <option value="2">Cao</option>
-                    <option value="1">Trung bình</option>
-                    <option value="0">Thấp</option>
-                  </select>
+                  <label htmlFor="projectManager">Mã ticket</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="projectName"
+                    placeholder="Nhập mã ticket"
+                    onChange={(e) => setMaTicket(e.currentTarget.value)}
+                    value={isMaTicket}
+                    autoComplete="off"
+                  />
                 </div>
               </div>
             </div>
@@ -470,6 +589,49 @@ const AddTask = ({
             </div>
             <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
               <div className="row">
+                <div className="form-group col-12 m-0 p-0 ">
+                  <label htmlFor="endDate">Chịu trách nhiệm</label>
+                  <div className="bg-white rounded shadow-sm position-relative">
+                    <textarea
+                      style={{ height: "40px" }}
+                      ref={messageInputRefTN}
+                      className="form-control"
+                      rows="4"
+                      placeholder="Nhập thành viên dự án..."
+                      value={messageTN}
+                      onChange={handleInputChangeTN}
+                    />
+
+                    {isPopupVisibleTN && (
+                      <div
+                        id="mentionPopup"
+                        className="mention-popup list-group position-absolute"
+                        style={{
+                          maxHeight: "200px",
+                          overflowY: "auto",
+                          width: "100%",
+                        }}
+                      >
+                        {filteredUsersTN.map((user) => (
+                          <a
+                            href="#"
+                            key={user.id}
+                            className="list-group-item list-group-item-action"
+                            onClick={() =>
+                              handleMentionSelectTN(user.fullName, user.userID)
+                            }
+                          >
+                            {user.fullName}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
+              <div className="row">
                 <div className="form-group col-6 m-0 p-0 pe-1">
                   <label htmlFor="startDate">Ngày bắt đầu</label>
                   <div className="tgDate">
@@ -508,7 +670,7 @@ const AddTask = ({
             </div>
             <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
               <div className="row">
-                <div className="form-group col-12 m-0 p-0 ">
+                <div className="form-group col-6 m-0 p-0 pe-1">
                   <label htmlFor="startDate">Ngày thông báo deadline</label>
                   <div className="tgDate">
                     {" "}
@@ -524,6 +686,20 @@ const AddTask = ({
                       class="fa-duotone fa-solid fa-calendar-days"
                     ></i>
                   </div>
+                </div>
+                <div className="form-group col-6 m-0 p-0 ps-1">
+                  <label htmlFor="startDate">Ưu tiên</label>
+                  <select
+                    style={{ border: "1px solid #DEE2E6" }}
+                    value={isUuTien}
+                    onChange={(e) => setUuTien(e.currentTarget.value)}
+                    id="select2_uutien"
+                    className="select_uutien"
+                  >
+                    <option value="2">Cao</option>
+                    <option value="1">Trung bình</option>
+                    <option value="0">Thấp</option>
+                  </select>
                 </div>
               </div>
             </div>

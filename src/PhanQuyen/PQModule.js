@@ -9,8 +9,8 @@ const PQModule = ({ isData, onchange }) => {
   return (
     <div className="grid-table w-100" style={{ padding: "12px" }}>
       <div className="itemtableNamePQ">
-        <div className="item-table">
-          <table className="task-table">
+        <div className="item-table position-relative">
+          <table className="task-table ">
             <thead>
               <tr>
                 <td className="text-center theadSpan">

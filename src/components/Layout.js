@@ -9,6 +9,29 @@ const Layout = () => {
   const { title, icon, iconAdd } = useContext(TitleContext);
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isfullName, setfullName] = useState(localStorage.getItem("fullName"));
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const [isPQDuyen, setPQDuyen] = useState(false);
+  const [isPagePQ, setPagePQ] = useState(false);
+
+  const getPhanQuyen = async () => {
+    const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const dataPQ = data.lstUserPage.filter((x) => x.pageID === "R");
+      if (dataPQ[0].isChecked == 1) setPagePQ(true);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getPhanQuyen();
+  }, [isUser, isPQDuyen]);
+
   useEffect(() => {
     const handleResize = () => {
       setIsCollapsed(window.innerWidth <= 800);
@@ -116,7 +139,7 @@ const Layout = () => {
               </div>
             </Link>
           </div>
-          {isIDLogin.toLowerCase() === "admin" && (
+          {isPagePQ && (
             <div className="nav-item">
               <Link
                 className="nav-link text-white d-flex justify-content-between align-items-center"

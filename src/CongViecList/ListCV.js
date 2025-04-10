@@ -6,6 +6,7 @@ import SelectTable from "./select2GridTable";
 import GridWork from "../CongViecList/GridCV";
 import DateRangePicker from "../Date/DateRangePicker";
 import ButtonDelete from "../ButtonDelete/ButtonDelete";
+import Select2Ticket from "./select2Ticket";
 import Select2NV from "./select2NhanVien";
 import "../CongViecList/ListCV.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -28,6 +29,7 @@ const ListCV = () => {
   const [isDataNV, setDataNV] = useState([]);
   const [isDataNVTT, setDataNVTt] = useState([]);
   const [data, setData] = useState([]);
+  const [isdataF, setDataF] = useState([]);
   const [isdataFilter, setdataFilter] = useState([]);
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
   const [showPopup, setShowPopup] = useState(false);
@@ -48,6 +50,12 @@ const ListCV = () => {
   const [IsDelete, setDelete] = useState(null);
   const [isEdit, setEdit] = useState("");
   const [isNhanVienValue, setNhanVienValue] = useState("All");
+  const [isTicketValue, setTicketValue] = useState("All");
+  const [isTicket, setTicket] = useState([]);
+
+  const [isRole, setRole] = useState("");
+  const [isopera, setopera] = useState(true);
+  const [isLeader, setLeader] = useState("");
 
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
@@ -58,8 +66,23 @@ const ListCV = () => {
       }
 
       const data = await response.json();
-      const dataPQ = data.lstUserRole.filter((x) => x.roleID == 1);
-      if (dataPQ[0].isChecked == 1) setPQDuyen(true);
+
+      const priorityRoles = data.lstUserRole.map((item) => item.roleID);
+      const currentHighestRole =
+        priorityRoles.find((roleID) =>
+          data.lstUserRole.some(
+            (item) => item.roleID === roleID && item.isChecked === 1
+          )
+        ) || "Member";
+      if (currentHighestRole === "Leader") {
+        const selectedDepCodes = data.lstUserDep
+          .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
+          .map((dep) => dep.dep_Code) // Lấy mã phòng ban
+          .join(",");
+        setLeader(selectedDepCodes);
+      }
+      currentHighestRole === "Member" && setopera(false);
+      setRole(currentHighestRole);
     } catch (error) {
       console.error(error.message);
     }
@@ -77,9 +100,12 @@ const ListCV = () => {
   const handleNVChange = async (value) => {
     setNhanVienValue(value);
   };
+  const onChangeMaTicket = async (value) => {
+    setTicketValue(value);
+  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    isRole != "" && fetchData();
+  }, [isRole]);
   const fetchData = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=Get`;
     try {
@@ -91,8 +117,13 @@ const ListCV = () => {
       const staffData = await response.json();
       let filteredData = staffData;
       setDataNVTt(staffData);
-      isIDLogin.toLowerCase() != "admin" &&
+
+      isRole !== "Administrator" &&
+        isRole !== "Leader" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
+
+      isRole === "Leader" &&
+        (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
 
       setDataNV(filteredData);
     } catch (error) {
@@ -136,7 +167,7 @@ const ListCV = () => {
   }, [showPopup]);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin.toLowerCase() != "admin" &&
+    isRole !== "Administrator" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -154,9 +185,7 @@ const ListCV = () => {
     getPhongBan();
   }, []);
   const getData = async () => {
-    // console.log(dateRange.from);
-    // console.log(dateRange.to);
-    const url = `${process.env.REACT_APP_URL_API}Work/Get?action=Get`;
+    const url = `${process.env.REACT_APP_URL_API}Work/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -164,7 +193,6 @@ const ListCV = () => {
       }
 
       const getTable = await response.json();
-
       setData(getTable);
     } catch (error) {
       console.error(error.message);
@@ -175,16 +203,36 @@ const ListCV = () => {
   }, [isCheckAdd, dateRange]);
   useEffect(() => {
     let filteredData = data;
-    if (isIDLogin.toLowerCase() != "admin") {
-      filteredData = data.filter((x) => {
+    if (isRole === "") return;
+    isRole !== "Administrator" &&
+      (filteredData = data.filter((x) => {
         return (
           x.idImplementer?.includes(isUser) ||
-          (isPQDuyen && x.idRequester?.includes(isUser))
+          (isRole === "Leader" && x.idRequester?.includes(isUser)) ||
+          x.idResponsible?.includes(isUser)
         );
-      });
+      }));
+    setdataFilter(filteredData);
+    setDataF(filteredData);
+  }, [data, isRole]);
+  useEffect(() => {
+    let ticketFilter = isdataF;
+    if (isPhongBanValue != "All") {
+      ticketFilter = ticketFilter.filter((x) => x.dep_Code == isPhongBanValue);
     }
-    setdataFilter(filteredData); // Cập nhật state với mảng đã lọc
-  }, [data, isPQDuyen, isIDLogin, isUser]);
+    const dataticket = Array.from(
+      new Map(
+        ticketFilter.map((item) => [
+          `${item.ticket}`,
+          {
+            ticket: item.ticket,
+          },
+        ])
+      ).values()
+    );
+    setTicket(dataticket);
+  }, [isPhongBanValue, isdataF]);
+
   const handleAdd = () => {
     setTitle(` Thêm công việc mới`);
     setIcon(<i className="fa-solid fa-plus icontitle"></i>);
@@ -199,12 +247,15 @@ const ListCV = () => {
     }
   }, [IsClickCTH, IsClickTH, IsClickHT, IsClickQH]);
   useEffect(() => {
-    let dataPB = data;
+    let dataPB = isdataF;
     let quatrinh = IsQuaTrinh;
     const valueDuan = IsDuAn;
 
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
+
+    if (isTicketValue != "All")
+      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
 
     if (isNhanVienValue !== "All")
       dataPB = dataPB.filter(
@@ -219,9 +270,9 @@ const ListCV = () => {
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
     setdataFilter(dataPB);
-  }, [isPhongBanValue]);
+  }, [isPhongBanValue, isdataF]);
   useEffect(() => {
-    let dataPB = data;
+    let dataPB = isdataF;
     let quatrinh = IsQuaTrinh;
     const valueDuan = IsDuAn;
     if (isPhongBanValue != "All")
@@ -236,19 +287,23 @@ const ListCV = () => {
       dataPB = dataPB.filter(
         (x) =>
           x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue)
+          x.idRequester?.includes(isNhanVienValue) ||
+          x.idResponsible?.includes(isNhanVienValue)
       );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
     setdataFilter(dataPB);
-  }, [IsQuaTrinh]);
+  }, [IsQuaTrinh, isdataF]);
   useEffect(() => {
-    let dataPB = data;
+    let dataPB = isdataF;
     let quatrinh = IsQuaTrinh;
     const valueDuan = IsDuAn;
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
+
+    if (isTicketValue != "All")
+      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
@@ -256,7 +311,8 @@ const ListCV = () => {
       dataPB = dataPB.filter(
         (x) =>
           x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue)
+          x.idRequester?.includes(isNhanVienValue) ||
+          x.idResponsible?.includes(isNhanVienValue)
       );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
@@ -277,11 +333,14 @@ const ListCV = () => {
     setWorkItem(dataEdit);
   };
   useEffect(() => {
-    let dataPB = data;
+    let dataPB = isdataF;
     let quatrinh = IsQuaTrinh;
     const valueDuan = IsDuAn;
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
+
+    if (isTicketValue != "All")
+      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
 
     if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
 
@@ -289,13 +348,39 @@ const ListCV = () => {
       dataPB = dataPB.filter(
         (x) =>
           x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue)
+          x.idRequester?.includes(isNhanVienValue) ||
+          x.idResponsible?.includes(isNhanVienValue)
       );
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
     setdataFilter(dataPB);
-  }, [isNhanVienValue]);
+  }, [isNhanVienValue, isdataF]);
+  useEffect(() => {
+    let dataPB = isdataF;
+    let quatrinh = IsQuaTrinh;
+    const valueDuan = IsDuAn;
+    if (isPhongBanValue != "All")
+      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
+
+    if (isTicketValue != "All")
+      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
+
+    if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
+
+    if (isNhanVienValue !== "All")
+      dataPB = dataPB.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue) ||
+          x.idResponsible?.includes(isNhanVienValue)
+      );
+
+    dataPB = dataPB.filter((x) =>
+      x.workName.toLowerCase().includes(valueDuan.toLowerCase())
+    );
+    setdataFilter(dataPB);
+  }, [isTicketValue, isdataF]);
   return (
     <div className="">
       {/* <div className="addtask addtaskleave d-flex">
@@ -325,8 +410,8 @@ const ListCV = () => {
           </span>
         </div>
       </div> */}
-      <div>
-        <div className="tab-table">
+      <div className="d-flex">
+        <div className="tab-table w-100">
           <div
             onClick={() => setTab(false)}
             className={`item-table ${!isTab ? "active" : ""}`}
@@ -343,6 +428,24 @@ const ListCV = () => {
             <i class="fa-solid fa-table"></i>
             Lưới
           </div>
+        </div>
+        <div
+          style={{ display: "flex", whiteSpace: "nowrap", marginRight: "5px" }}
+        >
+          {isRole !== "Member" && (
+            <>
+              <button
+                style={{ marginTop: "2px" }}
+                onClick={() => {
+                  setShowPopup(!showPopup);
+                  setWorkItem([]);
+                }}
+                className="btn btn-primary mr-2"
+              >
+                <i className="fas fa-plus"></i> Thêm công việc
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div
@@ -362,7 +465,13 @@ const ListCV = () => {
                 onPhongBanChange={handlePBChange}
               />
             </div>
-
+            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
+              <label>Mã ticket </label>{" "}
+              <Select2Ticket
+                dataSelect2={isTicket}
+                onChangeMaTicket={onChangeMaTicket}
+              />
+            </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1 col_search ItemCV">
               <label>Quá trình </label>
               <select
@@ -394,33 +503,6 @@ const ListCV = () => {
                 onNhanVienChange={handleNVChange}
               />
             </div>
-            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV itemadd">
-              {isPQDuyen && (
-                <>
-                  {!showPopup && (
-                    <button
-                      style={{ marginTop: "26px" }}
-                      onClick={() => {
-                        setShowPopup(!showPopup);
-                        setWorkItem([]);
-                      }}
-                      className="btn btn-primary mr-2"
-                    >
-                      <i className="fas fa-plus"></i> Add
-                    </button>
-                  )}
-                  {showPopup && (
-                    <button
-                      style={{ marginTop: "26px" }}
-                      onClick={() => setShowPopup(!showPopup)}
-                      className="btn btn-danger"
-                    >
-                      <i className="fas fa-times"></i> Cancel
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -431,7 +513,7 @@ const ListCV = () => {
             setIDDelete={setDelete}
             title="Chưa thực hiện"
             status={1}
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             setCheckAdd={setCheckAdd}
             tasks={isdataFilter.filter((task) => task.status == 1)}
           />
@@ -439,7 +521,7 @@ const ListCV = () => {
             handleSetting={handleSetting}
             setIDDelete={setDelete}
             title="Đang thực hiện"
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             status={2}
             setCheckAdd={setCheckAdd}
             tasks={isdataFilter.filter((task) => task.status == 2)}
@@ -449,7 +531,7 @@ const ListCV = () => {
             setIDDelete={setDelete}
             title="Hoàn thành"
             status={3}
-            setPQDuyen={false}
+            setPQDuyen={isRole}
             setCheckAdd={setCheckAdd}
             tasks={isdataFilter.filter((task) => task.status == 3)}
           />
@@ -458,7 +540,7 @@ const ListCV = () => {
             setIDDelete={setDelete}
             title="Quá hạn"
             status={4}
-            setPQDuyen={isPQDuyen}
+            setPQDuyen={isRole}
             setCheckAdd={setCheckAdd}
             tasks={isdataFilter.filter((task) => task.status == 4)}
           />
@@ -470,7 +552,7 @@ const ListCV = () => {
           handleSetting={handleSetting}
           setIDDeleteColumn={setDelete}
           setCheckAdd={setCheckAdd}
-          setPQDuyen={isPQDuyen}
+          setPQDuyen={isRole}
         />
       </div>
       <Modal
@@ -489,6 +571,7 @@ const ListCV = () => {
             setDataAddTask={isWorkItem}
             setEdit={isEdit}
             setDataNV={isDataNVTT}
+            setRole={isRole}
           />
         </Modal.Body>
       </Modal>

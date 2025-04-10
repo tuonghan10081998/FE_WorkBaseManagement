@@ -166,7 +166,7 @@ const TaskColumn = ({
                       style={{ color: "#6ba323" }}
                       className="fa-solid fa-briefcase"
                     ></i>{" "}
-                    Công việc: {task.workName}
+                    {task.ticket} - {task.workName}
                   </p>
                 </div>
                 <div className="carticon position-relative">
@@ -180,7 +180,7 @@ const TaskColumn = ({
                     data-id={task.id}
                     className="popupsettingCart popupsettingCV"
                   >
-                    {setPQDuyen && status != 1 && (
+                    {task.statusHT !== "1" && setPQDuyen !== "Member" && (
                       <div data-id={task.id} onClick={(e) => handleShowHT(e)}>
                         <i className="fa-solid fa-street-view me-1"></i>
                         <span>Hoàn thành</span>
@@ -195,7 +195,7 @@ const TaskColumn = ({
                         <div>
                           <p class="duan" style="font-size: 17px;font-weight: bold;">
                             <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
-                            Công việc: ${task.workName}
+                            ${task.ticket} - ${task.workName}
                           </p>
 
                          <div class="task_item item_detail" style="gap: 2px;">
@@ -214,14 +214,22 @@ const TaskColumn = ({
                               </div>
                             </div>
                           </div>
-
+                           <div class="task_item item_detail" style="gap: 2px;">
+                            <div class="user-names">
+                              <div>
+                                <i style="color: #894141;
+                            font-size: 21px;" class="fa-solid fa-person-dress me-1"
+                         ></i> Trách nhiệm: ${task.responsible}
+                              </div>
+                            </div>
+                          </div>
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div class="user-names">
-                              <fiv>
+                              <div>
                                 <i style="color: #256A9D;"  class="fas fa-user me-1"></i> Thực hiện: ${
                                   task.implementer
                                 }
-                              </fiv>
+                              </div>
                             </div>
                           </div>
 
@@ -248,9 +256,10 @@ const TaskColumn = ({
                           </div>
                            <div class="task_item item_detail" style="gap: 2px;">
                             <div>
-                              <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : ${
+                              <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : 
+                              <div style="margin-left: 20px;">${
                                 task.note || ""
-                              }
+                              }</div> 
                             </div>
                           </div>
                         </div>
@@ -264,7 +273,7 @@ const TaskColumn = ({
                       <span> Xem </span>
                     </div>
 
-                    {setPQDuyen && (
+                    {setPQDuyen !== "Member" && (
                       <div
                         onClick={(e) => {
                           if (handleSetting) {
@@ -280,7 +289,7 @@ const TaskColumn = ({
                         <span>Sửa</span>
                       </div>
                     )}
-                    {isIDLogin.toLowerCase() == "admin" && (
+                    {setPQDuyen === "Administrator" && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {
@@ -301,6 +310,7 @@ const TaskColumn = ({
                   </div>
                 </div>
               </div>
+
               <p className="task-title" style={{ fontSize: "14px" }}>
                 <i
                   className="fa-solid fa-splotch me-1"
@@ -323,6 +333,17 @@ const TaskColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <div className="user-names">
                   <p>
+                    <i
+                      style={{ color: "rgb(116 117 133)", fontSize: "18px" }}
+                      class="fa-solid fa-person-dress me-1"
+                    ></i>
+                    Trách nhiệm: {task.responsible}
+                  </p>
+                </div>
+              </div>
+              <div className="task_item" style={{ gap: "2px" }}>
+                <div className="user-names">
+                  <p>
                     <i className="fas fa-user me-1"></i>Thực hiện:{" "}
                     {task.implementer}
                   </p>
@@ -331,7 +352,9 @@ const TaskColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <p>
                   <i className="fas fa-clock "></i> Ngày:{" "}
-                  {`${task.fromDate} - ${task.toDate}`}
+                  {`${moment(task.fromDate, "DD/MM/YYYY").format(
+                    "DD/MM"
+                  )} - ${moment(task.toDate, "DD/MM/YYYY").format("DD/MM")}`}
                 </p>
               </div>
             </div>
