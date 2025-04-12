@@ -6,14 +6,26 @@ const KPIFullMonth = ({ setData }) => {
     let totalTarget = 0;
 
     months.forEach((month) => {
-      const [achieved, target] = month.split("/").map(Number);
+      const monthSplit = month.split("@")[0];
+      const [achieved, target] = monthSplit.split("/").map(Number);
       totalAchieved += achieved;
       totalTarget += target;
     });
 
     return [totalAchieved, totalTarget];
   };
+  const handleColorT = (value) => {
+    const monthSplit = value.split("@");
+    const [first, second] = monthSplit[0].split("/").map(Number);
+    const color = monthSplit[1] == 0 ? "red" : "green";
 
+    return (
+      <span>
+        <span style={{ color, fontWeight: "600" }}>{first}</span>
+        <span style={{ color, fontWeight: "600" }}>/{second}</span>
+      </span>
+    );
+  };
   // Hàm xử lý hành động
   const handleViewDetails = (id) => {
     alert("Xem chi tiết nhân viên có ID: " + id);
@@ -79,18 +91,18 @@ const KPIFullMonth = ({ setData }) => {
                   <td>{employee.fullname}</td>
                   <td>{employee.dep_Name}</td>
                   <td>{employee.year}</td>
-                  <td>{employee.month1}</td>
-                  <td>{employee.month2}</td>
-                  <td>{employee.month3}</td>
-                  <td>{employee.month4}</td>
-                  <td>{employee.month5}</td>
-                  <td>{employee.month6}</td>
-                  <td>{employee.month7}</td>
-                  <td>{employee.month8}</td>
-                  <td>{employee.month9}</td>
-                  <td>{employee.month10}</td>
-                  <td>{employee.month11}</td>
-                  <td>{employee.month12}</td>
+                  <td>{handleColorT(employee.month1)}</td>
+                  <td>{handleColorT(employee.month2)}</td>
+                  <td>{handleColorT(employee.month3)}</td>
+                  <td>{handleColorT(employee.month4)}</td>
+                  <td>{handleColorT(employee.month5)}</td>
+                  <td>{handleColorT(employee.month6)}</td>
+                  <td>{handleColorT(employee.month7)}</td>
+                  <td>{handleColorT(employee.month8)}</td>
+                  <td>{handleColorT(employee.month9)}</td>
+                  <td>{handleColorT(employee.month10)}</td>
+                  <td>{handleColorT(employee.month11)}</td>
+                  <td>{handleColorT(employee.month12)}</td>
                   <td>{totalAchieved}</td>
                   <td>{totalTarget}</td>
                   {/* <td>

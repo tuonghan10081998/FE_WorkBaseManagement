@@ -92,8 +92,8 @@ const Leave = () => {
   }, [setTitle, setIcon]);
 
   useEffect(() => {
-    getPhongBan();
-  }, []);
+    isRole != "" && getPhongBan();
+  }, [isRole]);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
     isRole !== "Administrator" &&

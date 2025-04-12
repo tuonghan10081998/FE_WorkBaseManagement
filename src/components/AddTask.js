@@ -252,8 +252,8 @@ const AddTask = ({
     }
   };
   useEffect(() => {
-    getPhongBan();
-  }, []);
+    setRole != "" && getPhongBan();
+  }, [setRole]);
   const handleReturn = () => {
     setCheckTille(false);
     setCheckSave(false);

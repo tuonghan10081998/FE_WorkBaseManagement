@@ -1,131 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import KPIFullMonth from "./KPIFullMonth";
 import KPIMonth from "./KPIMonth";
+import KPISetting from "./CreateKPI";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SelectTable from "../CongViecList/select2GridTable";
 import { TitleContext } from "../components/TitleContext";
 import Select2NV from "../CongViecList/select2NhanVien";
+import { Modal, Button } from "react-bootstrap";
 
-const isData = [
-  {
-    id: 1,
-    userID: "A001",
-    fullname: "Nguyễn Văn A",
-    dep_Name: "Kinh Doanh",
-    year: 2023,
-    month1: "75/90",
-    month2: "80/90",
-    month3: "85/90",
-    month4: "90/90",
-    month5: "70/80",
-    month6: "85/90",
-    month7: "90/90",
-    month8: "80/90",
-    month9: "88/90",
-    month10: "85/90",
-    month11: "95/90",
-    month12: "88/90",
-  },
-  {
-    id: 2,
-    userID: "A002",
-    fullname: "Trần Thị B",
-    dep_Name: "Nhân Sự",
-    year: 2023,
-    month1: "70/80",
-    month2: "75/80",
-    month3: "80/85",
-    month4: "85/90",
-    month5: "65/75",
-    month6: "78/80",
-    month7: "80/85",
-    month8: "75/80",
-    month9: "82/85",
-    month10: "70/80",
-    month11: "85/90",
-    month12: "75/80",
-  },
-];
-const isDataMonth = [
-  {
-    id: 1,
-    fullname: "Nguyễn Văn A",
-    dep_Name: "Kinh Doanh",
-    target: "90",
-    achieved: "75",
-  },
-  {
-    id: 2,
-    fullname: "Trần Thị B",
-    dep_Name: "Nhân Sự",
-    target: "80",
-    achieved: "70",
-  },
-  {
-    id: 3,
-    fullname: "Lê Minh C",
-    dep_Name: "Marketing",
-    target: "100",
-    achieved: "95",
-  },
-  {
-    id: 4,
-    fullname: "Phạm Thị D",
-    dep_Name: "Kinh Doanh",
-    target: "85",
-    achieved: "80",
-  },
-  {
-    id: 5,
-    fullname: "Vũ Hoàng E",
-    dep_Name: "Kế Toán",
-    target: "95",
-    achieved: "90",
-  },
-  {
-    id: 6,
-    fullname: "Ngô Minh F",
-    dep_Name: "Nhân Sự",
-    target: "88",
-    achieved: "85",
-  },
-  {
-    id: 7,
-    fullname: "Bùi Thị G",
-    dep_Name: "Marketing",
-    target: "92",
-    achieved: "90",
-  },
-  {
-    id: 8,
-    fullname: "Đặng Hoàng H",
-    dep_Name: "Kinh Doanh",
-    target: "80",
-    achieved: "70",
-  },
-  {
-    id: 9,
-    fullname: "Lê Thị I",
-    dep_Name: "Kế Toán",
-    target: "100",
-    achieved: "98",
-  },
-  {
-    id: 10,
-    fullname: "Trần Minh J",
-    dep_Name: "Marketing",
-    target: "95",
-    achieved: "93",
-  },
-  {
-    id: 11,
-    fullname: "Nguyễn Văn K",
-    dep_Name: "Kinh Doanh",
-    target: "100",
-    achieved: "20",
-  },
-];
 const KPI = () => {
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isFullName, setFullName] = useState(localStorage.getItem("fullName"));
@@ -139,16 +22,59 @@ const KPI = () => {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const [isData, setData] = useState([]);
+  const [isCheckAddFM, setCheckAddFM] = useState(false);
+  const [isCheckAddM, setCheckAddM] = useState(false);
   const [isPhongBan, setPhongBan] = useState(null);
-  const [isPhongBanValue, setPhongBanValue] = useState("All");
+  const [isPhongBanValue, setPhongBanValue] = useState("");
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
   const [IsNhanVienValue, setNhanVienValue] = useState("");
   const [isNhanVien, setNhanVien] = useState([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [showPopup, setshowPopup] = useState(false);
   const [isDataNV, setDataNV] = useState([]);
+  const [isDataNVTT, setDataNVTT] = useState([]);
   const [isTab, setTab] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [isEditNV, setEditNV] = useState("");
+  const [isRole, setRole] = useState("");
+  const [isopera, setopera] = useState(true);
+  const [isLeader, setLeader] = useState("");
+  const [isCheckNV, setCheckNV] = useState(false);
+  const [isDataMonth, setDataMonth] = useState([]);
+  const getPhanQuyen = async () => {
+    const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const priorityRoles = data.lstUserRole.map((item) => item.roleID);
+      const currentHighestRole =
+        priorityRoles.find((roleID) =>
+          data.lstUserRole.some(
+            (item) => item.roleID === roleID && item.isChecked === 1
+          )
+        ) || "Member";
+      if (currentHighestRole === "Leader") {
+        const selectedDepCodes = data.lstUserDep
+          .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
+          .map((dep) => dep.dep_Code) // Lấy mã phòng ban
+          .join(",");
+        setLeader(selectedDepCodes);
+      }
+      currentHighestRole === "Member" && setopera(false);
+      setRole(currentHighestRole);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getPhanQuyen();
+  }, [isUser]);
 
   useEffect(() => {
     setTitle(`KPI `);
@@ -164,15 +90,15 @@ const KPI = () => {
     setNhanVienValue(value);
   };
 
-  const startYear = 2022;
+  const startYear = currentYear - 2;
   const years = [];
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  for (let year = startYear; year <= currentYear; year++) {
+  for (let year = startYear; year <= currentYear + 1; year++) {
     years.push(year);
   }
   useEffect(() => {
-    fetchData();
-  }, []);
+    isRole != "" && fetchData();
+  }, [isRole]);
   const fetchData = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=Get`;
     try {
@@ -183,8 +109,14 @@ const KPI = () => {
 
       const staffData = await response.json();
       let filteredData = staffData;
-      isIDLogin != "VNManh" &&
+      setDataNVTT(filteredData);
+      isRole !== "Administrator" &&
+        isRole !== "Leader" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
+
+      isRole === "Leader" &&
+        (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
+
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -213,11 +145,12 @@ const KPI = () => {
     }
   }, [isPhongBanValue, isDataNV]);
   useEffect(() => {
-    getPhongBan();
-  }, []);
+    isRole != "" && getPhongBan();
+  }, [isRole]);
+
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
-    isIDLogin != "VNManh" &&
+    isRole !== "Administrator" &&
       (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
     try {
       const response = await fetch(url);
@@ -227,10 +160,61 @@ const KPI = () => {
 
       const data = await response.json();
       setPhongBan(data);
+      setPhongBanValue(data[0].dep_Code);
     } catch (error) {
       console.error(error.message);
     }
   };
+  useEffect(() => {
+    console.log(isEditNV);
+  }, [isEditNV, isCheckNV]);
+  const handleClose = () => {
+    setshowPopup(!showPopup);
+  };
+  const GetResult = async () => {
+    const phongbanResult = isPhongBanValue;
+    const yearResult = selectedYear;
+    const monthResult = selectedMonth;
+    if (phongbanResult == "" || selectedYear == "" || selectedMonth == "")
+      return;
+    var url = `${process.env.REACT_APP_URL_API}KPI/GetResult?action=GetResult&para1=${phongbanResult}&para2=${monthResult}&para3=${yearResult}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setDataMonth(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    GetResult();
+  }, [isPhongBanValue, selectedYear, selectedMonth, isCheckAddM]);
+  const GetTotalSetting = async () => {
+    const phongbanResult = isPhongBanValue;
+    const yearResult = selectedYear;
+    const monthResult = selectedMonth;
+    if (phongbanResult == "" || selectedYear == "" || selectedMonth == "")
+      return;
+    var url = `${process.env.REACT_APP_URL_API}KPI/GetTotalResult?action=GetTotalResult&para1=${phongbanResult}&para2=0&para3=${yearResult}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    GetTotalSetting();
+  }, [isPhongBanValue, selectedYear, isCheckAddFM]);
   return (
     <div>
       <div>
@@ -260,8 +244,12 @@ const KPI = () => {
       >
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
-            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0  col_search ItemCV">
-              <label>Chọn năm </label>{" "}
+            <div
+              className={`${
+                !isTab ? "col-6" : "col-3"
+              }  col-md-3 col-lg-2 col-xl-2 m-0  col_search ItemCV`}
+            >
+              <label style={{ whiteSpace: "nowrap" }}>Chọn năm </label>{" "}
               <select
                 className="select_uutien select_year"
                 value={selectedYear}
@@ -275,11 +263,11 @@ const KPI = () => {
               </select>
             </div>
             <div
-              className={`col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1 col_search ItemCV item-tab ${
+              className={`col-3 col-md-3 col-lg-2 col-xl-2 m-0 px-1 col_search ItemCV item-tab ${
                 !isTab ? "active" : ""
               }`}
             >
-              <label>Chọn tháng </label>{" "}
+              <label style={{ whiteSpace: "nowrap" }}>Chọn tháng </label>{" "}
               <select
                 className="select_uutien select_year"
                 value={selectedMonth}
@@ -295,6 +283,7 @@ const KPI = () => {
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
               <label>Chọn phòng ban </label>{" "}
               <SelectTable
+                setCheckAll={false}
                 dataSelect2={isPhongBan}
                 onPhongBanChange={handlePBChange}
               />
@@ -307,6 +296,23 @@ const KPI = () => {
                 onNhanVienChange={handleNVChange}
               />
             </div>
+            <div
+              className={`${
+                !isTab
+                  ? "col-6 col-md-6 col-lg-4 col-xl-6"
+                  : "col-6 col-md-6 col-lg-2 col-xl-4"
+              }  m-0 px-1  col_search ItemCV itemadd`}
+            >
+              {isRole === "Administrator" && (
+                <button
+                  onClick={() => setshowPopup(true)}
+                  style={{ marginTop: "26px" }}
+                  class="btn btn-primary mr-2"
+                >
+                  <i class="fas fa-plus"></i> Cài đặt KPI
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -315,8 +321,32 @@ const KPI = () => {
       </div>
       <div className={`item-tab ${!isTab ? "active" : ""}`}>
         {" "}
-        <KPIMonth setDataMonth={isDataMonth} />
+        <KPIMonth
+          setPQ={isRole}
+          setCheckAddM={setCheckAddM}
+          setDataMonth={isDataMonth}
+        />
       </div>
+      <Modal
+        show={showPopup}
+        onHide={handleClose}
+        dialogClassName="modal-dialog-centered"
+        aria-labelledby="popupModalHeader"
+        backdrop="static" // Ngăn không cho modal đóng khi click ngoài
+        keyboard={false}
+        className="popupModalCreateLeave"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="popupModalHeader">Cài đặt thông số KPI</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <KPISetting
+            setshowPopup={setshowPopup}
+            setCheckAddFM={setCheckAddFM}
+            setRole={isRole}
+          />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

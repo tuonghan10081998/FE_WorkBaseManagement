@@ -183,8 +183,8 @@ const Project = () => {
     }
   };
   useEffect(() => {
-    getPhongBan();
-  }, []);
+    isRole != "" && getPhongBan();
+  }, [isRole]);
   const getData = async () => {
     const url = `${process.env.REACT_APP_URL_API}Task/Get?action=GEt&Para1=${dateRange.from}&Para2=${dateRange.to}`;
     try {

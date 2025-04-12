@@ -27,7 +27,7 @@ const ListCV = () => {
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
   });
   const [isDataNV, setDataNV] = useState([]);
-  const [isDataNVTT, setDataNVTt] = useState([]);
+  const [isDataNVTT, setDataNVTT] = useState([]);
   const [data, setData] = useState([]);
   const [isdataF, setDataF] = useState([]);
   const [isdataFilter, setdataFilter] = useState([]);
@@ -88,8 +88,8 @@ const ListCV = () => {
     }
   };
   useEffect(() => {
-    getPhanQuyen();
-  }, [isUser, isPQDuyen]);
+    isUser != "" && getPhanQuyen();
+  }, []);
 
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
@@ -116,7 +116,7 @@ const ListCV = () => {
 
       const staffData = await response.json();
       let filteredData = staffData;
-      setDataNVTt(staffData);
+      setDataNVTT(staffData);
 
       isRole !== "Administrator" &&
         isRole !== "Leader" &&
@@ -182,8 +182,8 @@ const ListCV = () => {
     }
   };
   useEffect(() => {
-    getPhongBan();
-  }, []);
+    isRole != "" && getPhongBan();
+  }, [isRole]);
   const getData = async () => {
     const url = `${process.env.REACT_APP_URL_API}Work/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
     try {

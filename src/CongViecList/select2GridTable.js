@@ -5,7 +5,7 @@ import "bootstrap/dist/js/bootstrap.js";
 import "select2/dist/css/select2.min.css";
 import "select2/dist/js/select2.min.js";
 
-const SelectTable = ({ dataSelect2, onPhongBanChange }) => {
+const SelectTable = ({ dataSelect2, onPhongBanChange, setCheckAll = true }) => {
   const selectRef = useRef(null);
   useEffect(() => {
     if (selectRef.current) {
@@ -36,7 +36,7 @@ const SelectTable = ({ dataSelect2, onPhongBanChange }) => {
           style={{ minWidth: "200px" }}
         >
           {" "}
-          <option value="All">Tất cả</option>
+          {setCheckAll && <option value="All">Tất cả</option>}
           {dataSelect2?.map((item) => (
             <option key={item.dep_Code} value={item.dep_Code}>
               {item.dep_Name}

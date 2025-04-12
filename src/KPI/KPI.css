@@ -58,3 +58,15 @@ tbody {
 .btn-achieved {
   color: #dc3545; /* Màu đỏ */
 }
+.select_KPIPB .select2-container .select2-selection--single {
+  justify-content: center !important;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Loại bỏ giao diện mặc định */
+  margin: 0; /* Loại bỏ khoảng cách */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Ẩn mũi tên trong Firefox */
+}

@@ -1,36 +1,67 @@
 import React, { useState, useEffect, useContext } from "react";
+import KPIDetailResult from "./ResultDetail";
 import "./KPI.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-const KPIMonth = ({ setDataMonth }) => {
-  const calculateProgress = (achieved, target) => {
-    return (parseFloat(achieved) / parseFloat(target)) * 100;
-  };
-
+import KPIResult from "./KPIResult";
+import { Modal, Button } from "react-bootstrap";
+const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   // Lưu trữ dữ liệu bảng
   const [sortedEmployees, setSortedEmployees] = useState([]);
-
+  const [showPopup, setshowPopup] = useState(false);
+  const [showPopupDetail, setshowPopupDetail] = useState(false);
+  const [isIDData, setIDData] = useState("");
+  const [isMonth, setMonth] = useState("");
+  const [isYear, setYear] = useState("");
+  const [isUserID, setUserID] = useState("");
+  const [isDetailResult, setDetailSesult] = useState([]);
+  const [isFullName, setFullName] = useState([]);
+  const [isAddM, setAddM] = useState(false);
+  useEffect(() => {
+    setCheckAddM((x) => !x);
+  }, [isAddM]);
+  const handleClose = () => {
+    setshowPopup(false);
+  };
+  const handleCloseDetail = () => {
+    setshowPopupDetail(false);
+  };
   // Sắp xếp dữ liệu khi component được tải
   useEffect(() => {
-    const sortedData = [...setDataMonth].sort(
-      (a, b) =>
-        calculateProgress(b.achieved, b.target) -
-        calculateProgress(a.achieved, a.target)
-    );
-    setSortedEmployees(sortedData);
-  }, []);
+    if (setDataMonth == "") return;
+    setSortedEmployees(setDataMonth);
+  }, [setDataMonth]);
 
   // Xử lý các hành động
-  const viewDetails = (id) => {
-    alert(`Xem chi tiết nhân viên có ID: ${id}`);
-  };
-
-  const enterTargetKPI = (id) => {
-    alert(`Nhập KPI Mục Tiêu cho nhân viên có ID: ${id}`);
-  };
 
   const enterAchievedKPI = (id) => {
-    alert(`Nhập KPI Thực Hiện cho nhân viên có ID: ${id}`);
+    setIDData(id);
+    setshowPopup(true);
   };
+  const enterXemDetail = (id, year, month, fullName) => {
+    setUserID(id);
+    setMonth(month);
+    setYear(year);
+    setFullName(fullName);
+    setshowPopupDetail(true);
+  };
+  const GetDetailResult = async () => {
+    var url = `${process.env.REACT_APP_URL_API}KPI/GetResult?action=GetDetailResult&para1=${isUserID}&para2=${isMonth}&para3=${isYear}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setDetailSesult(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    isUserID && GetDetailResult();
+  }, [isUserID, isAddM]);
   return (
     <div className="itemtableName">
       <div className="item-table">
@@ -40,27 +71,24 @@ const KPIMonth = ({ setDataMonth }) => {
               <td scope="col">Hạng</td>
               <td scope="col">Nhân viên</td>
               <td scope="col">Bộ phận</td>
-              <td scope="col">Thực hiện</td>
               <td scope="col">Mục tiêu</td>
+              <td scope="col">Thực hiện</td>
               <td scope="col">Tiến độ</td>
-              <td style={{ width: "150px" }} scope="col">
+              <td style={{ width: "150px", textAlign: "center" }} scope="col">
                 Hành động
               </td>
             </tr>
           </thead>
           <tbody>
             {sortedEmployees.map((employee, index) => {
-              const progress = calculateProgress(
-                employee.achieved,
-                employee.target
-              );
+              const progress = employee.percentRate;
               return (
                 <tr key={employee.id}>
                   <td>{index + 1}</td>
-                  <td>{employee.fullname}</td>
+                  <td>{employee.fullName}</td>
                   <td>{employee.dep_Name}</td>
-                  <td>{employee.achieved}</td>
-                  <td>{employee.target}</td>
+                  <td>{employee.kpi}</td>
+                  <td>{employee.result}</td>
                   <td>
                     <div className="mb-2">
                       <div className="text-muted small">
@@ -83,19 +111,31 @@ const KPIMonth = ({ setDataMonth }) => {
                     </div>
                   </td>
                   <td>
-                    <div className="d-flex justify-content-start">
-                      <button
-                        className="btn btn-target btn-icon mx-1"
-                        onClick={() => enterTargetKPI(employee.id)}
-                      >
-                        <i className="fas fa-bullseye"></i>
-                      </button>
-                      <button
-                        className="btn btn-achieved btn-icon mx-1"
-                        onClick={() => enterAchievedKPI(employee.id)}
-                      >
-                        <i className="fas fa-tasks"></i>
-                      </button>
+                    <div className="d-flex justify-content-center">
+                      {(setPQ === "Administrator" ||
+                        employee.userID === isUser) && (
+                        <button
+                          className="btn btn-view btn-icon mx-1"
+                          onClick={() =>
+                            enterXemDetail(
+                              employee.userID,
+                              employee.year,
+                              employee.month,
+                              employee.fullName
+                            )
+                          }
+                        >
+                          <i className="fas fa-eye"></i>
+                        </button>
+                      )}
+                      {employee.userID === isUser && (
+                        <button
+                          className="btn btn-achieved btn-icon mx-1"
+                          onClick={() => enterAchievedKPI(employee.userID)}
+                        >
+                          <i className="fas fa-tasks"></i>
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -104,6 +144,51 @@ const KPIMonth = ({ setDataMonth }) => {
           </tbody>
         </table>
       </div>
+
+      <Modal
+        show={showPopup}
+        onHide={handleClose}
+        dialogClassName="modal-dialog-centered"
+        aria-labelledby="popupModalHeader"
+        backdrop="static" // Ngăn không cho modal đóng khi click ngoài
+        keyboard={false}
+        className="popupModalCreateLeave"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="popupModalHeader">Nhập KPI</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <KPIResult
+            setshowPopup={setshowPopup}
+            setData={sortedEmployees.filter((x) => x.userID == isIDData)}
+            setAddM={setAddM}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={showPopupDetail}
+        onHide={handleCloseDetail}
+        dialogClassName="modal-dialog-centered"
+        aria-labelledby="popupModalHeader"
+        backdrop="static" // Ngăn không cho modal đóng khi click ngoài
+        keyboard={false}
+        className="popupModalCreateLeave"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="popupModalHeader">Chi tiết KPI</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <KPIDetailResult
+            setshowPopup={setshowPopupDetail}
+            setData={isDetailResult}
+            setPQ={setPQ}
+            setFullName={isFullName}
+            setAddM={setAddM}
+            setMonth={isMonth}
+            setYear={isYear}
+          />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
