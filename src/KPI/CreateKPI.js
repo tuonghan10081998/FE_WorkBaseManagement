@@ -202,7 +202,9 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                   <table className="table table-bordered">
                     <thead>
                       <tr>
-                        <th style={{ fontSize: "14px" }}>Họ tên</th>
+                        <th style={{ fontSize: "14px", width: "200px" }}>
+                          Họ tên
+                        </th>
                         <th style={{ fontSize: "14px" }}>KPI</th>
                       </tr>
                     </thead>

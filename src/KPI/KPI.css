@@ -79,5 +79,12 @@ input[type="number"] {
   white-space: nowrap;
   padding: 8px;
 }
-
+#sidebar {
+  background-color: #0d3057 !important;
+}
 /* Container bao bọc text + tooltip */
+@media (max-width: 800px) {
+  .cardbody {
+    width: 100% !important  ;
+  }
+}

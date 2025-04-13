@@ -39,7 +39,7 @@
   .dashboardCard {
     width: 100vw !important;
   }
-  .card-body {
+  .dashboard .card-body {
     width: calc(100vw - 20px) !important;
   }
 }

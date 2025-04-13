@@ -96,6 +96,7 @@ img.bg-img {
   padding-bottom: 3px;
   border-bottom: 3px solid #1161ee;
   font-size: 23px;
+  white-space: nowrap;
 }
 a:not(.active) {
   cursor: inherit;
@@ -249,7 +250,7 @@ a:not(.active) {
 }
 @media screen and (max-width: 600px) {
   .container2 {
-    width: 480px;
+    width: 100%;
   }
 }
 .coin {

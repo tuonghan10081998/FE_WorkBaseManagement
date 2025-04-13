@@ -265,7 +265,7 @@ const KPI = () => {
           <div className="row  w-100 m-0 p-0" style={{}}>
             <div
               className={`${
-                isTab ? "col-6" : "col-3"
+                !isTab ? "col-6" : "col-6"
               }  col-md-3 col-lg-2 col-xl-2 m-0  col_search ItemCV`}
             >
               <label style={{ whiteSpace: "nowrap" }}>Chọn năm </label>{" "}
@@ -282,8 +282,8 @@ const KPI = () => {
               </select>
             </div>
             <div
-              className={`col-3 col-md-3 col-lg-2 col-xl-2 m-0 px-1 col_search ItemCV item-tab ${
-                !isTab ? "active" : ""
+              className={`col-6 col-md-3 col-lg-2 col-xl-2 m-0 px-1 col_search ItemCV item-tab ${
+                isTab ? "active" : ""
               }`}
             >
               <label style={{ whiteSpace: "nowrap" }}>Chọn tháng </label>{" "}
@@ -318,7 +318,7 @@ const KPI = () => {
             <div
               className={`${
                 !isTab
-                  ? "col-6 col-md-6 col-lg-4 col-xl-6"
+                  ? "col-12 col-md-12 col-lg-4 col-xl-6"
                   : "col-6 col-md-6 col-lg-2 col-xl-4"
               }  m-0 px-1  col_search ItemCV itemadd`}
             >

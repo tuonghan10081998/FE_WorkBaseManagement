@@ -472,7 +472,7 @@ const AddTask = ({
   return (
     <div className="">
       <div className="card">
-        <div className="card-body">
+        <div className="card-body cardbody">
           <div className="row headerDuAn">
             <div className="col-8 p-0 m-0">
               <h1
