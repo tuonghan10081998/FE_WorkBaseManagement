@@ -23,6 +23,7 @@ const KPI = () => {
   const currentMonth = new Date().getMonth() + 1;
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isData, setData] = useState([]);
+  const [isDataF, setDataF] = useState([]);
   const [isCheckAddFM, setCheckAddFM] = useState(false);
   const [isCheckAddM, setCheckAddM] = useState(false);
   const [isPhongBan, setPhongBan] = useState(null);
@@ -42,6 +43,7 @@ const KPI = () => {
   const [isLeader, setLeader] = useState("");
   const [isCheckNV, setCheckNV] = useState(false);
   const [isDataMonth, setDataMonth] = useState([]);
+  const [isDataMonthF, setDataMonthF] = useState([]);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -144,6 +146,7 @@ const KPI = () => {
       setNhanVien(nhanvienNew);
     }
   }, [isPhongBanValue, isDataNV]);
+
   useEffect(() => {
     isRole != "" && getPhongBan();
   }, [isRole]);
@@ -191,6 +194,13 @@ const KPI = () => {
     }
   };
   useEffect(() => {
+    var dataF = isDataMonth;
+    if (IsNhanVienValue !== "All")
+      dataF = dataF.filter((x) => x.userID === IsNhanVienValue);
+    setDataMonthF(dataF);
+  }, [isDataMonth, IsNhanVienValue]);
+
+  useEffect(() => {
     GetResult();
   }, [isPhongBanValue, selectedYear, selectedMonth, isCheckAddM, isCheckAddFM]);
   const GetTotalSetting = async () => {
@@ -212,6 +222,12 @@ const KPI = () => {
       console.error(error.message);
     }
   };
+  useEffect(() => {
+    var dataF = isData;
+    if (IsNhanVienValue !== "All")
+      dataF = dataF.filter((x) => x.userID === IsNhanVienValue);
+    setDataF(dataF);
+  }, [isData, IsNhanVienValue]);
   useEffect(() => {
     GetTotalSetting();
   }, [isPhongBanValue, selectedYear, isCheckAddFM, isCheckAddM]);
@@ -317,14 +333,14 @@ const KPI = () => {
         </div>
       </div>
       <div className={`item-tab ${isTab ? "active" : ""}`}>
-        <KPIFullMonth setData={isData} />
+        <KPIFullMonth setData={isDataF} />
       </div>
       <div className={`item-tab ${!isTab ? "active" : ""}`}>
         {" "}
         <KPIMonth
           setPQ={isRole}
           setCheckAddM={setCheckAddM}
-          setDataMonth={isDataMonth}
+          setDataMonth={isDataMonthF}
         />
       </div>
       <Modal

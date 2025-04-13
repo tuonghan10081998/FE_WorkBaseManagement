@@ -213,6 +213,30 @@ const Project = () => {
           x.idResponsible?.includes(isUser)
         );
       }));
+
+    if (isPhongBanValue != "All")
+      filteredData = filteredData.filter((x) =>
+        x.dep_Code?.includes(isPhongBanValue)
+      );
+    if (isTicketValue != "All")
+      filteredData = filteredData.filter((x) =>
+        x.ticket?.includes(isTicketValue)
+      );
+
+    if (IsQuaTrinh != 0)
+      filteredData = filteredData.filter((x) => x.status == IsQuaTrinh);
+
+    if (isNhanVienValue !== "All")
+      filteredData = filteredData.filter(
+        (x) =>
+          x.idImplementer?.includes(isNhanVienValue) ||
+          x.idRequester?.includes(isNhanVienValue) ||
+          x.idResponsible?.includes(isNhanVienValue)
+      );
+
+    filteredData = filteredData.filter((x) =>
+      x.taskName?.toLowerCase().includes(IsDuAn.toLowerCase())
+    );
     setdataFilter(filteredData);
     setDataF(filteredData);
   }, [data, isRole]);

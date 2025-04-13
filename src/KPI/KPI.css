@@ -70,3 +70,14 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield; /* Ẩn mũi tên trong Firefox */
 }
+.purchasetd {
+  position: relative;
+  max-width: 400;
+  min-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 8px;
+}
+
+/* Container bao bọc text + tooltip */

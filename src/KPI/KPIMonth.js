@@ -28,7 +28,6 @@ const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
   };
   // Sắp xếp dữ liệu khi component được tải
   useEffect(() => {
-    if (setDataMonth == "") return;
     setSortedEmployees(setDataMonth);
   }, [setDataMonth]);
 

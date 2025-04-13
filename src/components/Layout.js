@@ -153,6 +153,17 @@ const Layout = () => {
               </div>
             </Link>
           </div>
+          <div className="nav-item">
+            <Link
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              to="/layout/PurChase"
+            >
+              <div>
+                <i className="fas fa-fire text-lg"></i>
+                <span className="ms-2">Phiếu mua hàng</span>
+              </div>
+            </Link>
+          </div>
           {isPagePQ && (
             <div className="nav-item">
               <Link

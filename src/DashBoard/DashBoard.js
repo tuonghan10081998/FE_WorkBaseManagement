@@ -152,6 +152,7 @@ const Dashboard = () => {
       }
 
       const getTable = await response.json();
+      console.log(getTable.kpi);
       setKPI(getTable.kpi);
       setCongViec(getTable.works);
       setDuAn(getTable.task);

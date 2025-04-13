@@ -13,20 +13,20 @@ const KPIChart = ({ data }) => {
   const [mucTieuData, setMucTieuData] = useState([]);
 
   useEffect(() => {
-    if (!Array.isArray(data) || data.length === 0 || !data[0]) return;
-
-    const kpiData = data[0];
-
+    console.log(data);
+    if (data.length === 0) return;
+    // const kpiData = data[0];
     const newCategories = [];
     const newThucHienData = [];
     const newMucTieuData = [];
 
-    Object.keys(kpiData).forEach((key, index) => {
-      const [thucHien, mucTieu] = kpiData[key].split("/").map(Number);
+    Object.keys(data).forEach((key, index) => {
+      const [thucHien, mucTieu] = data[key].split("/").map(Number);
       newCategories.push(`Tháng ${index + 1}`);
       newThucHienData.push(thucHien);
       newMucTieuData.push(mucTieu);
     });
+    console.log(newCategories);
     setCategories(newCategories);
     setThucHienData(newThucHienData);
     setMucTieuData(newMucTieuData);

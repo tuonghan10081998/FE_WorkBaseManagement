@@ -186,6 +186,16 @@ const Leave = () => {
     isRole === "Leader" &&
       (filteredData = data.filter((x) => isDepCode?.includes(x.dep_Code)));
 
+    if (isPhongBanValue != "All")
+      filteredData = filteredData.filter((x) =>
+        x.dep_Code?.includes(isPhongBanValue)
+      );
+
+    if (IsNhanVienValue != "All")
+      filteredData = filteredData.filter((x) =>
+        x.idRequester?.includes(IsNhanVienValue)
+      );
+
     setDataF(filteredData);
     setdataFilter(filteredData);
   }, [data, isRole]);
@@ -193,6 +203,9 @@ const Leave = () => {
     let dataPB = isdataF;
     if (isPhongBanValue != "All")
       dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
+
+    if (IsNhanVienValue != "All")
+      dataPB = dataPB.filter((x) => x.idRequester?.includes(IsNhanVienValue));
 
     setdataFilter(dataPB);
   }, [isPhongBanValue, isdataF]);
