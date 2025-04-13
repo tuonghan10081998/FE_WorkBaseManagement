@@ -22,7 +22,7 @@ const TaskCard = ({ task, setClickCardID, setClick, setIDDeleteColumn }) => {
     const parent = e.currentTarget.closest(".carticon");
     const child = parent.querySelector(".popupsettingCart");
     if (child) {
-      child.classList.toggle("active");
+      // child.classList.toggle("active");
     }
   };
   const handleClickOutside = (e) => {

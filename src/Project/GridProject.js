@@ -38,12 +38,14 @@ const GridTask = ({
     isCheckHandle == 1 && handleSave("PostHT");
   };
   const handleClick = (e) => {
-    const parent = e.currentTarget.closest(".carticon");
+    const parent = e.currentTarget.closest(".cartiona");
     const child = parent.querySelector(".popupsettingCart");
+    console.log(child);
     if (child) {
       child.classList.toggle("active");
     }
   };
+
   const handleSave = (NameValue) => {
     const data = setDataGrid.filter((x) => x.id == isIDData);
     const d = data[0];
@@ -228,6 +230,7 @@ const GridTask = ({
       minWidth: "190px", // Mặc định cho các cột khác
     };
   };
+
   return (
     <div className="grid-table">
       {/* <div className="headerTong ">
@@ -246,7 +249,7 @@ const GridTask = ({
 
       <div className="itemtableName">
         <div className="item-table">
-          <table {...getTableProps()} className="task-table">
+          <table {...getTableProps()} className="task-table ">
             <thead>
               <tr>
                 {headerGroups[0].headers.map((column) => (
@@ -279,7 +282,10 @@ const GridTask = ({
               {rows.map((row) => {
                 prepareRow(row);
                 return (
-                  <tr className="position-relative" {...row.getRowProps()}>
+                  <tr
+                    className="position-relative cartiona"
+                    {...row.getRowProps()}
+                  >
                     <td className="box-cv" style={{ maxWidth: "100px" }}>
                       <p>{row.values.ticket}</p>
                     </td>
@@ -327,7 +333,7 @@ const GridTask = ({
                       <i
                         data-id={row.values.id}
                         onClick={(e) => handleClick(e)}
-                        className="fa-solid fa-gear"
+                        className="fa-solid fa-gear cartioni"
                         style={{ color: "#89915e" }}
                       ></i>
                       <div
