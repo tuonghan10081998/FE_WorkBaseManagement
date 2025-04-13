@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-
+import { useNavigate, useParams } from "react-router-dom";
 import DashboardSection from "./DashboardSection";
 import SelectTable from "../CongViecList/select2GridTable";
 import KPIChart from "./KPIChart";
@@ -9,6 +9,7 @@ import "./Dashboard.css";
 import moment from "moment";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const convertDataToDashboardItems = (rawData) => {
     return [
       {
@@ -75,6 +76,9 @@ const Dashboard = () => {
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
   });
+  useEffect(() => {
+    !isUser && navigate("/");
+  }, [isUser]);
   const funTitle = () => {
     setTitle(`Dashboard`);
     setIcon(<i className="fa-duotone fa-solid fa-briefcase"></i>);
@@ -152,9 +156,8 @@ const Dashboard = () => {
       }
 
       const getTable = await response.json();
-      console.log(getTable.kpi);
       setKPI(getTable.kpi);
-      setCongViec(getTable.works);
+      setCongViec(getTable.work);
       setDuAn(getTable.task);
       setNgayPhep(getTable.leave);
     } catch (error) {

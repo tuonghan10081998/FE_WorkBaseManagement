@@ -166,7 +166,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                   </select>
                 </div>
                 <div className="form-group col-3 m-0 p-0 px-1">
-                  <label style={{ whiteSpace: "nowrap" }}>Chọn năm </label>{" "}
+                  <label style={{ whiteSpace: "nowrap" }}>Năm </label>{" "}
                   <select
                     className="select_uutien select_year"
                     value={selectedYear}
@@ -180,7 +180,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                   </select>
                 </div>
                 <div className="form-group col-3 m-0 p-0 ">
-                  <label style={{ whiteSpace: "nowrap" }}>Chọn tháng </label>{" "}
+                  <label style={{ whiteSpace: "nowrap" }}>Tháng </label>{" "}
                   <select
                     className="select_uutien select_year"
                     value={selectedMonth}
@@ -203,7 +203,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                     <thead>
                       <tr>
                         <th style={{ fontSize: "14px" }}>Họ tên</th>
-                        <th style={{ fontSize: "14px" }}>Cài đặt KPI</th>
+                        <th style={{ fontSize: "14px" }}>KPI</th>
                       </tr>
                     </thead>
                     <tbody>

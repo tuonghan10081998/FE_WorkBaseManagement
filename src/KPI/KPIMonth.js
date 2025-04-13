@@ -4,7 +4,13 @@ import "./KPI.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import KPIResult from "./KPIResult";
 import { Modal, Button } from "react-bootstrap";
-const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
+const KPIMonth = ({
+  setDataMonth,
+  setPQ,
+  setCheckAddM,
+  setTrigger,
+  setisTrigger,
+}) => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   // Lưu trữ dữ liệu bảng
   const [sortedEmployees, setSortedEmployees] = useState([]);
@@ -19,9 +25,11 @@ const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
   const [isAddM, setAddM] = useState(false);
   useEffect(() => {
     setCheckAddM((x) => !x);
+    setisTrigger && setTrigger((x) => !x);
   }, [isAddM]);
   const handleClose = () => {
     setshowPopup(false);
+    setTrigger((x) => !x);
   };
   const handleCloseDetail = () => {
     setshowPopupDetail(false);
@@ -61,6 +69,9 @@ const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
   useEffect(() => {
     isUserID && GetDetailResult();
   }, [isUserID, isAddM]);
+  useEffect(() => {
+    setisTrigger && setshowPopup(true);
+  }, [setisTrigger]);
   return (
     <div className="itemtableName">
       <div className="item-table">
@@ -127,14 +138,14 @@ const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
                           <i className="fas fa-eye"></i>
                         </button>
                       )}
-                      {employee.userID === isUser && (
+                      {/* {employee.userID === isUser && (
                         <button
                           className="btn btn-achieved btn-icon mx-1"
                           onClick={() => enterAchievedKPI(employee.userID)}
                         >
                           <i className="fas fa-tasks"></i>
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </td>
                 </tr>
@@ -159,7 +170,7 @@ const KPIMonth = ({ setDataMonth, setPQ, setCheckAddM }) => {
         <Modal.Body>
           <KPIResult
             setshowPopup={setshowPopup}
-            setData={sortedEmployees.filter((x) => x.userID == isIDData)}
+            setData={sortedEmployees.filter((x) => x.userID === isUser)}
             setAddM={setAddM}
           />
         </Modal.Body>

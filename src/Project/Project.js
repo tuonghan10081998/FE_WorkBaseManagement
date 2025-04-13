@@ -1,4 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import ProjectColumn from "./ProjectColumn";
 import { TitleContext } from "../components/TitleContext";
 import CreateProject from "./CreateProject";
@@ -39,7 +41,7 @@ const Project = () => {
   const [isWorkItem, setWorkItem] = useState([]);
   const [isClickCard, setClickCardID] = useState(null);
   const [isPhongBan, setPhongBan] = useState(null);
-
+  const navigate = useNavigate();
   const [isNhanVien, setNhanVien] = useState([]);
   const [IsQuaTrinh, setQuaTrinh] = useState("0");
   const [IsDuAn, setDuAn] = useState("");
@@ -57,6 +59,9 @@ const Project = () => {
   const [isRole, setRole] = useState("");
   const [isopera, setopera] = useState(true);
   const [isLeader, setLeader] = useState("");
+  useEffect(() => {
+    !isUser && navigate("/");
+  }, [isUser]);
 
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
@@ -259,7 +264,7 @@ const Project = () => {
     setTicket(dataticket);
   }, [isPhongBanValue, isdataF]);
   const handleAdd = () => {
-    setTitle(` Thêm công việc mới`);
+    setTitle(` Thêm dự án mới`);
     setIcon(<i className="fa-solid fa-plus icontitle"></i>);
     !showPopup && setWorkItem([]);
     setShowPopup(!showPopup);
@@ -467,7 +472,7 @@ const Project = () => {
                 }}
                 className="btn btn-primary mr-2"
               >
-                <i className="fas fa-plus"></i> Thêm công việc
+                <i className="fas fa-plus"></i> Thêm dự án
               </button>
             </>
           )}

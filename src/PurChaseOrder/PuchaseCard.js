@@ -56,7 +56,7 @@ const PurChaseCard = ({ setData, onChange }) => {
   const handleClose = () => setShow(false);
   return (
     <div className="itemtableName">
-      <div className="item-table">
+      <div className="item-table" style={{ height: "calc(100vh - 150px)" }}>
         <table className="task-table">
           <thead>
             <tr>

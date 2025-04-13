@@ -15,10 +15,8 @@ const KPI = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isIDLogin) {
-      navigate("/");
-    }
-  }, [isIDLogin, navigate]);
+    !isIDLogin && navigate("/");
+  }, [isIDLogin]);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
@@ -44,6 +42,11 @@ const KPI = () => {
   const [isCheckNV, setCheckNV] = useState(false);
   const [isDataMonth, setDataMonth] = useState([]);
   const [isDataMonthF, setDataMonthF] = useState([]);
+  const [trigger, setTrigger] = useState(false);
+  const handleClickNKPI = (e) => {
+    e.preventDefault();
+    setTrigger((prev) => !prev); // Mỗi lần click đổi trạng thái
+  };
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -241,7 +244,7 @@ const KPI = () => {
           >
             {" "}
             <i class="fa-solid fa-list-ol"></i>
-            Theo năm
+            Tháng
           </div>
           <div
             onClick={() => setTab(true)}
@@ -249,7 +252,7 @@ const KPI = () => {
           >
             {" "}
             <i class="fa-solid fa-table"></i>
-            Theo tháng
+            Năm
           </div>
         </div>
       </div>
@@ -262,7 +265,7 @@ const KPI = () => {
           <div className="row  w-100 m-0 p-0" style={{}}>
             <div
               className={`${
-                !isTab ? "col-6" : "col-3"
+                isTab ? "col-6" : "col-3"
               }  col-md-3 col-lg-2 col-xl-2 m-0  col_search ItemCV`}
             >
               <label style={{ whiteSpace: "nowrap" }}>Chọn năm </label>{" "}
@@ -328,19 +331,30 @@ const KPI = () => {
                   <i class="fas fa-plus"></i> Cài đặt KPI
                 </button>
               )}
+              {isRole !== "Administrator" && (
+                <button
+                  onClick={(e) => handleClickNKPI(e)}
+                  style={{ marginTop: "26px" }}
+                  class="btn btn-primary mr-2"
+                >
+                  <i class="fas fa-plus"></i> Nhập KPI
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
-      <div className={`item-tab ${isTab ? "active" : ""}`}>
+      <div className={`item-tab ${!isTab ? "active" : ""}`}>
         <KPIFullMonth setData={isDataF} />
       </div>
-      <div className={`item-tab ${!isTab ? "active" : ""}`}>
+      <div className={`item-tab ${isTab ? "active" : ""}`}>
         {" "}
         <KPIMonth
           setPQ={isRole}
           setCheckAddM={setCheckAddM}
           setDataMonth={isDataMonthF}
+          setTrigger={setTrigger}
+          setisTrigger={trigger}
         />
       </div>
       <Modal
@@ -353,7 +367,7 @@ const KPI = () => {
         className="popupModalCreateLeave"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="popupModalHeader">Cài đặt thông số KPI</Modal.Title>
+          <Modal.Title id="popupModalHeader">Cài đặt KPI</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <KPISetting

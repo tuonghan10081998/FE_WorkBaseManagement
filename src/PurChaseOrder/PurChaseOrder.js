@@ -3,7 +3,7 @@ import { TitleContext } from "../components/TitleContext";
 import DateRangePicker from "../Date/DateRangePicker";
 import Select2Ticket from "../CongViecList/select2Ticket";
 import PurChaseCard from "./PuchaseCard";
-
+import CreatePurChase from "./CreatePurChase";
 import { Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 import moment from "moment";
@@ -18,58 +18,8 @@ const PurChaseOrder = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [isCheckAdd, setCheckAdd] = useState(false);
-  const [isData, setData] = useState([
-    {
-      id: 1,
-      ticket: "TK1001",
-      title: "PH001",
-      description: "Mua phần mềm kế toán doanh nghiệp bản quyền full",
-      amount: 2500000,
-      createDate: "10/04/2025",
-      idCreator: "KH001",
-      fullName: "Nguyễn Văn A",
-    },
-    {
-      id: 2,
-      ticket: "TK1002",
-      title: "PH002",
-      description: "Gia hạn dịch vụ hỗ trợ kỹ thuật 12 tháng",
-      amount: 1200000,
-      createDate: "11/04/2025",
-      idCreator: "KH002",
-      fullName: "Trần Thị B",
-    },
-    {
-      id: 3,
-      ticket: "TK1003",
-      title: "PH003",
-      description: "Mua gói giải pháp quản lý ERP cho công ty sản xuất",
-      amount: 3800000,
-      createDate: "12/04/2025",
-      idCreator: "KH003",
-      fullName: "Lê Văn C",
-    },
-    {
-      id: 4,
-      ticket: "TK1004",
-      title: "PH004",
-      description: "Đặt mua tài liệu đào tạo nhân sự nội bộ",
-      amount: 500000,
-      createDate: "12/04/2025",
-      idCreator: "KH004",
-      fullName: "Nguyễn Văn A",
-    },
-    {
-      id: 5,
-      ticket: "TK1005",
-      title: "PH005",
-      description: "Phần mềm quản lý công việc nhóm cho phòng ban",
-      amount: 900000,
-      createDate: "13/04/2025",
-      idCreator: "KH005",
-      fullName: "Phạm Thị D",
-    },
-  ]);
+  const [isID, setID] = useState("");
+  const [isData, setData] = useState([]);
 
   const [isDataFilter, setDataFilter] = useState([]);
   const [isTicket, setTicket] = useState([]);
@@ -77,6 +27,7 @@ const PurChaseOrder = () => {
   const [isopera, setopera] = useState(true);
   const [isLeader, setLeader] = useState("");
   const [isTicketValue, setTicketValue] = useState("All");
+  const [isCheckSave, setCheckSave] = useState(false);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -131,6 +82,23 @@ const PurChaseOrder = () => {
     );
     setTicket(dataticket);
   }, [isData]);
+  const getPayment = async () => {
+    const url = `${process.env.REACT_APP_URL_API}PaymentVoucher/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const getTable = await response.json();
+      setData(getTable);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getPayment();
+  }, [isCheckAdd, dateRange]);
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
@@ -161,33 +129,36 @@ const PurChaseOrder = () => {
       setData(isData.filter((x) => x.id !== pur.id));
       setDataFilter(isDataFilter.filter((x) => x.id !== pur.id));
     } else {
+      setID(pur.id);
       setShowPopup(true);
+      setCheckSave(false);
     }
   };
   return (
     <div>
       <div
-        className="d-flex justify-content-between align-items-center  mt-1 p-2 div-select"
+        className="headerPur d-flex justify-content-between align-items-center  mt-1 p-2 div-select"
         style={{ flexWrap: "wrap", gap: "5px" }}
       >
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
-            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0  col_search ItemCV">
+            <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0  col_search ItemCV">
               <label>Thời gian </label>{" "}
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
-            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
+            <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
               <label>Mã ticket </label>{" "}
               <Select2Ticket
                 dataSelect2={isTicket}
                 onChangeMaTicket={onChangeMaTicket}
               />
             </div>
-            <div className="col-12 col-md-12 col-lg-3 col-xl-8 m-0 px-1  col_search ItemCV itemadd">
+            <div className="col-12 col-md-12 col-lg-4 col-xl-8 m-0 px-1  col_search ItemCV itemadd">
               <button
                 style={{ marginTop: "25px" }}
                 onClick={() => {
                   setShowPopup(!showPopup);
+                  setCheckSave(true);
                 }}
                 class="btn btn-primary mr-2"
               >
@@ -207,13 +178,13 @@ const PurChaseOrder = () => {
         keyboard={false}
         className="popupModalCreateLeave"
       >
-        <Modal.Header closeButton>
-          <Modal.Title id="popupModalHeader">Nhập KPI</Modal.Title>
-        </Modal.Header>
         <Modal.Body>
-          {/* <KPIResult
-          
-          /> */}
+          <CreatePurChase
+            setData={isDataFilter.filter((x) => x.id == isID)}
+            setCheckAdd={setCheckAdd}
+            setShowPopup={setShowPopup}
+            setCheckSave={isCheckSave}
+          />
         </Modal.Body>
       </Modal>
     </div>

@@ -20,10 +20,8 @@ const Leave = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isIDLogin) {
-      navigate("/");
-    }
-  }, [isIDLogin, navigate]);
+    !isIDLogin && navigate("/");
+  }, [isIDLogin]);
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDepCode, setDepCode] = useState("");
   const [isPQDuyen, setPQDuyen] = useState(false);

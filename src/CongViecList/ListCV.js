@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import TaskColumn from "./TaskColumn";
 import { TitleContext } from "../components/TitleContext";
 import AddTask from "../components/AddTask";
@@ -17,6 +18,7 @@ import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
 const ListCV = () => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const navigate = useNavigate();
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isPhongBanValue, setPhongBanValue] = useState("All");
   const [isDepCode, setDepCode] = useState("");
@@ -26,6 +28,9 @@ const ListCV = () => {
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
   });
+  useEffect(() => {
+    !isUser && navigate("/");
+  }, [isUser]);
   const [isDataNV, setDataNV] = useState([]);
   const [isDataNVTT, setDataNVTT] = useState([]);
   const [data, setData] = useState([]);

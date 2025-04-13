@@ -162,9 +162,9 @@ const GridTask = ({
       { Header: "Ghi chú", accessor: "fromDate" },
       { Header: "Ghi chú", accessor: "completeDate" },
       { Header: "Trạng thái", accessor: "status" },
-      { Header: "Người thực hiện", accessor: "requester" },
-      { Header: "Trách nhiệm", accessor: "responsible" },
       { Header: "Người giao việc", accessor: "implementer" },
+      { Header: "Trách nhiệm", accessor: "responsible" },
+      { Header: "Người thực hiện", accessor: "requester" },
       { Header: "Deadline", accessor: "toDate" },
       { Header: "Hành động", accessor: "complete" },
       { Header: "Hành động", accessor: "remindDate" },
@@ -219,8 +219,8 @@ const GridTask = ({
     }
     if (["description"].includes(column.id)) {
       return {
-        maxWidth: "350px",
-        minWidth: "350px",
+        maxWidth: "330px",
+        minWidth: "330px",
       };
     }
     return {
@@ -297,14 +297,15 @@ const GridTask = ({
                     <td className="box-wrap">
                       {getStatusSpan(row.values.status)}
                     </td>
-                    <td className="box-cv" style={{ maxWidth: "125px" }}>
-                      <p>{row.values.implementer}</p>
+                    <td style={{ maxWidth: "125px" }} className="">
+                      <p>{row.values.requester}</p>
                     </td>
+
                     <td style={{ maxWidth: "125px" }} className="">
                       <p>{row.values.responsible}</p>
                     </td>
-                    <td style={{ maxWidth: "125px" }} className="">
-                      <p>{row.values.requester}</p>
+                    <td className="box-cv" style={{ maxWidth: "125px" }}>
+                      <p>{row.values.implementer}</p>
                     </td>
                     <td style={{ maxWidth: "70px" }} className="box-wrap">
                       {moment(row.values.fromDate, "DD/MM/YYYY").format(

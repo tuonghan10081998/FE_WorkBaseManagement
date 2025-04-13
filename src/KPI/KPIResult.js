@@ -22,6 +22,8 @@ const KPIResult = ({ setAddM, setData, setshowPopup }) => {
   const currentMonth = new Date().getMonth() + 1;
 
   useEffect(() => {
+    console.log(setData);
+    if (setData.length == 0) return;
     const d = setData[0];
     setDepCode(d.dep_Code);
     setDepName(d.dep_Name);
