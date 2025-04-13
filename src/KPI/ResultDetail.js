@@ -39,7 +39,7 @@ const KPIDetailResult = ({
         userID: x.userID,
         month: setMonth,
         year: setYear,
-        kpi: x.result,
+        result: x.result,
         unit: "",
         createDate: moment(x.createDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
         idCreator: "",

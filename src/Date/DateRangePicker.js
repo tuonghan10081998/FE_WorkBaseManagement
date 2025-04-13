@@ -4,7 +4,7 @@ import moment from "moment";
 import "daterangepicker/daterangepicker.css";
 import "daterangepicker";
 
-const DateRangePicker = ({ onDateChange }) => {
+const DateRangePicker = ({ onDateChange, setCheckALl = true }) => {
   const dateRangeRef = useRef(null);
 
   useEffect(() => {
@@ -34,7 +34,10 @@ const DateRangePicker = ({ onDateChange }) => {
             moment().subtract(1, "month").startOf("month"),
             moment().subtract(1, "month").endOf("month"),
           ],
-          "Tất cả": [moment("1900-01-01"), moment("1900-01-01")], // "Tất cả" hiển thị nhưng trả về ngày cố định
+
+          ...(setCheckALl && {
+            "Tất cả": [moment("1900-01-01"), moment("1900-01-01")],
+          }),
         },
         locale: {
           format: "DD/MM/YYYY",

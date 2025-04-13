@@ -11,6 +11,7 @@ import PhanQuyen from "./PhanQuyen/PhanQuyen";
 import KPI from "./KPI/KPI";
 import Leave from "./Leave/Leave";
 import Project from "./Project/Project";
+import Dashboard from "./DashBoard/DashBoard";
 export default function App() {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/layout/listleave" element={<Leave />} />
             <Route path="/layout/project" element={<Project />} />
             <Route path="/layout/KPI" element={<KPI />} />
+            <Route path="/layout/Dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
       </TitleProvider>

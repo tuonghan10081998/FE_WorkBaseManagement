@@ -155,7 +155,7 @@ const ListCV = () => {
 
   const funTitle = () => {
     setTitle(`Danh sách công việc`);
-    setIcon(<i class="fa-duotone fa-solid fa-briefcase"></i>);
+    setIcon(<i className="fa-duotone fa-solid fa-briefcase"></i>);
     setIconAdd();
   };
 

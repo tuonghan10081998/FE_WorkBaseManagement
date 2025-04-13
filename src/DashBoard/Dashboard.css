@@ -1,0 +1,45 @@
+.highcharts-credits {
+  display: none;
+}
+.dashboard {
+  margin-bottom: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 20px;
+}
+.dashboard .card-header {
+  height: 40px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 0px;
+}
+.dashboard .card-tools {
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+}
+.dashboardCard {
+  background-color: #fff !important;
+}
+#mainContent .dashboard .card-body {
+  width: calc(100vw - 272px);
+}
+#mainContent.active .dashboard .card-body {
+  width: calc(100vw - 85px);
+}
+#mainContent .dashboardCard {
+  padding: 5px 10px;
+  width: calc(100vw - 252px);
+}
+#mainContent.active .dashboardCard {
+  padding: 5px 10px;
+  width: calc(100vw - 65px);
+}
+@media (max-width: 800px) {
+  .dashboardCard {
+    width: 100vw !important;
+  }
+  .card-body {
+    width: calc(100vw - 20px) !important;
+  }
+}

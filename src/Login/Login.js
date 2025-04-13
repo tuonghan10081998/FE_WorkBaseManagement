@@ -130,8 +130,9 @@ const Login = () => {
     localStorage.setItem("passwordID", ispwLogin);
     localStorage.setItem("userID", data2.data.userID);
     localStorage.setItem("fullName", data2.data.fullName);
-
-    navigate("/layout");
+    console.log(data2.data.lstPage);
+    if (data2.data.lstPage?.includes("DB")) navigate("/layout/Dashboard");
+    else navigate("/layout/listcongviec");
   };
   const handleRememberMeChange = (e) => {
     setRememberMe(e.target.checked);

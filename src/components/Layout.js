@@ -12,7 +12,7 @@ const Layout = () => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isPQDuyen, setPQDuyen] = useState(false);
   const [isPagePQ, setPagePQ] = useState(false);
-
+  const [isDB, setDB] = useState(false);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -23,7 +23,9 @@ const Layout = () => {
 
       const data = await response.json();
       const dataPQ = data.lstUserPage.filter((x) => x.pageID === "R");
+      const dataDB = data.lstUserPage.filter((x) => x.pageID === "DB");
       if (dataPQ[0].isChecked == 1) setPagePQ(true);
+      if (dataDB[0].isChecked == 1) setDB(true);
     } catch (error) {
       console.error(error.message);
     }
@@ -94,6 +96,19 @@ const Layout = () => {
               </div>
             )}
           </div> */}
+          {isDB && (
+            <div className="nav-item">
+              <Link
+                className="nav-link text-white d-flex justify-content-between align-items-center"
+                to="/layout/Dashboard"
+              >
+                <div>
+                  <i className="fas fa-fire text-lg"></i>
+                  <span className="ms-2">Dashboard</span>
+                </div>
+              </Link>
+            </div>
+          )}{" "}
           <div className="nav-item">
             <Link
               className="nav-link text-white d-flex justify-content-between align-items-center"
@@ -116,7 +131,6 @@ const Layout = () => {
               </div>
             </Link>
           </div>
-
           <div className="nav-item">
             <Link
               className="nav-link text-white d-flex justify-content-between align-items-center"
@@ -152,7 +166,6 @@ const Layout = () => {
               </Link>
             </div>
           )}
-
           <div className="nav-item">
             <Link
               onClick={() => {
@@ -189,7 +202,10 @@ const Layout = () => {
             <i className="fas fa-bars text-2xl"></i>
           </div>
           {title}{" "}
-          <div class="d-flex align-items-center icon-userName">
+          <div
+            style={{ marginRight: "15px" }}
+            class="d-flex align-items-center icon-userName"
+          >
             <i class="fas fa-user user-iconLayout"></i>
             <span class="user-name">{isfullName}</span>
           </div>

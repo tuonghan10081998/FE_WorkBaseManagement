@@ -192,7 +192,7 @@ const KPI = () => {
   };
   useEffect(() => {
     GetResult();
-  }, [isPhongBanValue, selectedYear, selectedMonth, isCheckAddM]);
+  }, [isPhongBanValue, selectedYear, selectedMonth, isCheckAddM, isCheckAddFM]);
   const GetTotalSetting = async () => {
     const phongbanResult = isPhongBanValue;
     const yearResult = selectedYear;
@@ -214,7 +214,7 @@ const KPI = () => {
   };
   useEffect(() => {
     GetTotalSetting();
-  }, [isPhongBanValue, selectedYear, isCheckAddFM]);
+  }, [isPhongBanValue, selectedYear, isCheckAddFM, isCheckAddM]);
   return (
     <div>
       <div>

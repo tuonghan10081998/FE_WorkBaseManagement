@@ -91,18 +91,42 @@ const KPIFullMonth = ({ setData }) => {
                   <td>{employee.fullname}</td>
                   <td>{employee.dep_Name}</td>
                   <td>{employee.year}</td>
-                  <td>{handleColorT(employee.month1)}</td>
-                  <td>{handleColorT(employee.month2)}</td>
-                  <td>{handleColorT(employee.month3)}</td>
-                  <td>{handleColorT(employee.month4)}</td>
-                  <td>{handleColorT(employee.month5)}</td>
-                  <td>{handleColorT(employee.month6)}</td>
-                  <td>{handleColorT(employee.month7)}</td>
-                  <td>{handleColorT(employee.month8)}</td>
-                  <td>{handleColorT(employee.month9)}</td>
-                  <td>{handleColorT(employee.month10)}</td>
-                  <td>{handleColorT(employee.month11)}</td>
-                  <td>{handleColorT(employee.month12)}</td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month1)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month2)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month3)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month4)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month5)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month6)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month7)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month8)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month9)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month10)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month11)}
+                  </td>
+                  <td style={{ maxWidth: "80px", minWidth: "70px" }}>
+                    {handleColorT(employee.month12)}
+                  </td>
                   <td>{totalAchieved}</td>
                   <td>{totalTarget}</td>
                   {/* <td>
