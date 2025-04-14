@@ -158,7 +158,7 @@ const GridTask = ({
       });
     }
   };
-  const getStatusSpan = (status) => {
+  const getStatusSpan = (status, statusHT) => {
     if (status === "1") {
       return (
         <span className="status-icon status-pending">
@@ -175,6 +175,13 @@ const GridTask = ({
       return (
         <span className="status-icon status-completed ">
           <i className="fas fa-check-circle"></i> Hoàn thành
+          <i
+            style={{
+              color: `${statusHT === "1" ? "#4952b5" : "red"}`,
+              margin: "0 0 0 9px",
+            }}
+            class="fa-solid fa-flag"
+          ></i>
         </span>
       );
     } else {
@@ -359,7 +366,7 @@ const GridTask = ({
                     </td>
 
                     <td className="box-wrap">
-                      {getStatusSpan(row.values.status)}
+                      {getStatusSpan(row.values.status, row.values.statusHT)}
                     </td>
                     <td style={{ maxWidth: "125px" }} className="">
                       <p>{row.values.requester}</p>

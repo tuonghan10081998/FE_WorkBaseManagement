@@ -360,7 +360,7 @@ const ProjectColumn = ({
                   <div>
                     <i
                       style={{
-                        color: `${task.statusHT === "1" ? "green" : "red"}`,
+                        color: `${task.statusHT === "1" ? "#4952b5" : "red"}`,
                       }}
                       class="fa-solid fa-flag"
                     ></i>
