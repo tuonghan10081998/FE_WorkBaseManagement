@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import moment from "moment";
 import iziToast from "izitoast";
@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "../CongViecList/GridCV.css";
 import { useTable, useSortBy, usePagination } from "react-table";
-
+import $, { data } from "jquery";
 const GridTask = ({
   setDataGrid,
   handleSetting,
@@ -15,6 +15,9 @@ const GridTask = ({
   setCheckAdd,
   setPQDuyen,
 }) => {
+  const elementRef = useRef([]);
+  const [isTop, setTop] = useState(null);
+
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isTitleBody, setTiTleBody] = useState("");
   const [show, setShow] = useState(false);
@@ -37,15 +40,72 @@ const GridTask = ({
     isCheckHandle == 0 && handleClickDelete();
     isCheckHandle == 1 && handleSave("PostHT");
   };
-  const handleClick = (e) => {
-    const parent = e.currentTarget.closest(".cartiona");
+  const handleClick = (e, index) => {
+    const parent = e.currentTarget.closest(".cartion");
     const child = parent.querySelector(".popupsettingCart");
-    console.log(child);
     if (child) {
       child.classList.toggle("active");
     }
   };
+  const handleClickTD = (e, index) => {
+    const element = elementRef.current[index];
 
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const tdElement = element.closest("td");
+      const popup = tdElement.querySelector(".gridPop");
+
+      if (!popup.classList.contains("active")) {
+        // Bỏ active ở tất cả popup khác
+        document.querySelectorAll(".gridPop.active").forEach((el) => {
+          el.classList.remove("active");
+        });
+        popup.classList.add("active");
+      } else {
+        document.querySelectorAll(".gridPop.active").forEach((el) => {
+          el.classList.remove("active");
+        });
+      }
+
+      const popupHeight = popup.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      let top = rect.top;
+
+      if (top + popupHeight > windowHeight) {
+        const overflow = top + popupHeight - windowHeight;
+        top = top - overflow - 20;
+      }
+
+      if (top < 0) {
+        top = 0;
+      }
+
+      setTop(top);
+    }
+  };
+
+  const handleClickOutside = (e) => {
+    const cartIcons = document.querySelectorAll(".cartion");
+
+    cartIcons.forEach((cartIcon) => {
+      const popup = cartIcon.querySelector(".popupsettingCart");
+      if (
+        popup &&
+        !cartIcon.contains(e.target) &&
+        !e.target.classList.contains("cartioni")
+      ) {
+        popup.classList.remove("active");
+      }
+    });
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   const handleSave = (NameValue) => {
     const data = setDataGrid.filter((x) => x.id == isIDData);
     const d = data[0];
@@ -249,7 +309,7 @@ const GridTask = ({
 
       <div className="itemtableName">
         <div className="item-table">
-          <table {...getTableProps()} className="task-table ">
+          <table {...getTableProps()} className="task-table position-relative">
             <thead>
               <tr>
                 {headerGroups[0].headers.map((column) => (
@@ -278,14 +338,12 @@ const GridTask = ({
               </tr>
             </thead>
 
-            <tbody className="tbody" {...getTableBodyProps()}>
-              {rows.map((row) => {
+            <tbody className="tbody " {...getTableBodyProps()}>
+              {rows.map((row, index) => {
+                const top = (index + 1) * 48;
                 prepareRow(row);
                 return (
-                  <tr
-                    className="position-relative cartiona"
-                    {...row.getRowProps()}
-                  >
+                  <tr className=" " {...row.getRowProps()}>
                     <td className="box-cv" style={{ maxWidth: "100px" }}>
                       <p>{row.values.ticket}</p>
                     </td>
@@ -319,54 +377,73 @@ const GridTask = ({
                       )}
                       -{moment(row.values.toDate, "DD/MM/YYYY").format("DD/MM")}
                     </td>
-                    <td style={{ maxWidth: "50px" }} className="box-wrap"></td>
-                    <div
-                      className="carticon "
-                      style={{
-                        position: "absolute",
-                        top: "4px",
-                        right: "73px",
-                        fontSize: "26px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <i
-                        data-id={row.values.id}
-                        onClick={(e) => handleClick(e)}
-                        className="fa-solid fa-gear cartioni"
-                        style={{ color: "#89915e" }}
-                      ></i>
+                    <td style={{ maxWidth: "50px" }} className="box-wrap">
                       <div
+                        className="d-flex"
                         style={{
-                          top: "10px",
-                          right: "27px",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
-                        data-id={row.values.id}
-                        className="popupsettingCart popupsettingCV"
                       >
-                        {row.values.statusHT !== "1" &&
-                          setPQDuyen !== "Member" && (
-                            <div
-                              data-id={row.values.id}
-                              onClick={(e) => {
-                                handleShow(e);
-                                setTiTleBody(
-                                  "<p>Bạn xác nhận hoàn thành dự án này</p>"
-                                );
-                                setLable("Thông báo");
-                                setCheckHandle(1);
-                              }}
-                            >
-                              <i className="fa-solid fa-street-view me-1"></i>
-                              <span>Hoàn thành</span>
-                            </div>
-                          )}
-
-                        <div
+                        <i
+                          onClick={(e) => handleClickTD(e, index)}
+                          ref={(el) => (elementRef.current[index] = el)}
+                          className="fa-solid fa-gear cartioni "
+                          style={{
+                            color: "#89915e",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                          }}
+                        ></i>
+                      </div>
+                      <div
+                        className="cartion"
+                        style={{
+                          position: "fixed",
+                          top: `${isTop}px`,
+                          right: "93px",
+                          fontSize: "26px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <i
                           data-id={row.values.id}
-                          onClick={(e) => {
-                            handleShow(e);
-                            setTiTleBody(`<div>
+                          onClick={(e) => handleClick(e, index)}
+                          className="fa-solid fa-gear d-none"
+                          style={{ color: "#89915e" }}
+                        ></i>
+                        <div
+                          style={{
+                            right: "93px",
+                            position: "fixed",
+                            top: `${isTop}px`,
+                          }}
+                          data-id={row.values.id}
+                          className="popupsettingCart popupsettingCV gridPop"
+                        >
+                          {row.values.statusHT !== "1" &&
+                            setPQDuyen !== "Member" && (
+                              <div
+                                data-id={row.values.id}
+                                onClick={(e) => {
+                                  handleShow(e);
+                                  setTiTleBody(
+                                    "<p>Bạn xác nhận hoàn thành dự án này</p>"
+                                  );
+                                  setLable("Thông báo");
+                                  setCheckHandle(1);
+                                }}
+                              >
+                                <i className="fa-solid fa-street-view me-1"></i>
+                                <span>Hoàn thành</span>
+                              </div>
+                            )}
+
+                          <div
+                            data-id={row.values.id}
+                            onClick={(e) => {
+                              handleShow(e);
+                              setTiTleBody(`<div>
                           <p class="duan" style="font-size: 17px;font-weight: bold;">
                             <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
                             Dự án: ${row.values.taskName}
@@ -438,49 +515,50 @@ const GridTask = ({
                           </div>
                         </div>
                       `);
-                            setLable("Xem chi tiết dự án");
-                            setCheckHandle(0);
-                          }}
-                        >
-                          <i class="fa-solid fa-eye me-1"></i>
-                          <span> Xem </span>
-                        </div>
-                        {setPQDuyen !== "Member" && (
-                          <div
-                            onClick={(e) => {
-                              if (handleSetting) {
-                                handleSetting({
-                                  action: 2, // Đặt tên key cho đúng
-                                  id: row.values.id, // Đảm bảo truyền ID đúng
-                                });
-                                handleClick(e);
-                              }
-                            }}
-                          >
-                            <i className="fa-solid fa-pen-to-square me-1"></i>
-                            <span>Sửa</span>
-                          </div>
-                        )}
-                        {setPQDuyen === "Administrator" && (
-                          <div
-                            data-id={row.values.id}
-                            onClick={(e) => {
-                              handleShow(e);
-                              setTiTleBody("<p>Bạn muốn xóa dự án này</p>");
-                              setLable("Thông báo");
+                              setLable("Xem chi tiết dự án");
                               setCheckHandle(0);
                             }}
-                            style={{ boxShadow: "none" }}
                           >
-                            <i
-                              style={{ color: "REd" }}
-                              className="fa-solid fa-trash me-1"
-                            ></i>
-                            <span> Xóa </span>
+                            <i class="fa-solid fa-eye me-1"></i>
+                            <span> Xem </span>
                           </div>
-                        )}
+                          {setPQDuyen !== "Member" && (
+                            <div
+                              onClick={(e) => {
+                                if (handleSetting) {
+                                  handleSetting({
+                                    action: 2, // Đặt tên key cho đúng
+                                    id: row.values.id, // Đảm bảo truyền ID đúng
+                                  });
+                                  handleClick(e);
+                                }
+                              }}
+                            >
+                              <i className="fa-solid fa-pen-to-square me-1"></i>
+                              <span>Sửa</span>
+                            </div>
+                          )}
+                          {setPQDuyen === "Administrator" && (
+                            <div
+                              data-id={row.values.id}
+                              onClick={(e) => {
+                                handleShow(e);
+                                setTiTleBody("<p>Bạn muốn xóa dự án này</p>");
+                                setLable("Thông báo");
+                                setCheckHandle(0);
+                              }}
+                              style={{ boxShadow: "none" }}
+                            >
+                              <i
+                                style={{ color: "REd" }}
+                                className="fa-solid fa-trash me-1"
+                              ></i>
+                              <span> Xóa </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </td>
                   </tr>
                 );
               })}

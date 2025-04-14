@@ -247,6 +247,15 @@ td p {
 .btn-customGrid i {
   margin-right: 3px;
 }
+.itemtableName .task-table thead {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  box-shadow: inset 0 -1px 0 #b1bdc7;
+}
+.select2-selection__placeholder {
+  opacity: 0.5;
+}
 @media (max-height: 400px) {
   .itemtableName {
     height: 300px;

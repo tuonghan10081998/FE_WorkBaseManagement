@@ -7,28 +7,32 @@ import "admin-lte/dist/js/adminlte.min.js";
 window.$ = $;
 window.jQuery = $;
 
-const KPIChart = ({ data }) => {
+const KPIChart = ({ data, dataKT }) => {
   const [categories, setCategories] = useState([]);
   const [thucHienData, setThucHienData] = useState([]);
   const [mucTieuData, setMucTieuData] = useState([]);
-
+  const [keToanData, setKeToanData] = useState([]);
   useEffect(() => {
-    if (data.length === 0) return;
+    if (data.length === 0 || dataKT.length === 0) return;
     // const kpiData = data[0];
     const newCategories = [];
     const newThucHienData = [];
     const newMucTieuData = [];
+    const newKeToanData = [];
 
     Object.keys(data).forEach((key, index) => {
       const [thucHien, mucTieu] = data[key].split("/").map(Number);
+      const ketoan = Number(dataKT[key]);
       newCategories.push(`T ${index + 1}`);
       newThucHienData.push(thucHien);
       newMucTieuData.push(mucTieu);
+      newKeToanData.push(ketoan);
     });
     setCategories(newCategories);
     setThucHienData(newThucHienData);
     setMucTieuData(newMucTieuData);
-  }, [data]);
+    setKeToanData(newKeToanData);
+  }, [data, dataKT]);
 
   const options = {
     chart: {
@@ -117,8 +121,8 @@ const KPIChart = ({ data }) => {
     },
     series: [
       {
-        name: "Thực Hiện",
-        data: thucHienData,
+        name: "Chi tiêu",
+        data: keToanData,
       },
     ],
   };
@@ -148,7 +152,11 @@ const KPIChart = ({ data }) => {
             <div className="card-header bg-white">
               <h3
                 className="card-title text-black"
-                style={{ fontWeight: "bold", fontSize: "20px" }}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  marginBottom: 0,
+                }}
               >
                 KPI
               </h3>
@@ -181,7 +189,11 @@ const KPIChart = ({ data }) => {
             <div className="card-header bg-white">
               <h3
                 className="card-title text-black"
-                style={{ fontWeight: "bold", fontSize: "20px" }}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  marginBottom: 0,
+                }}
               >
                 Kế toán
               </h3>

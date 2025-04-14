@@ -70,6 +70,7 @@ const Dashboard = () => {
   const [isPhongBanValue, setPhongBanValue] = useState("");
   const [isKPI, setKPI] = useState([]);
   const [isCongViec, setCongViec] = useState([]);
+  const [isKeToan, setKeToan] = useState([]);
   const [isDuAn, setDuAn] = useState([]);
   const [isNghiPhep, setNgayPhep] = useState([]);
   const [dateRange, setDateRange] = useState({
@@ -160,6 +161,7 @@ const Dashboard = () => {
       setCongViec(getTable.work);
       setDuAn(getTable.task);
       setNgayPhep(getTable.leave);
+      setKeToan(getTable.fee);
     } catch (error) {
       console.error(error.message);
     }
@@ -207,7 +209,7 @@ const Dashboard = () => {
           sectionTitle="Nghỉ Phép"
           items={convertNghiPhepData(isNghiPhep)}
         />
-        <KPIChart data={isKPI} />
+        <KPIChart data={isKPI} dataKT={isKeToan} />
       </div>
     </div>
   );

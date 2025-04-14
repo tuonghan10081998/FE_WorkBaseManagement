@@ -96,6 +96,7 @@ body {
   justify-content: left;
   align-items: center;
   gap: 0px;
+  background: #0d3057;
 }
 .collapsed .fa-bars {
   padding-left: 7px;

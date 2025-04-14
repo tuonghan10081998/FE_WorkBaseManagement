@@ -356,6 +356,16 @@ const TaskColumn = ({
                     "DD/MM"
                   )} - ${moment(task.toDate, "DD/MM/YYYY").format("DD/MM")}`}
                 </p>
+                {status === 3 && (
+                  <div>
+                    <i
+                      style={{
+                        color: `${task.statusHT === "1" ? "green" : "red"}`,
+                      }}
+                      class="fa-solid fa-flag"
+                    ></i>
+                  </div>
+                )}
               </div>
             </div>
           ))}

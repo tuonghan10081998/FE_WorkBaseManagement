@@ -102,6 +102,7 @@ const Layout = () => {
           {isDB && (
             <div className="nav-item">
               <Link
+                onClick={handleMenu}
                 className="nav-link text-white d-flex justify-content-between align-items-center"
                 to="/layout/Dashboard"
               >
@@ -117,6 +118,7 @@ const Layout = () => {
           )}{" "}
           <div className="nav-item">
             <Link
+              onClick={handleMenu}
               className="nav-link text-white d-flex justify-content-between align-items-center"
               to="/layout/listcongviec"
             >
@@ -131,6 +133,7 @@ const Layout = () => {
           </div>
           <div className="nav-item">
             <Link
+              onClick={handleMenu}
               className="nav-link text-white d-flex justify-content-between align-items-center"
               to="/layout/project"
             >
@@ -145,6 +148,7 @@ const Layout = () => {
           </div>
           <div className="nav-item">
             <Link
+              onClick={handleMenu}
               className="nav-link text-white d-flex justify-content-between align-items-center"
               to="/layout/listleave"
             >
@@ -159,6 +163,7 @@ const Layout = () => {
           </div>
           <div className="nav-item">
             <Link
+              onClick={handleMenu}
               className="nav-link text-white d-flex justify-content-between align-items-center"
               to="/layout/KPI"
             >
@@ -190,6 +195,7 @@ const Layout = () => {
           {isPagePQ && (
             <div className="nav-item">
               <Link
+                onClick={handleMenu}
                 className="nav-link text-white d-flex justify-content-between align-items-center"
                 to="/layout/phanquyen"
               >

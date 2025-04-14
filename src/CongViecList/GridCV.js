@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import moment from "moment";
 import iziToast from "izitoast";
@@ -8,7 +8,7 @@ import "bootstrap/dist/js/bootstrap.js";
 import "../CongViecList/GridCV.css";
 import SelectTable from "./select2GridTable";
 import { useTable, useSortBy, usePagination } from "react-table";
-
+import $, { data } from "jquery";
 const GridWork = ({
   setDataGrid,
   handleSetting,
@@ -16,6 +16,8 @@ const GridWork = ({
   setCheckAdd,
   setPQDuyen,
 }) => {
+  const elementRef = useRef([]);
+  const [isTop, setTop] = useState(null);
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isTitleBody, setTiTleBody] = useState("");
   const [show, setShow] = useState(false);
@@ -38,6 +40,65 @@ const GridWork = ({
     isCheckHandle == 0 && handleClickDelete();
     isCheckHandle == 1 && handleSave("PostHT");
   };
+  const handleClickTD = (e, index) => {
+    const element = elementRef.current[index];
+
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const tdElement = element.closest("td");
+      const popup = tdElement.querySelector(".gridPop");
+
+      if (!popup.classList.contains("active")) {
+        // Bỏ active ở tất cả popup khác
+        document.querySelectorAll(".gridPop.active").forEach((el) => {
+          el.classList.remove("active");
+        });
+        popup.classList.add("active");
+      } else {
+        document.querySelectorAll(".gridPop.active").forEach((el) => {
+          el.classList.remove("active");
+        });
+      }
+
+      const popupHeight = popup.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      let top = rect.top;
+
+      if (top + popupHeight > windowHeight) {
+        const overflow = top + popupHeight - windowHeight;
+        top = top - overflow - 20;
+      }
+
+      if (top < 0) {
+        top = 0;
+      }
+
+      setTop(top);
+    }
+  };
+
+  const handleClickOutside = (e) => {
+    const cartIcons = document.querySelectorAll(".cartion");
+
+    cartIcons.forEach((cartIcon) => {
+      const popup = cartIcon.querySelector(".popupsettingCart");
+      if (
+        popup &&
+        !cartIcon.contains(e.target) &&
+        !e.target.classList.contains("cartioni")
+      ) {
+        popup.classList.remove("active");
+      }
+    });
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   const handleSave = (NamePort) => {
     const data = setDataGrid.filter((x) => x.id == isIDData);
     const d = data[0];
@@ -272,10 +333,10 @@ const GridWork = ({
             </thead>
 
             <tbody className="tbody" {...getTableBodyProps()}>
-              {rows.map((row) => {
+              {rows.map((row, index) => {
                 prepareRow(row);
                 return (
-                  <tr className="position-relative" {...row.getRowProps()}>
+                  <tr className="" {...row.getRowProps()}>
                     <td className="box-cv" style={{ maxWidth: "100px" }}>
                       <p>{row.values.ticket}</p>
                     </td>
@@ -309,55 +370,73 @@ const GridWork = ({
                       )}
                       -{moment(row.values.toDate, "DD/MM/YYYY").format("DD/MM")}
                     </td>
-                    <td style={{ maxWidth: "50px" }} className="box-wrap"></td>
-                    <div
-                      className="carticon "
-                      style={{
-                        position: "absolute",
-                        top: "4px",
-                        right: "73px",
-                        fontSize: "26px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <i
-                        data-id={row.values.id}
-                        onClick={(e) => handleClick(e)}
-                        className="fa-solid fa-gear"
-                        style={{ color: "#89915e" }}
-                      ></i>
+                    <td style={{ maxWidth: "50px" }} className="box-wrap">
                       <div
+                        className="d-flex"
                         style={{
-                          top: "10px",
-                          right: "27px",
-                          zIndex: "9999",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
-                        data-id={row.values.id}
-                        className="popupsettingCart popupsettingCV"
                       >
-                        {row.values.statusHT !== "1" &&
-                          setPQDuyen !== "Member" && (
-                            <div
-                              data-id={row.values.id}
-                              onClick={(e) => {
-                                handleShow(e);
-                                setTiTleBody(
-                                  "<p>Bạn xác nhận hoàn thành công việc này</p>"
-                                );
-                                setLable("Thông báo");
-                                setCheckHandle(1);
-                              }}
-                            >
-                              <i className="fa-solid fa-street-view me-1"></i>
-                              <span>Hoàn thành</span>
-                            </div>
-                          )}
-
-                        <div
+                        <i
+                          onClick={(e) => handleClickTD(e, index)}
+                          ref={(el) => (elementRef.current[index] = el)}
+                          className="fa-solid fa-gear cartioni "
+                          style={{
+                            color: "#89915e",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                          }}
+                        ></i>
+                      </div>
+                      <div
+                        className="cartion "
+                        style={{
+                          position: "fixed",
+                          top: `${isTop}px`,
+                          right: "93px",
+                          fontSize: "26px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <i
                           data-id={row.values.id}
-                          onClick={(e) => {
-                            handleShow(e);
-                            setTiTleBody(`<div>
+                          onClick={(e) => handleClick(e)}
+                          className="fa-solid fa-gear d-none"
+                          style={{ color: "#89915e" }}
+                        ></i>
+                        <div
+                          style={{
+                            right: "93px",
+                            position: "fixed",
+                            top: `${isTop}px`,
+                          }}
+                          data-id={row.values.id}
+                          className="popupsettingCart popupsettingCV gridPop"
+                        >
+                          {row.values.statusHT !== "1" &&
+                            setPQDuyen !== "Member" && (
+                              <div
+                                data-id={row.values.id}
+                                onClick={(e) => {
+                                  handleShow(e);
+                                  setTiTleBody(
+                                    "<p>Bạn xác nhận hoàn thành công việc này</p>"
+                                  );
+                                  setLable("Thông báo");
+                                  setCheckHandle(1);
+                                }}
+                              >
+                                <i className="fa-solid fa-street-view me-1"></i>
+                                <span>Hoàn thành</span>
+                              </div>
+                            )}
+
+                          <div
+                            data-id={row.values.id}
+                            onClick={(e) => {
+                              handleShow(e);
+                              setTiTleBody(`<div>
                           <p class="duan" style="font-size: 17px;font-weight: bold;">
                             <i style="color: #6ba323;" class="fa-solid fa-briefcase"></i>
                             Công việc: ${row.values.workName}
@@ -429,50 +508,53 @@ const GridWork = ({
                           </div>
                         </div>
                       `);
-                            setLable("Xem chi tiết công việc");
-                            setCheckHandle(0);
-                          }}
-                        >
-                          <i class="fa-solid fa-eye me-1"></i>
-                          <span> Xem </span>
-                        </div>
-                        {setPQDuyen !== "Member" && (
-                          <div
-                            onClick={(e) => {
-                              if (handleSetting) {
-                                handleSetting({
-                                  action: 2, // Đặt tên key cho đúng
-                                  id: row.values.id, // Đảm bảo truyền ID đúng
-                                });
-                                handleClick(e);
-                              }
-                            }}
-                          >
-                            <i className="fa-solid fa-pen-to-square me-1"></i>
-                            <span>Sửa</span>
-                          </div>
-                        )}
-
-                        {setPQDuyen === "Administrator" && (
-                          <div
-                            data-id={row.values.id}
-                            onClick={(e) => {
-                              handleShow(e);
-                              setTiTleBody("<p>Bạn muốn xóa công việc này</p>");
-                              setLable("Thông báo");
+                              setLable("Xem chi tiết công việc");
                               setCheckHandle(0);
                             }}
-                            style={{ boxShadow: "none" }}
                           >
-                            <i
-                              style={{ color: "REd" }}
-                              className="fa-solid fa-trash me-1"
-                            ></i>
-                            <span> Xóa </span>
+                            <i class="fa-solid fa-eye me-1"></i>
+                            <span> Xem </span>
                           </div>
-                        )}
+                          {setPQDuyen !== "Member" && (
+                            <div
+                              onClick={(e) => {
+                                if (handleSetting) {
+                                  handleSetting({
+                                    action: 2, // Đặt tên key cho đúng
+                                    id: row.values.id, // Đảm bảo truyền ID đúng
+                                  });
+                                  handleClick(e);
+                                }
+                              }}
+                            >
+                              <i className="fa-solid fa-pen-to-square me-1"></i>
+                              <span>Sửa</span>
+                            </div>
+                          )}
+
+                          {setPQDuyen === "Administrator" && (
+                            <div
+                              data-id={row.values.id}
+                              onClick={(e) => {
+                                handleShow(e);
+                                setTiTleBody(
+                                  "<p>Bạn muốn xóa công việc này</p>"
+                                );
+                                setLable("Thông báo");
+                                setCheckHandle(0);
+                              }}
+                              style={{ boxShadow: "none" }}
+                            >
+                              <i
+                                style={{ color: "REd" }}
+                                className="fa-solid fa-trash me-1"
+                              ></i>
+                              <span> Xóa </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </td>
                   </tr>
                 );
               })}

@@ -35,6 +35,9 @@
   padding: 5px 10px;
   width: calc(100vw - 65px);
 }
+.itemDash {
+  padding: 2px 5px !important;
+}
 @media (max-width: 800px) {
   .dashboardCard {
     width: 100vw !important;

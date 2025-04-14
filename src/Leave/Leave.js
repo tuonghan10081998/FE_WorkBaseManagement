@@ -284,19 +284,17 @@ const Leave = () => {
             </div>
 
             <div className="col-6 col-md-6 col-lg-3 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
-              {isRole !== "Administrator" && (
-                <button
-                  style={{ marginTop: "25px" }}
-                  onClick={() => {
-                    setshowPopup(!showPopup);
-                    setEdit("0");
-                    setWorkItem([]);
-                  }}
-                  class="btn btn-primary mr-2"
-                >
-                  <i class="fas fa-plus"></i> Tạo phiếu nghỉ
-                </button>
-              )}
+              <button
+                style={{ marginTop: "25px" }}
+                onClick={() => {
+                  setshowPopup(!showPopup);
+                  setEdit("0");
+                  setWorkItem([]);
+                }}
+                class="btn btn-primary mr-2"
+              >
+                <i class="fas fa-plus"></i> Tạo phiếu nghỉ
+              </button>
             </div>
           </div>
         </div>

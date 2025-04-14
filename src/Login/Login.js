@@ -50,6 +50,7 @@ const Login = () => {
   const [isCodeEmail, setIsCodeEmail] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isHoTen, setHoTen] = useState("");
+  const [isTele, setTele] = useState("");
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -94,6 +95,7 @@ const Login = () => {
       fullName: "",
       passWord: ispwLogin.toString(),
       email: "",
+      telegram: "",
       department: "",
     };
     PostLogin(object);
@@ -130,7 +132,6 @@ const Login = () => {
     localStorage.setItem("passwordID", ispwLogin);
     localStorage.setItem("userID", data2.data.userID);
     localStorage.setItem("fullName", data2.data.fullName);
-    console.log(data2.data.lstPage);
     if (data2.data.lstPage?.includes("DB")) navigate("/layout/Dashboard");
     else navigate("/layout/listcongviec");
   };
@@ -175,7 +176,8 @@ const Login = () => {
       confirmPassword == "" ||
       email == "" ||
       isPhongBanValue == "" ||
-      isHoTen == ""
+      isHoTen == "" ||
+      isTele == ""
     ) {
       iziToast.warning({
         title: "Warning",
@@ -198,6 +200,7 @@ const Login = () => {
       fullName: isHoTen.toString(),
       passWord: password.toString(),
       email: email,
+      telegram: isTele,
       department: isPhongBanValue.toString(),
     };
     PostRegister(object);
@@ -390,6 +393,14 @@ const Login = () => {
                   value={email}
                   type="text"
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="off"
+                />
+                <input
+                  className="mt-4"
+                  placeholder="Telegram"
+                  value={isTele}
+                  type="text"
+                  onChange={(e) => setTele(e.target.value)}
                   autoComplete="off"
                 />
                 <div className="item_father ">
