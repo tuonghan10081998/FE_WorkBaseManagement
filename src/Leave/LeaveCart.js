@@ -86,10 +86,14 @@ const LeaveCart = ({
       id: d.id,
       title: d.title,
       reason: d.reason.toString(),
-      fromDate: moment(d.fromDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      toDate: moment(d.toDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      fromDate: moment(d.fromDate, "DD/MM/YYYY HH:mm:ss")
+        .utc() // Chuyển thời gian về UTC
+        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      toDate: moment(d.toDate, "DD/MM/YYYY HH:mm:ss")
+        .utc() // Chuyển thời gian về UTC
+        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       status: isCheckPhieu.toString(),
-      createDate: moment().format("YYYY-MM-DD"),
+      createDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       idRequester: "",
       idManager: isUser,
       approvalDate: null,
@@ -251,7 +255,11 @@ const LeaveCart = ({
                 <div className="user-names">
                   <p>
                     <i className="fas fa-clock me-1"></i>Ngày nghỉ:{" "}
-                    {`${task.fromDate} - ${task.toDate}`}
+                    {`${moment(task.fromDate, "DD/MM/YYYY HH:mm:ss").format(
+                      "DD/MM/YY HH:mm"
+                    )} - ${moment(task.toDate, "DD/MM/YYYY HH:mm:ss").format(
+                      "DD/MM/YY HH:mm"
+                    )}`}
                   </p>
                 </div>
               </div>

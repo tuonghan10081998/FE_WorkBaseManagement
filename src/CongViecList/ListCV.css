@@ -108,7 +108,6 @@
   margin: 0;
 }
 .modal-body {
-  width: 90%;
   padding: 0;
 }
 .modal-fullscreen .modal-content {
@@ -282,7 +281,6 @@
   .select2-selection__placeholder {
   color: #837878; /* Màu chữ của placeholder */
   font-size: 16px; /* Kích thước chữ */
-  font-style: ; /* Kiểu chữ nghiêng */
 }
 .date-picker-container {
   position: relative;

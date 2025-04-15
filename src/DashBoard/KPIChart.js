@@ -12,27 +12,40 @@ const KPIChart = ({ data, dataKT }) => {
   const [thucHienData, setThucHienData] = useState([]);
   const [mucTieuData, setMucTieuData] = useState([]);
   const [keToanData, setKeToanData] = useState([]);
+  const [categoriesKT, setCategoriesKT] = useState([]);
+  const [thuNhapData, setThuNhapData] = useState([]);
   useEffect(() => {
-    if (data.length === 0 || dataKT.length === 0) return;
+    if (data.length === 0) return;
     // const kpiData = data[0];
     const newCategories = [];
     const newThucHienData = [];
     const newMucTieuData = [];
-    const newKeToanData = [];
 
     Object.keys(data).forEach((key, index) => {
       const [thucHien, mucTieu] = data[key].split("/").map(Number);
-      const ketoan = Number(dataKT[key]);
       newCategories.push(`T ${index + 1}`);
       newThucHienData.push(thucHien);
       newMucTieuData.push(mucTieu);
-      newKeToanData.push(ketoan);
     });
     setCategories(newCategories);
     setThucHienData(newThucHienData);
     setMucTieuData(newMucTieuData);
+  }, [data]);
+  useEffect(() => {
+    if (dataKT.length === 0) return;
+    const newKeToanData = [];
+    const newCategoriesKT = [];
+    const newThuNhapData = [];
+    Object.keys(dataKT).forEach((key, index) => {
+      const [chitieu, thunhap] = dataKT[key].split("/").map(Number);
+      newKeToanData.push(chitieu);
+      newThuNhapData.push(thunhap);
+      newCategoriesKT.push(`T ${index + 1}`);
+    });
     setKeToanData(newKeToanData);
-  }, [data, dataKT]);
+    setCategoriesKT(newCategoriesKT);
+    setThuNhapData(newThuNhapData);
+  }, [dataKT]);
 
   const options = {
     chart: {
@@ -73,7 +86,7 @@ const KPIChart = ({ data, dataKT }) => {
     },
     series: [
       {
-        name: "Muc tiêu",
+        name: "Mục tiêu",
         data: thucHienData,
       },
       {
@@ -91,7 +104,7 @@ const KPIChart = ({ data, dataKT }) => {
       text: "",
     },
     xAxis: {
-      categories: categories,
+      categories: categoriesKT,
       crosshair: true,
     },
     yAxis: {
@@ -123,6 +136,10 @@ const KPIChart = ({ data, dataKT }) => {
       {
         name: "Chi tiêu",
         data: keToanData,
+      },
+      {
+        name: "Thu nhập ",
+        data: thuNhapData,
       },
     ],
   };

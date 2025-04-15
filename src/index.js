@@ -13,6 +13,7 @@ import Leave from "./Leave/Leave";
 import Project from "./Project/Project";
 import Dashboard from "./DashBoard/DashBoard";
 import PurChaseOrder from "./PurChaseOrder/PurChaseOrder";
+import Revenue from "./Revenue/Revenue";
 export default function App() {
   return (
     <BrowserRouter>
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="/layout/KPI" element={<KPI />} />
             <Route path="/layout/Dashboard" element={<Dashboard />} />
             <Route path="/layout/PurChase" element={<PurChaseOrder />} />
+            <Route path="/layout/Revenue" element={<Revenue />} />
           </Route>
         </Routes>
       </TitleProvider>

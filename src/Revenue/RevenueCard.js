@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
 import moment from "moment";
-const PurChaseCard = ({ setData, onChange }) => {
+const RevenueCard = ({ setData, onChange }) => {
   const [show, setShow] = useState(false);
   const [isIDData, setIDData] = useState("");
   const handleSave = () => {
@@ -15,6 +15,7 @@ const PurChaseCard = ({ setData, onChange }) => {
       title: d.title,
       description: d.description,
       amount: d.amount,
+      idDepartment: d.idDepartment,
       createDate: moment(d.createDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
       idCreator: d.idCreator,
     };
@@ -27,7 +28,7 @@ const PurChaseCard = ({ setData, onChange }) => {
   };
   const PostSave = async (arrPost, NamePort) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}PaymentVoucher/Delete`,
+      `${process.env.REACT_APP_URL_API}Revenue/Delete`,
       {
         method: "POST",
         headers: {
@@ -62,7 +63,7 @@ const PurChaseCard = ({ setData, onChange }) => {
             <tr>
               <td scope="col">Mã ticket</td>
               <td scope="col">Tiêu đề</td>
-              <td scope="col">Giá</td>
+              <td scope="col">Thu nhập</td>
               <td scope="col">Ngày </td>
               <td scope="col">Nhân viên</td>
               <td style={{ minWidth: "200px", maxWidth: "400px" }} scope="col">
@@ -84,7 +85,6 @@ const PurChaseCard = ({ setData, onChange }) => {
                     {x.amount.toLocaleString()}
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>
-                    {" "}
                     {moment(x.createDate, "DD/MM/YYYY").format("DD/MM/YY")}
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>{x.fullName}</td>
@@ -130,7 +130,7 @@ const PurChaseCard = ({ setData, onChange }) => {
         <Modal.Header>
           <Modal.Title id="popupModalLabel">Thông báo</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Bạn muốn xóa đơn hàng này</Modal.Body>
+        <Modal.Body>Bạn muốn xóa thu nhập này</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Hủy
@@ -143,4 +143,4 @@ const PurChaseCard = ({ setData, onChange }) => {
     </div>
   );
 };
-export default PurChaseCard;
+export default RevenueCard;

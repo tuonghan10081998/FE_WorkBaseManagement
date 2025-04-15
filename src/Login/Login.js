@@ -64,7 +64,6 @@ const Login = () => {
 
       const data = await response.json();
       setPhongBan(data);
-      // setPhongBanValue(<data value="" 0="" className="dep_Code"></data>);
     } catch (error) {
       console.error(error.message);
     }

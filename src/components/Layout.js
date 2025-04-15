@@ -75,30 +75,6 @@ const Layout = () => {
           </span>
         </div>
         <nav className="nav flex-column">
-          {/* <div className="nav-item">
-            <a
-              className="nav-link text-white d-flex justify-content-between align-items-center"
-              href="#"
-              onClick={() => setIsHomeExpanded(!isHomeExpanded)}
-            >
-              <div>
-                <i className="fas fa-home text-lg"></i>
-                <span className="ms-2">Home</span>
-              </div>
-            </a>
-            {isHomeExpanded && (
-              <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
-                <Link className="nav-link text-white" to="/subhome1">
-                  <i className="fas fa-circle text-sm"></i>
-                  <span className="ms-2">Sub Home 1</span>
-                </Link>
-                <Link className="nav-link text-white" to="/subhome2">
-                  <i className="fas fa-circle text-sm"></i>
-                  <span className="ms-2">Sub Home 2</span>
-                </Link>
-              </div>
-            )}
-          </div> */}
           {isDB && (
             <div className="nav-item">
               <Link
@@ -157,7 +133,7 @@ const Layout = () => {
                   style={{ color: "#e70000" }}
                   className="fa-solid fa-person-walking-arrow-right"
                 ></i>
-                <span className="ms-2">Danh sách nghỉ phép</span>
+                <span className="ms-2">Danh sách xin phép</span>
               </div>
             </Link>
           </div>
@@ -176,20 +152,59 @@ const Layout = () => {
               </div>
             </Link>
           </div>
-          {isKT && (
+          {/* {isKT && (
             <div className="nav-item">
               <Link
                 className="nav-link text-white d-flex justify-content-between align-items-center"
                 to="/layout/PurChase"
               >
                 <div>
+                  <span className="ms-2">Kế toán</span>
+                </div>
+              </Link>
+            </div>  
+          )} */}
+          {isKT && (
+            <div className="nav-item">
+              <a
+                className="nav-link text-white d-flex justify-content-between align-items-center"
+                href="#"
+              >
+                <div onClick={() => setIsHomeExpanded(!isHomeExpanded)}>
                   <i
                     style={{ color: "rgb(249 237 72)" }}
                     className="fas fa-fire text-lg"
                   ></i>
                   <span className="ms-2">Kế toán</span>
                 </div>
-              </Link>
+              </a>
+              {isHomeExpanded && (
+                <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
+                  <Link
+                    onClick={handleMenu}
+                    className="nav-link text-white"
+                    to="/layout/PurChase"
+                  >
+                    <i
+                      style={{ color: "rgb(207 72 249)" }}
+                      className="fa-solid fa-circle-dollar-to-slot"
+                    ></i>
+                    <span className="ms-2">Chi tiêu</span>
+                  </Link>
+                  <Link
+                    onClick={handleMenu}
+                    className="nav-link text-white"
+                    to="/layout/Revenue"
+                  >
+                    <i
+                      style={{ color: "#f3b705" }}
+                      className="fa-solid fa-comments-dollar"
+                    ></i>
+
+                    <span className="ms-2">Thu nhập</span>
+                  </Link>
+                </div>
+              )}
             </div>
           )}
           {isPagePQ && (

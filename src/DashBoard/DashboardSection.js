@@ -49,7 +49,7 @@ const DashboardSection = ({ sectionTitle, items }) => {
           {/* Đây là phần thay thế card-body */}
           <div className="card-body py-2">
             <div className="row  bg-white">
-              {items.map((item, index) => (
+              {items?.map((item, index) => (
                 <DashboardCard key={index} {...item} />
               ))}
             </div>

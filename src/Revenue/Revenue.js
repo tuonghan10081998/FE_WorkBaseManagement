@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from "react";
 import { TitleContext } from "../components/TitleContext";
 import DateRangePicker from "../Date/DateRangePicker";
 import Select2Ticket from "../CongViecList/select2Ticket";
-import PurChaseCard from "./PuchaseCard";
-import CreatePurChase from "./CreatePurChase";
+import SelectTable from "../CongViecList/select2GridTable";
+import RevenueCard from "./RevenueCard";
+import CreateRevenue from "./CreateRevenue";
 import { Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 import moment from "moment";
-const PurChaseOrder = () => {
+
+const Revenue = () => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [dateRange, setDateRange] = useState({
@@ -15,7 +17,8 @@ const PurChaseOrder = () => {
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
   });
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
-
+  const [isPhongBanValue, setPhongBanValue] = useState("");
+  const [isPhongBan, setPhongBan] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [isCheckAdd, setCheckAdd] = useState(false);
   const [isID, setID] = useState("");
@@ -28,6 +31,7 @@ const PurChaseOrder = () => {
   const [isLeader, setLeader] = useState("");
   const [isTicketValue, setTicketValue] = useState("All");
   const [isCheckSave, setCheckSave] = useState(false);
+
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -58,32 +62,28 @@ const PurChaseOrder = () => {
       console.error(error.message);
     }
   };
-  useEffect(() => {
-    isUser != "" && getPhanQuyen();
-  }, []);
-  useEffect(() => {
-    var dataFilter = isData;
-    if (isTicketValue != "All")
-      dataFilter = dataFilter.filter((x) => x.ticket?.includes(isTicketValue));
-    setDataFilter(dataFilter);
-  }, [isData, isTicketValue]);
-  useEffect(() => {
-    let ticketFilter = isData;
+  const getPhongBan = async () => {
+    var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
+    // isRole !== "Administrator" &&
+    //   (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
 
-    const dataticket = Array.from(
-      new Map(
-        ticketFilter.map((item) => [
-          `${item.ticket}`,
-          {
-            ticket: item.ticket,
-          },
-        ])
-      ).values()
-    );
-    setTicket(dataticket);
-  }, [isData]);
-  const getPayment = async () => {
-    const url = `${process.env.REACT_APP_URL_API}PaymentVoucher/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
+      const data = await response.json();
+      setPhongBan(data);
+      setPhongBanValue(data[0].dep_Code);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    isRole != "" && getPhongBan();
+  }, [isRole]);
+  const getRevenue = async () => {
+    const url = `${process.env.REACT_APP_URL_API}Revenue/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -97,17 +97,49 @@ const PurChaseOrder = () => {
     }
   };
   useEffect(() => {
-    getPayment();
+    getRevenue();
   }, [isCheckAdd, dateRange]);
+
+  useEffect(() => {
+    isUser != "" && getPhanQuyen();
+  }, []);
+  useEffect(() => {
+    if (isPhongBanValue == "") return;
+    var dataFilter = isData;
+    if (isTicketValue != "All")
+      dataFilter = dataFilter.filter((x) => x.ticket?.includes(isTicketValue));
+    console.log(dataFilter);
+    dataFilter = dataFilter.filter((x) => x.idDepartment == isPhongBanValue);
+
+    setDataFilter(dataFilter);
+  }, [isData, isPhongBanValue, isTicketValue]);
+  useEffect(() => {
+    let ticketFilter = isData;
+
+    ticketFilter = ticketFilter.filter(
+      (x) => x.idDepartment == isPhongBanValue
+    );
+
+    const dataticket = Array.from(
+      new Map(
+        ticketFilter.map((item) => [
+          `${item.ticket}`,
+          {
+            ticket: item.ticket,
+          },
+        ])
+      ).values()
+    );
+    setTicket(dataticket);
+  }, [isData, isPhongBanValue]);
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
   const funTitle = () => {
-    setTitle(`Chi tiêu`);
+    setTitle(`Thu nhập`);
     setIcon(<i className="fa-duotone fa-solid fa-briefcase"></i>);
     setIconAdd();
   };
-
   useEffect(() => {
     funTitle();
   }, [setTitle, setIcon]);
@@ -117,6 +149,9 @@ const PurChaseOrder = () => {
 
   const onChangeMaTicket = async (value) => {
     setTicketValue(value);
+  };
+  const handlePBChange = (value) => {
+    setPhongBanValue(value);
   };
 
   const handleOnChange = (pur) => {
@@ -142,13 +177,21 @@ const PurChaseOrder = () => {
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
             <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
+              <label>Chọn phòng ban </label>{" "}
+              <SelectTable
+                setCheckAll={false}
+                dataSelect2={isPhongBan}
+                onPhongBanChange={handlePBChange}
+              />
+            </div>
+            <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
               <label>Mã ticket </label>{" "}
               <Select2Ticket
                 dataSelect2={isTicket}
                 onChangeMaTicket={onChangeMaTicket}
               />
             </div>
-            <div className="col-12 col-md-12 col-lg-4 col-xl-8 m-0 px-1  col_search ItemCV itemadd">
+            <div className="col-6 col-md-6 col-lg-4 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
               <button
                 style={{ marginTop: "25px" }}
                 onClick={() => {
@@ -163,7 +206,7 @@ const PurChaseOrder = () => {
           </div>
         </div>
       </div>
-      <PurChaseCard setData={isDataFilter} onChange={handleOnChange} />
+      <RevenueCard setData={isDataFilter} onChange={handleOnChange} />
       <Modal
         show={showPopup}
         onHide={handleClose}
@@ -174,15 +217,16 @@ const PurChaseOrder = () => {
         className="popupModalCreateLeave"
       >
         <Modal.Body>
-          <CreatePurChase
+          <CreateRevenue
             setData={isDataFilter.filter((x) => x.id == isID)}
             setCheckAdd={setCheckAdd}
             setShowPopup={setShowPopup}
             setCheckSave={isCheckSave}
+            setRole={isRole}
           />
         </Modal.Body>
       </Modal>
     </div>
   );
 };
-export default PurChaseOrder;
+export default Revenue;

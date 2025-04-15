@@ -45,15 +45,8 @@ const Dashboard = () => {
   const convertNghiPhepData = (data) => {
     return [
       {
-        title: "Tổng Nhân Viên",
-        count: data.soLuong ?? 0,
-        icon: "fas fa-users",
-        bg: "#17A2B8",
-        textDark: false,
-      },
-      {
         title: "Nhân Viên Nghỉ",
-        count: parseInt(data.status) || 0,
+        count: parseInt(data.soLuong) || 0,
         icon: "fas fa-user-times",
         bg: "#FFC107",
         textDark: true,

@@ -83,6 +83,7 @@ const Leave = () => {
   const [showPopup, setshowPopup] = useState(false);
   const [isEdit, setEdit] = useState("");
   const [isDataNV, setDataNV] = useState([]);
+
   useEffect(() => {
     setTitle(`Danh sách nghỉ phép `);
     setIcon(<i class="fa-duotone fa-solid fa-briefcase"></i>);
@@ -111,6 +112,7 @@ const Leave = () => {
       console.error(error.message);
     }
   };
+
   useEffect(() => {
     isRole != "" && fetchData();
   }, [isRole]);
@@ -327,34 +329,48 @@ const Leave = () => {
           />
         </div>
       </div>
-      <Modal
-        show={showPopup}
-        onHide={handleClose}
-        dialogClassName="modal-dialog-centered"
-        aria-labelledby="popupModalHeader"
-        backdrop="static" // Ngăn không cho modal đóng khi click ngoài
-        keyboard={false}
-        className="popupModalCreateLeave"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="popupModalHeader">
-            {isEdit == "0"
-              ? "Tạo phiếu"
-              : isEdit == "1"
-              ? "Duyệt phiếu"
-              : "Sửa phiếu"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Createleave
-            setshowPopup={setshowPopup}
-            setCheckAdd={setCheckAdd}
-            setdataFilter={isWorkItem}
-            setEdit={isEdit}
-            setFullName={isFullName}
-          />
-        </Modal.Body>
-      </Modal>
+      <>
+        {showPopup && (
+          <div className="modal-backdrop fade show"></div> // Thêm lớp backdrop khi modal mở
+        )}
+        <div
+          className={`modal ${showPopup ? "d-block" : "d-none"}`} // Điều khiển modal mở hay đóng
+          tabIndex={-1}
+          role="dialog"
+          id="customModal"
+          aria-labelledby="popupModalHeader"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="popupModalHeader">
+                  {isEdit === "0"
+                    ? "Tạo phiếu"
+                    : isEdit === "1"
+                    ? "Duyệt phiếu"
+                    : "Sửa phiếu"}
+                </h5>
+                <button
+                  onClick={() => setshowPopup(false)}
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body cardleave" style={{ padding: "2px" }}>
+                <Createleave
+                  setshowPopup={setshowPopup}
+                  setCheckAdd={setCheckAdd}
+                  setdataFilter={isWorkItem}
+                  setEdit={isEdit}
+                  setFullName={isFullName}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     </div>
   );
 };

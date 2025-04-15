@@ -97,8 +97,8 @@ const KPIMonth = ({
                   <td>{index + 1}</td>
                   <td>{employee.fullName}</td>
                   <td>{employee.dep_Name}</td>
-                  <td>{employee.kpi}</td>
-                  <td>{employee.result}</td>
+                  <td>{employee.kpi.toLocaleString()}</td>
+                  <td>{employee.result.toLocaleString()}</td>
                   <td>
                     <div className="mb-2">
                       <div className="text-muted small">

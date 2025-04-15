@@ -7,12 +7,31 @@ import "bootstrap/dist/js/bootstrap.js";
 import moment from "moment";
 import { InitDate } from "../components/DatePicker";
 
-const CreatePurChase = ({
+const CreateRevenue = ({
   setData,
   setCheckAdd,
   setShowPopup,
   setCheckSave,
+  setRole,
 }) => {
+  const selectRef = useRef(null);
+  useEffect(() => {
+    if (selectRef.current) {
+      $(selectRef.current).select2({
+        placeholder: "Chọn phòng ban...",
+      });
+      $(selectRef.current).val(null).trigger("change");
+      $(selectRef.current).on("change", function () {
+        const value = $(this).val();
+        setPhongBanValue(value);
+      });
+    }
+    return () => {
+      if (selectRef.current) {
+        $(selectRef.current).select2("destroy");
+      }
+    };
+  }, []);
   const [isFullName, setFullName] = useState(localStorage.getItem("fullName"));
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const selectRef2 = useRef(null);
@@ -27,9 +46,31 @@ const CreatePurChase = ({
   const [isDescript, setDescript] = useState("");
   const [isCheckShow, setCheckShow] = useState(true);
   const [isID, setID] = useState(0);
+  const [isCheckSelect, setCheckSelect] = useState(false);
+
+  const [isPhongBanValue, setPhongBanValue] = useState("");
+  const [isPhongBan, setPhongBan] = useState([]);
   useEffect(() => {
     InitDate(".thoigian", setThoiGianBD, setThoiGianKT);
   }, []);
+  useEffect(() => {
+    getPhongBan();
+  }, []);
+  const getPhongBan = async () => {
+    var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setPhongBan(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleFocusInput = (inputRef) => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -45,15 +86,19 @@ const CreatePurChase = ({
       handleNotifi("nhập mã ticket");
       return;
     }
-
+    if (isPhongBanValue == "") {
+      handleNotifi("chọn phòng ban ");
+      return;
+    }
     if (isThoiGianKT == "") {
       handleNotifi("chọn ngày ");
       return;
     }
     if (isPrice == "") {
-      handleNotifi("nhập giá ");
+      handleNotifi("nhập thu nhập ");
       return;
     }
+
     setDisable(true);
     const object = {
       id: isID,
@@ -61,6 +106,7 @@ const CreatePurChase = ({
       title: isTitle,
       description: isDescript,
       amount: isPrice,
+      idDepartment: isPhongBanValue,
       createDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
       idCreator: isUser,
     };
@@ -68,7 +114,7 @@ const CreatePurChase = ({
   };
   const PostSave = async (arrPost) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}PaymentVoucher/Post`,
+      `${process.env.REACT_APP_URL_API}Revenue/Post`,
       {
         method: "POST",
         headers: {
@@ -104,6 +150,11 @@ const CreatePurChase = ({
       position: "topRight",
     });
   };
+  // useEffect(() => {
+  //   if (selectRef.current) {
+  //     $(selectRef.current).val(isPhongBanValue).trigger("change"); // Gán giá trị và trigger select2
+  //   }
+  // }, [isPhongBanValue]);
   useEffect(() => {
     if (!setCheckSave) {
       const d = setData[0];
@@ -113,7 +164,9 @@ const CreatePurChase = ({
       setPrice(d.amount);
       setTile(d.title);
       setThoiGianKT(d.createDate);
+      setPhongBanValue(d.idDepartment);
       setCheckShow(false);
+      setCheckSelect(true);
     } else {
       setID(0);
       setDescript("");
@@ -121,6 +174,8 @@ const CreatePurChase = ({
       setPrice("");
       setTile("");
       setThoiGianKT(moment().format("DD/MM/YYYY"));
+      setPhongBanValue(false);
+      setCheckSelect(false);
       setCheckShow(true);
     }
   }, [setCheckSave]);
@@ -196,16 +251,36 @@ const CreatePurChase = ({
                 </div>
               </div>
             </div>
-
             <div className="col-12 m-0 p-0 my-2 ">
               <div className="row">
                 <div className="form-group col-12 m-0 p-0 ">
-                  <label htmlFor="projectName">Giá</label>
+                  <label htmlFor="projectName">Phòng ban</label>
+                  <select
+                    disabled={isCheckSelect}
+                    value={isPhongBanValue}
+                    className="select_2 select2PhongBan"
+                    ref={selectRef}
+                  >
+                    {" "}
+                    <option value=""></option>
+                    {isPhongBan?.map((item) => (
+                      <option key={item.dep_Code} value={item.dep_Code}>
+                        {item.dep_Name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="col-12 m-0 p-0 my-2 ">
+              <div className="row">
+                <div className="form-group col-12 m-0 p-0 ">
+                  <label htmlFor="projectName">Thu nhập</label>
                   <input
                     type="number"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập giá"
+                    placeholder="Nhập thu nhập"
                     onChange={(e) => setPrice(e.currentTarget.value)}
                     value={isPrice}
                     autoComplete="off"
@@ -252,4 +327,4 @@ const CreatePurChase = ({
     </div>
   );
 };
-export default CreatePurChase;
+export default CreateRevenue;

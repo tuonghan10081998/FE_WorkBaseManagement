@@ -162,7 +162,7 @@
   width: 131px;
   display: none;
   cursor: pointer;
-  z-index: 9999;
+  z-index: 9;
 }
 .popupsettingCart.active {
   display: flex;

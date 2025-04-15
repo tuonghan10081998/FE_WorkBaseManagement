@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useContext } from "react";
-import { InitDate } from "../components/DatePicker";
+import { InitDateH } from "../components/DatePickerHour";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "izitoast/dist/css/iziToast.min.css";
 import iziToast from "izitoast";
@@ -27,7 +27,7 @@ const Createleave = ({
   };
 
   useEffect(() => {
-    InitDate(".thoigian", setThoiGianBD, setThoiGianKT);
+    InitDateH(".thoigian", setThoiGianBD, setThoiGianKT);
   }, []);
   useEffect(() => {
     if (setdataFilter.length > 0) {
@@ -79,10 +79,14 @@ const Createleave = ({
       id: isID,
       title: isTitle,
       reason: reason.toString(),
-      fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      fromDate: moment(isThoiGianBD, "DD/MM/YYYY HH:mm:ss")
+        .utc() // Chuyển thời gian về UTC
+        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      toDate: moment(isThoiGianKT, "DD/MM/YYYY HH:mm:ss")
+        .utc() // Chuyển thời gian về UTC
+        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       status: isSave.toString(),
-      createDate: moment().format("YYYY-MM-DD"),
+      createDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       idRequester: checkSave == 0 ? isUser : "",
       idManager: checkSave != 0 ? isUser : "",
       approvalDate: null,
@@ -133,7 +137,7 @@ const Createleave = ({
       <div className="row justify-content-center">
         <div className="col-12">
           <div className="card shadow-sm">
-            <div className="card-body">
+            <div className="card-body" style={{ padding: " 2px 20px 10px" }}>
               <form onSubmit={handleSubmit}>
                 <div className="col-12 my-2">
                   <label htmlFor="fullName" className="form-label">
@@ -213,6 +217,7 @@ const Createleave = ({
                     onChange={(e) => setReason(e.target.value)}
                   ></textarea>
                 </div>
+
                 <div className="d-flex justify-content-between mt-3">
                   <button
                     onClick={() => handleSave(2, 1)}
