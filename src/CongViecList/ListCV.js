@@ -273,55 +273,7 @@ const ListCV = () => {
       setShowPopup(!showPopup);
     }
   }, [IsClickCTH, IsClickTH, IsClickHT, IsClickQH]);
-  useEffect(() => {
-    let dataPB = isdataF;
-    let quatrinh = IsQuaTrinh;
-    const valueDuan = IsDuAn;
 
-    if (isPhongBanValue != "All")
-      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
-
-    if (isTicketValue != "All")
-      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
-
-    if (isNhanVienValue !== "All")
-      dataPB = dataPB.filter(
-        (x) =>
-          x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue)
-      );
-
-    if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
-
-    dataPB = dataPB.filter((x) =>
-      x.workName.toLowerCase().includes(valueDuan.toLowerCase())
-    );
-    setdataFilter(dataPB);
-  }, [isPhongBanValue, isdataF]);
-  useEffect(() => {
-    let dataPB = isdataF;
-    let quatrinh = IsQuaTrinh;
-    const valueDuan = IsDuAn;
-    if (isPhongBanValue != "All")
-      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
-
-    if (isNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idImplementer?.includes(isNhanVienValue));
-
-    if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
-
-    if (isNhanVienValue !== "All")
-      dataPB = dataPB.filter(
-        (x) =>
-          x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue) ||
-          x.idResponsible?.includes(isNhanVienValue)
-      );
-    dataPB = dataPB.filter((x) =>
-      x.workName.toLowerCase().includes(valueDuan.toLowerCase())
-    );
-    setdataFilter(dataPB);
-  }, [IsQuaTrinh, isdataF]);
   useEffect(() => {
     let dataPB = isdataF;
     let quatrinh = IsQuaTrinh;
@@ -341,11 +293,19 @@ const ListCV = () => {
           x.idRequester?.includes(isNhanVienValue) ||
           x.idResponsible?.includes(isNhanVienValue)
       );
+
     dataPB = dataPB.filter((x) =>
       x.workName.toLowerCase().includes(valueDuan.toLowerCase())
     );
     setdataFilter(dataPB);
-  }, [IsDuAn]);
+  }, [
+    isPhongBanValue,
+    isTicketValue,
+    IsQuaTrinh,
+    IsDuAn,
+    isNhanVienValue,
+    isdataF,
+  ]);
 
   useEffect(() => {
     let dataDelete = data.filter((x) => x.id != IsDelete);
@@ -359,55 +319,6 @@ const ListCV = () => {
     setShowPopup(!showPopup);
     setWorkItem(dataEdit);
   };
-  useEffect(() => {
-    let dataPB = isdataF;
-    let quatrinh = IsQuaTrinh;
-    const valueDuan = IsDuAn;
-    if (isPhongBanValue != "All")
-      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
-
-    if (isTicketValue != "All")
-      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
-
-    if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
-
-    if (isNhanVienValue !== "All")
-      dataPB = dataPB.filter(
-        (x) =>
-          x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue) ||
-          x.idResponsible?.includes(isNhanVienValue)
-      );
-    dataPB = dataPB.filter((x) =>
-      x.workName.toLowerCase().includes(valueDuan.toLowerCase())
-    );
-    setdataFilter(dataPB);
-  }, [isNhanVienValue, isdataF]);
-  useEffect(() => {
-    let dataPB = isdataF;
-    let quatrinh = IsQuaTrinh;
-    const valueDuan = IsDuAn;
-    if (isPhongBanValue != "All")
-      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
-
-    if (isTicketValue != "All")
-      dataPB = dataPB.filter((x) => x.ticket?.includes(isTicketValue));
-
-    if (quatrinh != 0) dataPB = dataPB.filter((x) => x.status == quatrinh);
-
-    if (isNhanVienValue !== "All")
-      dataPB = dataPB.filter(
-        (x) =>
-          x.idImplementer?.includes(isNhanVienValue) ||
-          x.idRequester?.includes(isNhanVienValue) ||
-          x.idResponsible?.includes(isNhanVienValue)
-      );
-
-    dataPB = dataPB.filter((x) =>
-      x.workName.toLowerCase().includes(valueDuan.toLowerCase())
-    );
-    setdataFilter(dataPB);
-  }, [isTicketValue, isdataF]);
   return (
     <div className="">
       {/* <div className="addtask addtaskleave d-flex">

@@ -199,6 +199,7 @@ const Leave = () => {
     setDataF(filteredData);
     setdataFilter(filteredData);
   }, [data, isRole]);
+
   useEffect(() => {
     let dataPB = isdataF;
     if (isPhongBanValue != "All")
@@ -208,17 +209,7 @@ const Leave = () => {
       dataPB = dataPB.filter((x) => x.idRequester?.includes(IsNhanVienValue));
 
     setdataFilter(dataPB);
-  }, [isPhongBanValue, isdataF]);
-
-  useEffect(() => {
-    let dataPB = isdataF;
-    if (isPhongBanValue != "All")
-      dataPB = dataPB.filter((x) => x.dep_Code?.includes(isPhongBanValue));
-
-    if (IsNhanVienValue != "All")
-      dataPB = dataPB.filter((x) => x.idRequester?.includes(IsNhanVienValue));
-    setdataFilter(dataPB);
-  }, [IsNhanVienValue, isdataF]);
+  }, [IsNhanVienValue, isPhongBanValue, isdataF]);
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
@@ -342,7 +333,7 @@ const Leave = () => {
         >
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
-              <div className="modal-header">
+              <div style={{ padding: "10px 20px" }} className="modal-header">
                 <h5 className="modal-title" id="popupModalHeader">
                   {isEdit === "0"
                     ? "Tạo phiếu"
