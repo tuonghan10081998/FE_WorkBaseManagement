@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardSection from "./DashboardSection";
 import SelectTable from "../CongViecList/select2GridTable";
+import DashboardDT from "./DashboardDT";
 import KPIChart from "./KPIChart";
 import { TitleContext } from "../components/TitleContext";
 import DateRangePicker from "../Date/DateRangePicker";
@@ -45,7 +46,7 @@ const Dashboard = () => {
   const convertNghiPhepData = (data) => {
     return [
       {
-        title: "Nhân Viên Nghỉ",
+        title: "Nhân viên nghỉ",
         count: parseInt(data.soLuong) || 0,
         icon: "fas fa-user-times",
         bg: "#FFC107",
@@ -53,7 +54,17 @@ const Dashboard = () => {
       },
     ];
   };
-
+  const convertDoanhThu = (data) => {
+    return [
+      {
+        title: "Doanh thu",
+        count: parseInt(data.doanhThu) || 0,
+        icon: "fa-solid fa-chart-simple",
+        bg: "#28a745",
+        textDark: false,
+      },
+    ];
+  };
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isRole, setRole] = useState("");
@@ -66,6 +77,7 @@ const Dashboard = () => {
   const [isKeToan, setKeToan] = useState([]);
   const [isDuAn, setDuAn] = useState([]);
   const [isNghiPhep, setNgayPhep] = useState([]);
+  const [isDoanhThu, setDoanhThu] = useState([]);
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -155,6 +167,7 @@ const Dashboard = () => {
       setDuAn(getTable.task);
       setNgayPhep(getTable.leave);
       setKeToan(getTable.fee);
+      setDoanhThu(getTable.doanhThu);
     } catch (error) {
       console.error(error.message);
     }
@@ -171,7 +184,7 @@ const Dashboard = () => {
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn phòng ban </label>{" "}
+              <label>Phòng ban </label>{" "}
               <SelectTable
                 setCheckAll={false}
                 dataSelect2={isPhongBan}
@@ -198,10 +211,26 @@ const Dashboard = () => {
           sectionTitle="Dự án"
           items={convertDataToDashboardItems(isDuAn)}
         />
-        <DashboardSection
-          sectionTitle="Nghỉ Phép"
-          items={convertNghiPhepData(isNghiPhep)}
-        />
+        <div
+          className="col-12 dashboard"
+          style={{
+            padding: "2px 10px",
+            marginBottom: "10px",
+            borderRadius: "0",
+          }}
+        >
+          <div className="row">
+            <DashboardDT
+              sectionTitle="Doanh thu"
+              items={convertDoanhThu(isDoanhThu)}
+            />
+            <DashboardDT
+              sectionTitle="Nghỉ Phép"
+              items={convertNghiPhepData(isNghiPhep)}
+            />
+          </div>
+        </div>
+
         <KPIChart data={isKPI} dataKT={isKeToan} />
       </div>
     </div>

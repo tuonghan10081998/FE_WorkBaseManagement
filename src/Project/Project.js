@@ -400,7 +400,7 @@ const Project = () => {
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn phòng ban </label>{" "}
+              <label>Phòng ban </label>{" "}
               <SelectTable
                 dataSelect2={isPhongBan}
                 onPhongBanChange={handlePBChange}
@@ -438,7 +438,7 @@ const Project = () => {
               />
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn nhân viên</label>{" "}
+              <label>Nhân viên</label>{" "}
               <Select2NV
                 dataSelect2NV={isNhanVien}
                 onNhanVienChange={handleNVChange}

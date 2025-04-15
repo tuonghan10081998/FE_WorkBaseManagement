@@ -30,7 +30,7 @@ const DashboardSection = ({ sectionTitle, items }) => {
         <div className="card card-success">
           <div className=" card-header bg-white">
             <h3
-              style={{ fontWeight: "bold", fontSize: "20px", marginBottom: 0 }}
+              style={{ fontWeight: "bold", fontSize: "20px" }}
               className="card-title text-black "
             >
               {sectionTitle}
@@ -49,7 +49,7 @@ const DashboardSection = ({ sectionTitle, items }) => {
           {/* Đây là phần thay thế card-body */}
           <div className="card-body py-2">
             <div className="row  bg-white">
-              {items?.map((item, index) => (
+              {items.map((item, index) => (
                 <DashboardCard key={index} {...item} />
               ))}
             </div>

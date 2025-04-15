@@ -85,7 +85,7 @@ const Leave = () => {
   const [isDataNV, setDataNV] = useState([]);
 
   useEffect(() => {
-    setTitle(`Danh sách nghỉ phép `);
+    setTitle(`Danh sách xin phép `);
     setIcon(<i class="fa-duotone fa-solid fa-briefcase"></i>);
     setIconAdd();
   }, [setTitle, setIcon]);
@@ -260,7 +260,7 @@ const Leave = () => {
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn phòng ban </label>{" "}
+              <label>Phòng ban </label>{" "}
               <SelectTable
                 dataSelect2={isPhongBan}
                 onPhongBanChange={handlePBChange}

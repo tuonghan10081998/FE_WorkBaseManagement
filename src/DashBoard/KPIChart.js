@@ -14,6 +14,7 @@ const KPIChart = ({ data, dataKT }) => {
   const [keToanData, setKeToanData] = useState([]);
   const [categoriesKT, setCategoriesKT] = useState([]);
   const [thuNhapData, setThuNhapData] = useState([]);
+  const [doanhthuData, setDoanhThuData] = useState([]);
   useEffect(() => {
     if (data.length === 0) return;
     // const kpiData = data[0];
@@ -36,15 +37,19 @@ const KPIChart = ({ data, dataKT }) => {
     const newKeToanData = [];
     const newCategoriesKT = [];
     const newThuNhapData = [];
+    const newDoanhThuData = [];
     Object.keys(dataKT).forEach((key, index) => {
       const [chitieu, thunhap] = dataKT[key].split("/").map(Number);
       newKeToanData.push(chitieu);
       newThuNhapData.push(thunhap);
+      const doanhthu = thunhap - chitieu;
+      newDoanhThuData.push(doanhthu);
       newCategoriesKT.push(`T ${index + 1}`);
     });
     setKeToanData(newKeToanData);
     setCategoriesKT(newCategoriesKT);
     setThuNhapData(newThuNhapData);
+    setDoanhThuData(newDoanhThuData);
   }, [dataKT]);
 
   const options = {
@@ -109,9 +114,8 @@ const KPIChart = ({ data, dataKT }) => {
     },
     yAxis: {
       min: 0,
-      title: {
-        text: "Số Lượng",
-      },
+      title: { text: "Số Lượng" },
+      opposite: false, // dùng true nếu muốn đưa trục y của line qua bên phải
     },
     tooltip: {
       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -136,10 +140,22 @@ const KPIChart = ({ data, dataKT }) => {
       {
         name: "Chi tiêu",
         data: keToanData,
+        type: "column",
       },
       {
-        name: "Thu nhập ",
+        name: "Thu nhập",
         data: thuNhapData,
+        type: "column",
+      },
+      {
+        name: "Doanh thu",
+        data: doanhthuData,
+        type: "line",
+        color: "#FF5733",
+        marker: {
+          enabled: true,
+          symbol: "circle",
+        },
       },
     ],
   };

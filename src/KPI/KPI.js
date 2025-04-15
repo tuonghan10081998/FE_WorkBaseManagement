@@ -268,7 +268,7 @@ const KPI = () => {
                 !isTab ? "col-6" : "col-6"
               }  col-md-6 col-lg-2 col-xl-2 m-0  col_search ItemCV`}
             >
-              <label style={{ whiteSpace: "nowrap" }}>Chọn năm </label>{" "}
+              <label style={{ whiteSpace: "nowrap" }}>Năm </label>{" "}
               <select
                 className="select_uutien select_year"
                 value={selectedYear}
@@ -286,7 +286,7 @@ const KPI = () => {
                 isTab ? "active" : ""
               }`}
             >
-              <label style={{ whiteSpace: "nowrap" }}>Chọn tháng </label>{" "}
+              <label style={{ whiteSpace: "nowrap" }}>Tháng </label>{" "}
               <select
                 className="select_uutien select_year"
                 value={selectedMonth}
@@ -300,7 +300,7 @@ const KPI = () => {
               </select>
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn phòng ban </label>{" "}
+              <label>Phòng ban </label>{" "}
               <SelectTable
                 setCheckAll={false}
                 dataSelect2={isPhongBan}
@@ -309,7 +309,7 @@ const KPI = () => {
             </div>
 
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn nhân viên</label>{" "}
+              <label>Nhân viên</label>{" "}
               <Select2NV
                 dataSelect2NV={isNhanVien}
                 onNhanVienChange={handleNVChange}
