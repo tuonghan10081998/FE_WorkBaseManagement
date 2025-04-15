@@ -182,13 +182,13 @@ const ProjectColumn = ({
                     data-id={task.id}
                     className="popupsettingCart popupsettingCV"
                   >
-                    {task.statusHT !== "1" && setPQDuyen !== "Member" && (
+                    {/* setPQDuyen !== "Member" && */}
+                    {task.statusHT !== "1" && status !== 1 && (
                       <div data-id={task.id} onClick={(e) => handleShowHT(e)}>
                         <i className="fa-solid fa-street-view me-1"></i>
                         <span>Hoàn thành</span>
                       </div>
                     )}
-
                     <div
                       data-id={task.id}
                       onClick={(e) => {

@@ -421,8 +421,9 @@ const GridWork = ({
                           data-id={row.values.id}
                           className="popupsettingCart popupsettingCV gridPop"
                         >
+                          {/* setPQDuyen !== "Member" && */}
                           {row.values.statusHT !== "1" &&
-                            setPQDuyen !== "Member" && (
+                            row.values.status !== "1" && (
                               <div
                                 data-id={row.values.id}
                                 onClick={(e) => {
@@ -438,7 +439,6 @@ const GridWork = ({
                                 <span>Hoàn thành</span>
                               </div>
                             )}
-
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {
@@ -538,7 +538,6 @@ const GridWork = ({
                               <span>Sửa</span>
                             </div>
                           )}
-
                           {setPQDuyen === "Administrator" && (
                             <div
                               data-id={row.values.id}

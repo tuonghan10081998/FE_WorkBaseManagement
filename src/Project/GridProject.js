@@ -428,8 +428,9 @@ const GridTask = ({
                           data-id={row.values.id}
                           className="popupsettingCart popupsettingCV gridPop"
                         >
+                          {/* setPQDuyen !== "Member" && */}
                           {row.values.statusHT !== "1" &&
-                            setPQDuyen !== "Member" && (
+                            row.values.status !== "1" && (
                               <div
                                 data-id={row.values.id}
                                 onClick={(e) => {
@@ -445,7 +446,6 @@ const GridTask = ({
                                 <span>Hoàn thành</span>
                               </div>
                             )}
-
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {

@@ -180,7 +180,8 @@ const TaskColumn = ({
                     data-id={task.id}
                     className="popupsettingCart popupsettingCV"
                   >
-                    {task.statusHT !== "1" && setPQDuyen !== "Member" && (
+                    {/* && setPQDuyen !== "Member" */}
+                    {task.statusHT !== "1" && status !== 1 && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {
@@ -192,7 +193,6 @@ const TaskColumn = ({
                         <span>Hoàn thành</span>
                       </div>
                     )}
-
                     <div
                       data-id={task.id}
                       onClick={(e) => {
@@ -279,7 +279,6 @@ const TaskColumn = ({
                       <i class="fa-solid fa-eye me-1"></i>
                       <span> Xem </span>
                     </div>
-
                     {setPQDuyen !== "Member" && (
                       <div
                         onClick={(e) => {
@@ -301,7 +300,7 @@ const TaskColumn = ({
                       <div
                         data-id={task.id}
                         onClick={(e) => {
-                          handleShowHT(e);
+                          // handleShowHT(e);
                           handleShow(e);
                           setLableBody("Bạn muốn xóa công việc này");
                           setLable("Thông báo");
