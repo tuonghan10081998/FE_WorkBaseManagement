@@ -141,7 +141,7 @@ const Createleave = ({
               <form onSubmit={handleSubmit}>
                 <div className="col-12 my-2">
                   <label htmlFor="fullName" className="form-label">
-                    Họ và Tên
+                    Họ và tên
                   </label>
                   <input
                     type="text"
@@ -149,7 +149,7 @@ const Createleave = ({
                     id="fullName"
                     value={setFullName}
                     // onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Nhập họ và tên của bạn"
+                    placeholder=""
                   />
                 </div>
                 <div className="col-12 my-2">
@@ -162,7 +162,7 @@ const Createleave = ({
                     id="fullName"
                     value={isTitle}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Nhập tiêu đề"
+                    placeholder=""
                     autoComplete="off"
                   />
                 </div>
@@ -206,13 +206,13 @@ const Createleave = ({
                 </div>
                 <div className="col-12">
                   <label htmlFor="reason" className="form-label">
-                    Lý Do Nghỉ Phép
+                    Lý do nghỉ phép
                   </label>
                   <textarea
                     className="form-control"
                     id="reason"
                     rows="4"
-                    placeholder="Nhập lý do nghỉ phép của bạn"
+                    placeholder=""
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                   ></textarea>

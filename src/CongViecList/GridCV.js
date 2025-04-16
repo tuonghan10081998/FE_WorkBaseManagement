@@ -17,6 +17,8 @@ const GridWork = ({
   setPQDuyen,
 }) => {
   const elementRef = useRef([]);
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
+
   const [isTop, setTop] = useState(null);
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isTitleBody, setTiTleBody] = useState("");
@@ -25,6 +27,7 @@ const GridWork = ({
   const [isCheckHandle, setCheckHandle] = useState(null);
   const [isCheckPhieu, setCheckPhieu] = useState(null);
   const [isLable, setLable] = useState(null);
+  const [isFeedBack, setFeedBack] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = (e) => {
     let ID = e.currentTarget.dataset.id;
@@ -36,9 +39,67 @@ const GridWork = ({
     setShow(false);
     handleSave("Delete");
   };
+  window.handleFeedbackChange = function (val) {
+    setFeedBack(val);
+  };
   const handlesSubmit = () => {
     isCheckHandle == 0 && handleClickDelete();
     isCheckHandle == 1 && handleSave("PostHT");
+    isCheckHandle == 2 && handleFeedBack();
+  };
+  const handleFeedBack = () => {
+    const object = {
+      id: isIDData,
+      ticket: "string",
+      workName: "string",
+      description: "string",
+      priority: 0,
+      note: "string",
+      idRequester: "string",
+      createDate: "2025-04-16T16:47:16.878Z",
+      fromDate: "2025-04-16T16:47:16.878Z",
+      remindDate: "2025-04-16T16:47:16.878Z",
+      toDate: "2025-04-16T16:47:16.878Z",
+      completeDate: "2025-04-16T16:47:16.878Z",
+      idResponsible: "string",
+      idApprover: "string",
+      feedback: isFeedBack,
+      statusHT: 0,
+      statusRemind: 0,
+      lstIDImplementer: ["string"],
+      idUserFeedback: isUser,
+    };
+    PostFB(object);
+  };
+  const PostFB = async (arrPost) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Work/PostFeedback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+
+      setCheckAdd((prev) => !prev);
+      setShow(false);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
   };
   const handleClickTD = (e, index) => {
     const element = elementRef.current[index];
@@ -116,6 +177,7 @@ const GridWork = ({
       remindDate: moment(d.remindDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
       idApprover: "",
       statusHT: 1,
+      idUserFeedback: "",
     };
     arrHT.push(object);
     PostSave(object, NamePort);
@@ -151,7 +213,7 @@ const GridWork = ({
     }
   };
   const handleClick = (e) => {
-    const parent = e.currentTarget.closest(".carticon");
+    const parent = e.currentTarget.closest(".cartion");
     const child = parent.querySelector(".popupsettingCart");
     if (child) {
       child.classList.toggle("active");
@@ -232,6 +294,7 @@ const GridWork = ({
       { Header: "Deadline", accessor: "toDate" },
       { Header: "Hành động", accessor: "complete" },
       { Header: "Hành động", accessor: "remindDate" },
+      { Header: "Hành động", accessor: "feedback" },
     ],
     []
   );
@@ -269,6 +332,8 @@ const GridWork = ({
         "fromDate",
         "completeDate",
         "remindDate",
+        ,
+        "feedback",
       ].includes(column.id)
     ) {
       return {
@@ -422,23 +487,22 @@ const GridWork = ({
                           className="popupsettingCart popupsettingCV gridPop"
                         >
                           {/* setPQDuyen !== "Member" && */}
-                          {row.values.statusHT !== "1" &&
-                            row.values.status !== "1" && (
-                              <div
-                                data-id={row.values.id}
-                                onClick={(e) => {
-                                  handleShow(e);
-                                  setTiTleBody(
-                                    "<p>Bạn xác nhận hoàn thành công việc này</p>"
-                                  );
-                                  setLable("Thông báo");
-                                  setCheckHandle(1);
-                                }}
-                              >
-                                <i className="fa-solid fa-street-view me-1"></i>
-                                <span>Hoàn thành</span>
-                              </div>
-                            )}
+                          {row.values.statusHT !== "1" && (
+                            <div
+                              data-id={row.values.id}
+                              onClick={(e) => {
+                                handleShow(e);
+                                setTiTleBody(
+                                  "<p>Bạn xác nhận hoàn thành công việc này</p>"
+                                );
+                                setLable("Thông báo");
+                                setCheckHandle(1);
+                              }}
+                            >
+                              <i className="fa-solid fa-street-view me-1"></i>
+                              <span>Hoàn thành</span>
+                            </div>
+                          )}
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {
@@ -513,10 +577,19 @@ const GridWork = ({
                               }</div> 
                             </div>
                           </div>
+                            <div class="task_item item_detail" style="gap: 2px;">
+                      <div style="width: 100%;">
+                        <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:
+                        <textarea 
+                          style="width: 100%; margin-top: 5px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;outline: none;" 
+                          placeholder="" 
+                          oninput="handleFeedbackChange(this.value)"
+                        >${row.values.feedback}</textarea>  
                         </div>
                       `);
                               setLable("Xem chi tiết công việc");
-                              setCheckHandle(0);
+                              setCheckHandle(2);
+                              setFeedBack(row.values.feedback);
                             }}
                           >
                             <i class="fa-solid fa-eye me-1"></i>
@@ -585,11 +658,10 @@ const GridWork = ({
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          {isLable == "Thông báo" && (
-            <Button onClick={() => handlesSubmit()} variant="primary">
-              Đồng ý
-            </Button>
-          )}{" "}
+
+          <Button onClick={() => handlesSubmit()} variant="primary">
+            {isLable == "Thông báo" ? "Đồng ý " : "Lưu FeedBack"}
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

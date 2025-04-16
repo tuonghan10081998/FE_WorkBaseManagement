@@ -2,10 +2,10 @@ import React, { useState, useContext, useEffect } from "react";
 import { TitleContext } from "../components/TitleContext";
 import DateRangePicker from "../Date/DateRangePicker";
 import Select2Ticket from "../CongViecList/select2Ticket";
+import SelectTable from "../CongViecList/select2GridTable";
 import PurChaseCard from "./PuchaseCard";
 import CreatePurChase from "./CreatePurChase";
 import { Modal, Button } from "react-bootstrap";
-import $ from "jquery";
 import moment from "moment";
 const PurChaseOrder = () => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
@@ -28,6 +28,8 @@ const PurChaseOrder = () => {
   const [isLeader, setLeader] = useState("");
   const [isTicketValue, setTicketValue] = useState("All");
   const [isCheckSave, setCheckSave] = useState(false);
+  const [isPhongBanValue, setPhongBanValue] = useState("");
+  const [isPhongBan, setPhongBan] = useState(null);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -65,11 +67,15 @@ const PurChaseOrder = () => {
     var dataFilter = isData;
     if (isTicketValue != "All")
       dataFilter = dataFilter.filter((x) => x.ticket?.includes(isTicketValue));
+
+    dataFilter = dataFilter.filter((x) => x.idDepartment == isPhongBanValue);
     setDataFilter(dataFilter);
-  }, [isData, isTicketValue]);
+  }, [isData, isTicketValue, isPhongBanValue]);
   useEffect(() => {
     let ticketFilter = isData;
-
+    ticketFilter = ticketFilter.filter(
+      (x) => x.idDepartment === isPhongBanValue
+    );
     const dataticket = Array.from(
       new Map(
         ticketFilter.map((item) => [
@@ -81,7 +87,27 @@ const PurChaseOrder = () => {
       ).values()
     );
     setTicket(dataticket);
-  }, [isData]);
+  }, [isData, isPhongBanValue]);
+  const getPhongBan = async () => {
+    var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
+    // isRole !== "Administrator" &&
+    //   (url = `${process.env.REACT_APP_URL_API}Department/Get?action=GetDept_User&para1=${isUser}`);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setPhongBan(data);
+      setPhongBanValue(data[0].dep_Code);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    isRole != "" && getPhongBan();
+  }, [isRole]);
   const getPayment = async () => {
     const url = `${process.env.REACT_APP_URL_API}PaymentVoucher/Get?action=Get&para1=${dateRange.from}&para2=${dateRange.to}`;
     try {
@@ -129,6 +155,9 @@ const PurChaseOrder = () => {
       setCheckSave(false);
     }
   };
+  const handlePBChange = (value) => {
+    setPhongBanValue(value);
+  };
   return (
     <div>
       <div
@@ -137,18 +166,26 @@ const PurChaseOrder = () => {
       >
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
-            <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0  col_search ItemCV">
+            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0  col_search ItemCV">
               <label>Thời gian </label>{" "}
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
-            <div className="col-6 col-md-6 col-lg-4 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
+            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
+              <label>Chọn phòng ban </label>{" "}
+              <SelectTable
+                setCheckAll={false}
+                dataSelect2={isPhongBan}
+                onPhongBanChange={handlePBChange}
+              />
+            </div>
+            <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
               <label>Mã ticket </label>{" "}
               <Select2Ticket
                 dataSelect2={isTicket}
                 onChangeMaTicket={onChangeMaTicket}
               />
             </div>
-            <div className="col-12 col-md-12 col-lg-4 col-xl-8 m-0 px-1  col_search ItemCV itemadd">
+            <div className="col-6 col-md-6 col-lg-3 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
               <button
                 style={{ marginTop: "25px" }}
                 onClick={() => {
@@ -179,6 +216,7 @@ const PurChaseOrder = () => {
             setCheckAdd={setCheckAdd}
             setShowPopup={setShowPopup}
             setCheckSave={isCheckSave}
+            setPhongBanValueA={isPhongBanValue}
           />
         </Modal.Body>
       </Modal>

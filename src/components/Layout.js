@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { TitleContext } from "../components/TitleContext";
 import "../components/index.css";
-
+import Info from "../Info/Info";
 const Layout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHomeExpanded, setIsHomeExpanded] = useState(false);
@@ -14,6 +14,8 @@ const Layout = () => {
   const [isPagePQ, setPagePQ] = useState(false);
   const [isDB, setDB] = useState(false);
   const [isKT, setKT] = useState(false);
+  const [isShowInfo, setShowInfo] = useState(false);
+  const [isCheck, setCheck] = useState(false);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -264,7 +266,11 @@ const Layout = () => {
           </div>
           {title}{" "}
           <div
-            style={{ marginRight: "15px" }}
+            onClick={() => {
+              setShowInfo(true);
+              setCheck(!isCheck);
+            }}
+            style={{ marginRight: "15px", cursor: "pointer" }}
             className="d-flex align-items-center icon-userName"
           >
             <i className="fas fa-user user-iconLayout"></i>
@@ -273,6 +279,39 @@ const Layout = () => {
         </div>
         <Outlet />
       </div>
+
+      <>
+        {isShowInfo && (
+          <div className="modal-backdrop fade show"></div> // Thêm lớp backdrop khi modal mở
+        )}
+        <div
+          className={`modal ${isShowInfo ? "d-block" : "d-none"}`} // Điều khiển modal mở hay đóng
+          tabIndex={-1}
+          role="dialog"
+          id="customModal"
+          aria-labelledby="popupModalHeader"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div style={{ padding: "10px 20px" }} className="modal-header">
+                <h5 className="modal-title" id="popupModalHeader">
+                  Thông tin
+                </h5>
+                <button
+                  onClick={() => setShowInfo(false)}
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body cardleave" style={{ padding: "2px" }}>
+                <Info setCheck={isCheck} setShowInfo={setShowInfo} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     </div>
   );
 };

@@ -10,6 +10,7 @@ const ProjectColumn = ({
   setPQDuyen,
   setCheckAdd,
 }) => {
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [show, setShow] = useState(false);
   const [isIDData, setIDDate] = useState(null);
@@ -18,6 +19,7 @@ const ProjectColumn = ({
   const [isLable, setLable] = useState(null);
   const [IsLableBody, setLableBody] = useState(null);
   const [isCheckView, setCheckView] = useState("");
+  const [isFeedBack, setFeedBack] = useState("abcc");
   const handleClickScroll = (e) => {
     const parent = e.currentTarget.closest(".task-column");
     const child = parent.querySelector(".overColumn");
@@ -89,6 +91,9 @@ const ProjectColumn = ({
     arrHT.push(object);
     PostSave(object, NameValue);
   };
+  window.handleFeedbackChange = function (val) {
+    setFeedBack(val);
+  };
   const PostSave = async (arrPost, NameValue) => {
     const request = new Request(
       `${process.env.REACT_APP_URL_API}Task/${NameValue}`,
@@ -136,8 +141,44 @@ const ProjectColumn = ({
       : status === 3
       ? "warning"
       : "success";
-  const handleCliCk = () => {
+  const handleCliCk = (e) => {
+    e.preventDefault();
     isCheckView == 1 && handleClickDelete();
+    isCheckView == 2 && handleFeedBack();
+  };
+  const handleFeedBack = () => {
+    const object = {
+      id: isIDData,
+      userID: isUser,
+      FeedBacck: isFeedBack,
+    };
+  };
+  const PostFB = async (arrPost) => {
+    const request = new Request(`${process.env.REACT_APP_URL_API}Task}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(arrPost),
+    });
+    let response = await fetch(request);
+    let data = await response.json();
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+
+      setCheckAdd((prev) => !prev);
+      setShow(false);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
   };
   return (
     <div className="col-md-6 col-lg-3" style={{ padding: "0 10px" }}>
@@ -183,7 +224,7 @@ const ProjectColumn = ({
                     className="popupsettingCart popupsettingCV"
                   >
                     {/* setPQDuyen !== "Member" && */}
-                    {task.statusHT !== "1" && status !== 1 && (
+                    {task.statusHT !== "1" && (
                       <div data-id={task.id} onClick={(e) => handleShowHT(e)}>
                         <i className="fa-solid fa-street-view me-1"></i>
                         <span>Hoàn thành</span>
@@ -265,7 +306,8 @@ const ProjectColumn = ({
                                }</div> 
                             </div>
                           </div>
-                        </div>
+                          
+                      </div>
                       `);
                         setLable("Xem chi tiết dự án");
                         setCheckView(2);
@@ -386,11 +428,11 @@ const ProjectColumn = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            {isCheckView == 1 ? "Hủy" : "Đóng"}
+            Đóng
           </Button>
           {isCheckView == 1 && (
-            <Button onClick={() => handleCliCk()} variant="primary">
-              Đồng ý
+            <Button onClick={(e) => handleCliCk(e)} variant="primary">
+              {isCheckView == 1 ? "Đồng ý" : "Lưu FeedBack"}
             </Button>
           )}
         </Modal.Footer>

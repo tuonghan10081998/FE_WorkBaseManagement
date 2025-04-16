@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
 import moment from "moment";
+import { color } from "highcharts";
 const PurChaseCard = ({ setData, onChange }) => {
   const [show, setShow] = useState(false);
   const [isIDData, setIDData] = useState("");
+  const [isDisable, setDisable] = useState(false);
   const handleSave = () => {
+    setDisable(true);
     const data = setData.filter((x) => x.id == isIDData);
     const d = data[0];
     let arrLeave = [];
@@ -38,6 +41,7 @@ const PurChaseCard = ({ setData, onChange }) => {
     );
     let response = await fetch(request);
     let data = await response.json();
+    setDisable(false);
     if (data.status == "OK") {
       iziToast.success({
         title: "Success",
@@ -52,6 +56,14 @@ const PurChaseCard = ({ setData, onChange }) => {
         position: "topRight",
       });
     }
+  };
+  const handleSumColumn = (data = [], field = "") => {
+    if (!Array.isArray(data) || !field) return 0;
+
+    return data.reduce((sum, item) => {
+      const value = Number(item[field]) || 0;
+      return sum + value;
+    }, 0);
   };
   const handleClose = () => setShow(false);
   return (
@@ -118,6 +130,32 @@ const PurChaseCard = ({ setData, onChange }) => {
               );
             })}
           </tbody>
+          {setData && setData.length > 0 && (
+            <tfoot>
+              <tr>
+                <td
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontWeight: "500",
+                    color: "REd",
+                  }}
+                  colSpan="2"
+                >
+                  Tổng
+                </td>
+                <td
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontWeight: "500",
+                    color: "REd",
+                  }}
+                >
+                  {handleSumColumn(setData, "amount").toLocaleString()}
+                </td>
+                <td colSpan="4"></td>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
       <Modal
@@ -135,7 +173,11 @@ const PurChaseCard = ({ setData, onChange }) => {
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button onClick={() => handleSave()} variant="primary">
+          <Button
+            disabled={isDisable}
+            onClick={() => handleSave()}
+            variant="primary"
+          >
             Đồng ý
           </Button>
         </Modal.Footer>

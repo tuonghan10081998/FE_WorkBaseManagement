@@ -65,8 +65,8 @@
   color: #000;
 }
 .list-group-item.active {
-  background-color: #fbf2f6 !important;
-  color: #000;
+  background-color: #00a9f6 !important;
+  color: #fff;
 }
 .list-group-item:hover {
   background-color: #f1f1f1;

@@ -30,7 +30,7 @@ const DashboardSection = ({ sectionTitle, items }) => {
         <div className="card card-success">
           <div className=" card-header bg-white">
             <h3
-              style={{ fontWeight: "bold", fontSize: "20px" }}
+              style={{ fontWeight: "bold", fontSize: "20px", marginBottom: 0 }}
               className="card-title text-black "
             >
               {sectionTitle}

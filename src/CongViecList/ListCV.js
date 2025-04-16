@@ -429,7 +429,7 @@ const ListCV = () => {
                 type="text"
                 id="projectFilter"
                 className="form-control mr-2"
-                placeholder="Tên công việc"
+                placeholder=""
                 value={IsDuAn}
                 onChange={(e) => setDuAn(e.currentTarget.value)}
               />

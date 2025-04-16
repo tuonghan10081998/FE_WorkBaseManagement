@@ -81,6 +81,14 @@ const KPIDetailResult = ({
       });
     }
   };
+  const handleSumColumn = (data = [], field = "") => {
+    if (!Array.isArray(data) || !field) return 0;
+
+    return data.reduce((sum, item) => {
+      const value = Number(item[field]) || 0;
+      return sum + value;
+    }, 0);
+  };
   return (
     <div className="">
       <div className="card">
@@ -105,17 +113,26 @@ const KPIDetailResult = ({
             <div className="col-lg-12 col-xl-12 m-0 p-0 my-2">
               <div className="row">
                 <label style={{ whiteSpace: "nowrap" }}>Danh sách</label>
-                <div className="m-0 p-0">
+                <div
+                  className="m-0 p-0"
+                  style={{ overflow: "auto", maxHeight: "500px" }}
+                >
                   <table className="table table-bordered">
                     <thead>
                       <tr>
-                        <th style={{ fontSize: "14px", width: "90px" }}>
+                        <td style={{ fontSize: "14px", width: "90px" }}>
                           Ngày
-                        </th>
-                        <th style={{ fontSize: "14px", width: "150px" }}>
+                        </td>
+                        <td
+                          style={{
+                            fontSize: "14px",
+                            width: "150px",
+                            textAlign: "center",
+                          }}
+                        >
                           KPI
-                        </th>
-                        <th style={{ fontSize: "14px" }}>Ghi chú</th>
+                        </td>
+                        <td style={{ fontSize: "14px" }}>Ghi chú</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -129,6 +146,7 @@ const KPIDetailResult = ({
                                 boxShadow: "none",
                                 border: "none",
                                 padding: "0",
+                                textAlign: "center",
                               }}
                               type="number"
                               min="0"
@@ -153,6 +171,36 @@ const KPIDetailResult = ({
                         </tr>
                       ))}
                     </tbody>
+                    {isDataDetail && isDataDetail.length > 0 && (
+                      <tfoot>
+                        <tr>
+                          <td
+                            style={{
+                              whiteSpace: "nowrap",
+                              fontWeight: "500",
+                              color: "REd",
+                            }}
+                            colSpan="1"
+                          >
+                            Tổng
+                          </td>
+                          <td
+                            style={{
+                              whiteSpace: "nowrap",
+                              fontWeight: "500",
+                              color: "REd",
+                              textAlign: "center",
+                            }}
+                          >
+                            {handleSumColumn(
+                              isDataDetail,
+                              "result"
+                            ).toLocaleString()}
+                          </td>
+                          <td colSpan="1"></td>
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
               </div>

@@ -72,6 +72,14 @@ const KPIMonth = ({
   useEffect(() => {
     setisTrigger && setshowPopup(true);
   }, [setisTrigger]);
+  const handleSumColumn = (data = [], field = "") => {
+    if (!Array.isArray(data) || !field) return 0;
+
+    return data.reduce((sum, item) => {
+      const value = Number(item[field]) || 0;
+      return sum + value;
+    }, 0);
+  };
   return (
     <div className="itemtableName">
       <div className="item-table">
@@ -152,6 +160,39 @@ const KPIMonth = ({
               );
             })}
           </tbody>
+          <tfoot>
+            <tr>
+              <td
+                style={{
+                  whiteSpace: "nowrap",
+                  fontWeight: "500",
+                  color: "REd",
+                }}
+                colSpan="3"
+              >
+                Tổng
+              </td>
+              <td
+                style={{
+                  whiteSpace: "nowrap",
+                  fontWeight: "500",
+                  color: "REd",
+                }}
+              >
+                {handleSumColumn(sortedEmployees, "kpi").toLocaleString()}
+              </td>
+              <td
+                style={{
+                  whiteSpace: "nowrap",
+                  fontWeight: "500",
+                  color: "REd",
+                }}
+              >
+                {handleSumColumn(sortedEmployees, "result").toLocaleString()}
+              </td>
+              <td colSpan="2"></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 

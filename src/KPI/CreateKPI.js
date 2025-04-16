@@ -219,6 +219,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                                 boxShadow: "none",
                                 border: "none",
                                 padding: "0 ",
+                                textAlign: "center",
                               }}
                               type="number"
                               min="0"

@@ -125,10 +125,12 @@ const AddTask = ({
       .split(" @") // Tách mảng theo dấu " @"
       .map((name) => name.replace(/^@/, "").trim()) // Loại bỏ dấu @ và khoảng trắng thừa
       .filter((name) => name !== "");
+    console.log(namesArrayTN);
     const dataNhanVienTN = setDataNV.filter((user) => {
       return namesArrayTN.includes(user.fullName);
     });
     const arrNvTN = dataNhanVienTN.map((user) => user.userID).join(", ");
+    console.log(arrNvTN);
     const arrPost = [];
     if (isWorkName == "") {
       handleNotifi("nhập tên công việc");
@@ -177,6 +179,7 @@ const AddTask = ({
       idApprover: "",
       statusHT: value,
       lstIDImplementer: uniqueArray,
+      idUserFeedback: "",
     };
     setShow(false);
     arrPost.push(object);
@@ -277,7 +280,7 @@ const AddTask = ({
     if (dataSend?.length > 0) {
       let d = dataSend[0];
       const userID = d.idImplementer;
-      const responsible = d.idRequester;
+      const responsible = d.idResponsible;
       const nhanvienAvaliable = setDataNV
         .map((user) => ({
           userID: user.userID,
@@ -294,7 +297,6 @@ const AddTask = ({
           fullName: user.fullName,
         }))
         .filter((x) => {
-          // Kiểm tra nếu userID của x có nằm trong danh sách userID của d.idImplementer không
           const userIDs = responsible.split(","); // Tạo mảng userID từ chuỗi
           return userIDs.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
         });
@@ -335,6 +337,7 @@ const AddTask = ({
       preloadedMentionsTN.forEach((user) => {
         preloadedText += `@${user.fullName} `;
       });
+    console.log(preloadedText.trim());
     setMessageTN(preloadedText.trim());
   }, [preloadedMentionsTN]);
   const handleFocusInput = (inputRef) => {
@@ -504,7 +507,7 @@ const AddTask = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập tên công việc"
+                    placeholder=""
                     onChange={(e) => setWorkName(e.currentTarget.value)}
                     value={isWorkName}
                     autoComplete="off"
@@ -516,7 +519,7 @@ const AddTask = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập mã ticket"
+                    placeholder=""
                     onChange={(e) => setMaTicket(e.currentTarget.value)}
                     value={isMaTicket}
                     autoComplete="off"
@@ -554,7 +557,7 @@ const AddTask = ({
                       ref={messageInputRef}
                       className="form-control"
                       rows="4"
-                      placeholder="Nhập thành viên dự án..."
+                      placeholder=""
                       value={message}
                       onChange={handleInputChange}
                     />
@@ -597,7 +600,7 @@ const AddTask = ({
                       ref={messageInputRefTN}
                       className="form-control"
                       rows="4"
-                      placeholder="Nhập thành viên dự án..."
+                      placeholder=""
                       value={messageTN}
                       onChange={handleInputChangeTN}
                     />
@@ -712,7 +715,7 @@ const AddTask = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập mô tả "
+                    placeholder=""
                     onChange={(e) => setNoiDung(e.currentTarget.value)}
                     value={isNoiDung}
                     autoComplete="off"

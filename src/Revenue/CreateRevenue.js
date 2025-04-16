@@ -13,6 +13,7 @@ const CreateRevenue = ({
   setShowPopup,
   setCheckSave,
   setRole,
+  setPhongBanValueA,
 }) => {
   const selectRef = useRef(null);
   useEffect(() => {
@@ -174,11 +175,13 @@ const CreateRevenue = ({
       setPrice("");
       setTile("");
       setThoiGianKT(moment().format("DD/MM/YYYY"));
-      setPhongBanValue(false);
       setCheckSelect(false);
       setCheckShow(true);
     }
   }, [setCheckSave]);
+  useEffect(() => {
+    setPhongBanValue(setPhongBanValueA);
+  }, [setPhongBanValueA]);
   return (
     <div className="">
       <div className="card">
@@ -210,7 +213,7 @@ const CreateRevenue = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập mã ticket"
+                    placeholder=""
                     onChange={(e) => setMaTicket(e.currentTarget.value)}
                     value={isMaTicket}
                     autoComplete="off"
@@ -243,7 +246,7 @@ const CreateRevenue = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập tiêu đề"
+                    placeholder=""
                     onChange={(e) => setTile(e.currentTarget.value)}
                     value={isTitle}
                     autoComplete="off"
@@ -280,7 +283,7 @@ const CreateRevenue = ({
                     type="number"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập thu nhập"
+                    placeholder=""
                     onChange={(e) => setPrice(e.currentTarget.value)}
                     value={isPrice}
                     autoComplete="off"
@@ -296,7 +299,7 @@ const CreateRevenue = ({
                     class="form-control"
                     id="noteInput"
                     rows="3"
-                    placeholder="Nhập mô tả"
+                    placeholder=""
                     value={isDescript}
                     onChange={(e) => setDescript(e.currentTarget.value)}
                   ></textarea>

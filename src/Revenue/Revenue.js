@@ -6,7 +6,6 @@ import SelectTable from "../CongViecList/select2GridTable";
 import RevenueCard from "./RevenueCard";
 import CreateRevenue from "./CreateRevenue";
 import { Modal, Button } from "react-bootstrap";
-import $ from "jquery";
 import moment from "moment";
 
 const Revenue = () => {
@@ -108,7 +107,7 @@ const Revenue = () => {
     var dataFilter = isData;
     if (isTicketValue != "All")
       dataFilter = dataFilter.filter((x) => x.ticket?.includes(isTicketValue));
-    console.log(dataFilter);
+
     dataFilter = dataFilter.filter((x) => x.idDepartment == isPhongBanValue);
 
     setDataFilter(dataFilter);
@@ -223,6 +222,7 @@ const Revenue = () => {
             setShowPopup={setShowPopup}
             setCheckSave={isCheckSave}
             setRole={isRole}
+            setPhongBanValueA={isPhongBanValue}
           />
         </Modal.Body>
       </Modal>

@@ -276,7 +276,7 @@ const CreateProject = ({
     if (dataSend?.length > 0) {
       let d = dataSend[0];
       const userID = d.idImplementer;
-      const responsible = d.idRequester;
+      const responsible = d.idResponsible;
       const nhanvienAvaliable = setDataNV
         .map((user) => ({
           userID: user.userID,
@@ -503,7 +503,7 @@ const CreateProject = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập tên dự án"
+                    placeholder=""
                     onChange={(e) => setTaskName(e.currentTarget.value)}
                     value={isTaskName}
                     autoComplete="off"
@@ -553,7 +553,7 @@ const CreateProject = ({
                       ref={messageInputRef}
                       className="form-control"
                       rows="4"
-                      placeholder="Nhập thành viên dự án..."
+                      placeholder=""
                       value={message}
                       onChange={handleInputChange}
                     />
@@ -596,7 +596,7 @@ const CreateProject = ({
                       ref={messageInputRefTN}
                       className="form-control"
                       rows="4"
-                      placeholder="Nhập thành viên dự án..."
+                      placeholder=""
                       value={messageTN}
                       onChange={handleInputChangeTN}
                     />
@@ -711,7 +711,7 @@ const CreateProject = ({
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="Nhập mô tả "
+                    placeholder=""
                     onChange={(e) => setNoiDung(e.currentTarget.value)}
                     value={isNoiDung}
                     autoComplete="off"

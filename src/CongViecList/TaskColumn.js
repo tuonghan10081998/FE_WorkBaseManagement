@@ -11,6 +11,7 @@ const TaskColumn = ({
   setCheckAdd,
 }) => {
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [show, setShow] = useState(false);
   const [isIDData, setIDDate] = useState(null);
   const [isShowHT, setShowHT] = useState(false);
@@ -18,6 +19,7 @@ const TaskColumn = ({
   const [isLable, setLable] = useState(null);
   const [IsLableBody, setLableBody] = useState(null);
   const [isCheckView, setCheckView] = useState("");
+  const [isFeedBack, setFeedBack] = useState("");
   const handleClickScroll = (e) => {
     const parent = e.currentTarget.closest(".task-column");
     const child = parent.querySelector(".overColumn");
@@ -58,7 +60,9 @@ const TaskColumn = ({
       }
     });
   };
-
+  window.handleFeedbackChange = function (val) {
+    setFeedBack(val);
+  };
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
 
@@ -83,6 +87,7 @@ const TaskColumn = ({
       remindDate: moment(d.remindDate, "DD/MM/YYYY").format("YYYY-MM-DD"),
       idApprover: "",
       statusHT: 1,
+      idUserFeedback: "",
     };
     arrHT.push(object);
     PostSave(object, NameValue);
@@ -136,6 +141,62 @@ const TaskColumn = ({
       : "success";
   const handleCliCk = () => {
     isCheckView == 1 && handleClickDelete();
+    isCheckView == 2 && handleFeedBack();
+  };
+  const handleFeedBack = () => {
+    const object = {
+      id: isIDData,
+      ticket: "string",
+      workName: "string",
+      description: "string",
+      priority: 0,
+      note: "string",
+      idRequester: "string",
+      createDate: "2025-04-16T16:47:16.878Z",
+      fromDate: "2025-04-16T16:47:16.878Z",
+      remindDate: "2025-04-16T16:47:16.878Z",
+      toDate: "2025-04-16T16:47:16.878Z",
+      completeDate: "2025-04-16T16:47:16.878Z",
+      idResponsible: "string",
+      idApprover: "string",
+      feedback: isFeedBack,
+      statusHT: 0,
+      statusRemind: 0,
+      lstIDImplementer: ["string"],
+      idUserFeedback: isUser,
+    };
+    PostFB(object);
+  };
+
+  const PostFB = async (arrPost) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Work/PostFeedback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+
+      setCheckAdd((prev) => !prev);
+      setShow(false);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
   };
   return (
     <div className="col-md-6 col-lg-3" style={{ padding: "0 10px" }}>
@@ -181,7 +242,7 @@ const TaskColumn = ({
                     className="popupsettingCart popupsettingCV"
                   >
                     {/* && setPQDuyen !== "Member" */}
-                    {task.statusHT !== "1" && status !== 1 && (
+                    {task.statusHT !== "1" && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {
@@ -268,12 +329,23 @@ const TaskColumn = ({
                               }</div> 
                             </div>
                           </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                      <div style="width: 100%;">
+                        <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:
+                        <textarea 
+                          style="width: 100%; margin-top: 5px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;outline: none;" 
+                          placeholder="" 
+                          oninput="handleFeedbackChange(this.value)"
+                        >${task.feedback}</textarea>
+                      </div>
+                    </div>
                         </div>
                       `);
 
                         setLable("Xem chi tiết công việc");
                         handleClickOutside(e);
                         setCheckView(2);
+                        setFeedBack(task.feedback);
                       }}
                     >
                       <i class="fa-solid fa-eye me-1"></i>
@@ -282,7 +354,6 @@ const TaskColumn = ({
                     {setPQDuyen !== "Member" && (
                       <div
                         onClick={(e) => {
-                          handleShowHT(e);
                           if (handleSetting) {
                             handleSetting({
                               action: 2, // Đặt tên key cho đúng
@@ -398,11 +469,10 @@ const TaskColumn = ({
           <Button variant="secondary" onClick={handleClose}>
             {isCheckView == 1 ? "Hủy" : "Đóng"}
           </Button>
-          {isCheckView == 1 && (
-            <Button onClick={() => handleCliCk()} variant="primary">
-              Đồng ý
-            </Button>
-          )}
+
+          <Button onClick={() => handleCliCk()} variant="primary">
+            {isCheckView == 1 ? "Đồng ý" : "Lưu FeedBack"}
+          </Button>
         </Modal.Footer>
       </Modal>
       <Modal

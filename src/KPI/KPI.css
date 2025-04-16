@@ -82,6 +82,10 @@ input[type="number"] {
 #sidebar {
   background-color: #0d3057 !important;
 }
+.table-bordered thead td {
+}
+.table-bordered tbody tr td {
+}
 /* Container bao bọc text + tooltip */
 @media (max-width: 800px) {
   .cardbody {

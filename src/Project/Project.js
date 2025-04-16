@@ -432,7 +432,7 @@ const Project = () => {
                 type="text"
                 id="projectFilter"
                 className="form-control mr-2"
-                placeholder="Dự án/Quy trình"
+                placeholder=""
                 value={IsDuAn}
                 onChange={(e) => setDuAn(e.currentTarget.value)}
               />

@@ -167,7 +167,7 @@ const LeaveCart = ({
                   <div className="popupsettingCart">
                     {isUser !== task.idRequester &&
                       status.toString() !== "1" &&
-                      setPQDuyen === "Administrator" && (
+                      setPQDuyen !== "Member" && (
                         <div
                           data-id={task.id}
                           onClick={(e) => {
@@ -184,7 +184,7 @@ const LeaveCart = ({
                       )}
                     {isUser !== task.idRequester &&
                       status.toString() !== "2" &&
-                      setPQDuyen === "Administrator" && (
+                      setPQDuyen !== "Member" && (
                         <div
                           data-id={task.id}
                           onClick={(e) => {

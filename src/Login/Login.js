@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./Login.css";
 // import { PostEmail, PostAccount, getAccount } from "../api/web";
 import "bootstrap/dist/css/bootstrap.css";
+import Select from "react-select";
 import Swal from "sweetalert2";
 import iziToast from "izitoast";
 import $ from "jquery";
@@ -51,6 +52,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isHoTen, setHoTen] = useState("");
   const [isTele, setTele] = useState("");
+  const [isDisable, setDisable] = useState(false);
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -112,7 +114,7 @@ const Login = () => {
     if (data2.statusCode != "200") {
       iziToast.warning({
         title: "Warning",
-        message: `Tài khoản hoặc mật khẩu không đúng`,
+        message: data2.message,
         position: "topRight",
       });
       return;
@@ -161,6 +163,7 @@ const Login = () => {
   };
   const submit = async (e) => {
     if (!isRegister) {
+      setDisable(true);
       regicter();
     }
 
@@ -217,6 +220,7 @@ const Login = () => {
     );
     let response = await fetch(request);
     let data = await response.json();
+    setDisable(false);
     if (data.statusCode == "200") {
       iziToast.success({
         title: "Success",
@@ -225,6 +229,7 @@ const Login = () => {
       });
       loadUseState();
       setIsRegister(true);
+
       btnSignIn.current.classList.remove("active");
       btnSignUp.current.classList.add("active");
       enregistrerSection.current.classList.add("active-section");
@@ -361,9 +366,9 @@ const Login = () => {
                 />
               </div>
               <hr />
-              {/* <a href="https://www.grandvincent-marion.fr/" target="_blank">
-                <h4>Forgot password?</h4>
-              </a> */}
+              <a target="_blank">
+                <h4>Quên mật khẩu</h4>
+              </a>
             </div>
             <div
               className="enregistrer active-section"
@@ -451,18 +456,11 @@ const Login = () => {
                     ))}
                   </select>
                 </div>
-                <div className="list_check">
-                  <div className="check"></div>
 
-                  <div className="coin">
-                    <span className="engraving">
-                      <i className="fa-light fa-house"></i>
-                    </span>
-                  </div>
-                </div>
                 <input
+                  disabled={isDisable}
                   onClick={submit}
-                  className="submit"
+                  className="submit mt-4"
                   defaultValue="SIGN UP"
                   type="submit"
                 />

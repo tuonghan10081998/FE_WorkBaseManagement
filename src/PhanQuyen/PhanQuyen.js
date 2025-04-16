@@ -10,7 +10,7 @@ const PhanQuyen = () => {
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
 
   const { setTitle, setIcon } = useContext(TitleContext);
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isData, setData] = useState([]);
   const [isDataNV, setDataNV] = useState([]);
   const [isID, setID] = useState(null);
@@ -36,8 +36,9 @@ const PhanQuyen = () => {
       }
 
       const staffData = await response.json();
-      setData(staffData);
-      staffData && setID(staffData[0].userID);
+      let dataNV = staffData.filter((x) => x.fullName !== "Admin");
+      setData(dataNV);
+      dataNV && setID(dataNV[0].userID);
     } catch (error) {
       console.error(error.message);
     }
@@ -65,9 +66,10 @@ const PhanQuyen = () => {
     setlstUserDep(updatedData);
   };
   const handleCheckRole = (roleID, isChecked) => {
-    console.log(roleID);
     const updatedData = islstUserRole.map((item) =>
-      item.roleID == roleID ? { ...item, isChecked: isChecked } : item
+      item.roleID == roleID
+        ? { ...item, isChecked: isChecked }
+        : { ...item, isChecked: 0 }
     );
     setlstUserRole(updatedData);
   };
@@ -84,7 +86,8 @@ const PhanQuyen = () => {
     let dataNV = isData.filter(
       (x) =>
         x.fullName &&
-        x.fullName.toLowerCase().includes(isNhanVien.toLowerCase())
+        x.fullName.toLowerCase().includes(isNhanVien.toLowerCase()) &&
+        x.fullName !== "Admin"
     );
     setDataNV(dataNV);
   }, [isNhanVien, isData]);
@@ -175,7 +178,7 @@ const PhanQuyen = () => {
                   type="text"
                   id="projectFilter"
                   className="form-control mr-2 mb-2"
-                  placeholder="Tìm kiếm nhân viên ..."
+                  placeholder=""
                   value={isNhanVien}
                   onChange={(e) => setNhanVien(e.currentTarget.value)}
                 />
@@ -184,9 +187,8 @@ const PhanQuyen = () => {
                 <li className="list-group-item ">
                   <div className="tilteLI sttPQ">Stt</div>
                   <div className="gridUL row m-0 p-0  w-100">
-                    <span className="tilteLI pqul col-4"> Họ tên</span>
-                    <span className="tilteLI pqul col-4"> Tài khoản</span>
-                    <span className="tilteLI pqul col-4"> Email</span>
+                    <span className="tilteLI pqul col-6"> Họ tên</span>
+                    <span className="tilteLI pqul col-6"> Email</span>
                   </div>
                 </li>
               </div>
@@ -205,14 +207,11 @@ const PhanQuyen = () => {
                   >
                     <div className="sttPQ">{index + 1}</div>
                     <div className="gridUL row m-0 p-0  w-100">
-                      <span className=" pqul col-4">
+                      <span className=" pqul col-6">
                         {account.fullName || ""}
                       </span>
-                      <span className="pqul col-4">
-                        {" "}
-                        {account.userName || ""}{" "}
-                      </span>
-                      <span className="pqul col-4">{account.Email || ""}</span>
+
+                      <span className="pqul col-6">{account.email || ""}</span>
                     </div>
                   </li>
                 ))}

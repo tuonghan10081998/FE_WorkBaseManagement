@@ -7,7 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "../CongViecList/GridCV.css";
 import { useTable, useSortBy, usePagination } from "react-table";
-import $, { data } from "jquery";
 const GridTask = ({
   setDataGrid,
   handleSetting,
@@ -17,6 +16,7 @@ const GridTask = ({
 }) => {
   const elementRef = useRef([]);
   const [isTop, setTop] = useState(null);
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
 
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isTitleBody, setTiTleBody] = useState("");
@@ -25,11 +25,15 @@ const GridTask = ({
   const [isCheckHandle, setCheckHandle] = useState(null);
   const [isCheckPhieu, setCheckPhieu] = useState(null);
   const [isLable, setLable] = useState(null);
+  const [isFeedBack, setFeedBack] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = (e) => {
     let ID = e.currentTarget.dataset.id;
     setIDDate(ID);
     setShow(true);
+  };
+  window.handleFeedbackChange = function (val) {
+    setFeedBack(val);
   };
   const handleClickDelete = (value) => {
     setIDDeleteColumn(isIDData);
@@ -39,6 +43,42 @@ const GridTask = ({
   const handlesSubmit = () => {
     isCheckHandle == 0 && handleClickDelete();
     isCheckHandle == 1 && handleSave("PostHT");
+    isCheckHandle == 2 && handleFeedBack();
+  };
+  const handleFeedBack = () => {
+    console.log(isIDData);
+    const object = {
+      id: isIDData,
+      userID: isUser,
+      FeedBacck: isFeedBack,
+    };
+  };
+  const PostFB = async (arrPost) => {
+    const request = new Request(`${process.env.REACT_APP_URL_API}Task}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(arrPost),
+    });
+    let response = await fetch(request);
+    let data = await response.json();
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+
+      setCheckAdd((prev) => !prev);
+      setShow(false);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
   };
   const handleClick = (e, index) => {
     const parent = e.currentTarget.closest(".cartion");
@@ -429,23 +469,22 @@ const GridTask = ({
                           className="popupsettingCart popupsettingCV gridPop"
                         >
                           {/* setPQDuyen !== "Member" && */}
-                          {row.values.statusHT !== "1" &&
-                            row.values.status !== "1" && (
-                              <div
-                                data-id={row.values.id}
-                                onClick={(e) => {
-                                  handleShow(e);
-                                  setTiTleBody(
-                                    "<p>Bạn xác nhận hoàn thành dự án này</p>"
-                                  );
-                                  setLable("Thông báo");
-                                  setCheckHandle(1);
-                                }}
-                              >
-                                <i className="fa-solid fa-street-view me-1"></i>
-                                <span>Hoàn thành</span>
-                              </div>
-                            )}
+                          {row.values.statusHT !== "1" && (
+                            <div
+                              data-id={row.values.id}
+                              onClick={(e) => {
+                                handleShow(e);
+                                setTiTleBody(
+                                  "<p>Bạn xác nhận hoàn thành dự án này</p>"
+                                );
+                                setLable("Thông báo");
+                                setCheckHandle(1);
+                              }}
+                            >
+                              <i className="fa-solid fa-street-view me-1"></i>
+                              <span>Hoàn thành</span>
+                            </div>
+                          )}
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {
@@ -520,10 +559,10 @@ const GridTask = ({
                               }</div> 
                             </div>
                           </div>
-                        </div>
+                          
                       `);
                               setLable("Xem chi tiết dự án");
-                              setCheckHandle(0);
+                              setCheckHandle(2);
                             }}
                           >
                             <i class="fa-solid fa-eye me-1"></i>
@@ -590,9 +629,11 @@ const GridTask = ({
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button onClick={() => handlesSubmit()} variant="primary">
-            Đồng ý
-          </Button>
+          {isLable == "Thông báo" && (
+            <Button onClick={() => handlesSubmit()} variant="primary">
+              {isLable == "Thông báo" ? "Đồng ý " : "Lưu FeedBack"}
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </div>

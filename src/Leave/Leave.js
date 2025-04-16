@@ -77,7 +77,7 @@ const Leave = () => {
   const [isIDDelete, setIDDelete] = useState(null);
   const [isPhongBan, setPhongBan] = useState(null);
   const [isPhongBanValue, setPhongBanValue] = useState("All");
-  const [IsNhanVienValue, setNhanVienValue] = useState("");
+  const [IsNhanVienValue, setNhanVienValue] = useState("All");
   const [IsNhanVien, setNhanVien] = useState("");
   const [isCheckAdd, setCheckAdd] = useState(false);
   const [showPopup, setshowPopup] = useState(false);
@@ -126,12 +126,12 @@ const Leave = () => {
 
       const staffData = await response.json();
       let filteredData = staffData;
-      isRole !== "Administrator" &&
-        isRole !== "Leader" &&
+      isRole === "Member" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
-
       isRole === "Leader" &&
-        (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
+        (filteredData = filteredData.filter((x) =>
+          isLeader.includes(x.dep_Code)
+        ));
 
       setDataNV(filteredData);
     } catch (error) {
@@ -179,7 +179,7 @@ const Leave = () => {
   };
   useEffect(() => {
     var filteredData = data;
-    if (isRole === "") return;
+    if (isRole == "") return;
     isRole === "Member" &&
       (filteredData = data.filter((x) => x.idRequester?.includes(isUser)));
 
@@ -198,7 +198,7 @@ const Leave = () => {
 
     setDataF(filteredData);
     setdataFilter(filteredData);
-  }, [data, isRole]);
+  }, [data, isRole, isDepCode]);
 
   useEffect(() => {
     let dataPB = isdataF;
@@ -286,7 +286,7 @@ const Leave = () => {
                 }}
                 class="btn btn-primary mr-2"
               >
-                <i class="fas fa-plus"></i> Tạo phiếu nghỉ
+                <i class="fas fa-plus"></i> Tạo phiếu
               </button>
             </div>
           </div>
