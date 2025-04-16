@@ -36,7 +36,9 @@ const PhanQuyen = () => {
       }
 
       const staffData = await response.json();
-      let dataNV = staffData.filter((x) => x.fullName !== "Admin");
+      let dataNV = staffData.filter(
+        (x) => x.fullName.toLowerCase() !== "admin"
+      );
       setData(dataNV);
       dataNV && setID(dataNV[0].userID);
     } catch (error) {
