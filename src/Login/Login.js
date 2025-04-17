@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import iziToast from "izitoast";
+
 import $ from "jquery";
 const Login = () => {
   const selectRef = useRef(null);
@@ -37,6 +38,7 @@ const Login = () => {
   const [isDisable, setDisable] = useState(false);
   const [isForget, setForget] = useState(true);
   const [options, setOption] = useState([]);
+  const [isDisableLM, setDisableLM] = useState(false);
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -209,14 +211,14 @@ const Login = () => {
     PostForgot(object, "ResetPass");
   };
   const handlegetcode = async () => {
-    console.log(username);
+    setDisableLM(true);
     if (username === "") {
       iziToast.warning({
         title: "Warning",
         message: `Vui lòng nhập tài khoản .`,
         position: "topRight",
       });
-      setDisable(false);
+      setDisableLM(false);
       return;
     }
     const object = {
@@ -244,7 +246,7 @@ const Login = () => {
     );
     let response = await fetch(request);
     let data = await response.json();
-    setDisable(false);
+    setDisableLM(false);
     if (data.statusCode == "200") {
       iziToast.success({
         title: "Success",
@@ -478,7 +480,7 @@ const Login = () => {
               </div>
               <hr />
               <a onClick={(e) => handleForget(e)} target="_blank">
-                <h4>Quên mật khẩu</h4>
+                <h4 className="textLogin">Quên mật khẩu</h4>
               </a>
             </div>
             <div
@@ -585,7 +587,10 @@ const Login = () => {
                       placeholder="Nhập mã telegram"
                       value={isCodeTele}
                       type="text"
-                      onChange={(e) => setCodeTele(e.target.value)}
+                      disabled={isDisableLM}
+                      onChange={(e) => {
+                        setCodeTele(e.target.value);
+                      }}
                     />
                     <button onClick={handlegetcode}>Lấy mã</button>
                   </div>
