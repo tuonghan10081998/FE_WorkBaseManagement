@@ -23,6 +23,7 @@ const KPIMonth = ({
   const [isDetailResult, setDetailSesult] = useState([]);
   const [isFullName, setFullName] = useState([]);
   const [isAddM, setAddM] = useState(false);
+  const [progress, setprogress] = useState("");
   useEffect(() => {
     setCheckAddM((x) => !x);
     setisTrigger && setTrigger((x) => !x);
@@ -37,6 +38,7 @@ const KPIMonth = ({
   // Sắp xếp dữ liệu khi component được tải
   useEffect(() => {
     setSortedEmployees(setDataMonth);
+    setprogress(calculateProgress(setDataMonth));
   }, [setDataMonth]);
 
   // Xử lý các hành động
@@ -80,6 +82,26 @@ const KPIMonth = ({
       return sum + value;
     }, 0);
   };
+  const getKpiPercentage = (data) => {
+    const totalKpi = handleSumColumn(data, "kpi");
+    const totalResult = handleSumColumn(data, "result");
+
+    if (totalKpi === 0 && totalResult === 0) return "0%";
+    if (totalKpi === 0) return "0%"; // tránh chia cho 0
+
+    const percent = (totalResult / totalKpi) * 100;
+    return `${parseFloat(percent.toFixed(2))}%`;
+  };
+  const calculateProgress = (data) => {
+    const totalKpi = handleSumColumn(data, "kpi");
+    const totalResult = handleSumColumn(data, "result");
+
+    if (totalKpi === 0 && totalResult === 0) return 0;
+    if (totalKpi - totalResult === 0) return 100;
+
+    const percent = (totalResult / totalKpi) * 100;
+    return Math.min(percent, 100); // tránh vượt quá 100%
+  };
   return (
     <div className="itemtableName">
       <div className="item-table">
@@ -119,7 +141,7 @@ const KPIMonth = ({
                           style={{
                             width: `${progress}%`,
                             backgroundColor:
-                              progress >= 90 ? "#28a745" : "#007bff",
+                              progress >= 100 ? "#28a745" : "#007bff",
                           }}
                           aria-valuenow={progress}
                           aria-valuemin="0"
@@ -160,39 +182,62 @@ const KPIMonth = ({
               );
             })}
           </tbody>
-          <tfoot>
-            <tr>
-              <td
-                style={{
-                  whiteSpace: "nowrap",
-                  fontWeight: "500",
-                  color: "REd",
-                }}
-                colSpan="3"
-              >
-                Tổng
-              </td>
-              <td
-                style={{
-                  whiteSpace: "nowrap",
-                  fontWeight: "500",
-                  color: "REd",
-                }}
-              >
-                {handleSumColumn(sortedEmployees, "kpi").toLocaleString()}
-              </td>
-              <td
-                style={{
-                  whiteSpace: "nowrap",
-                  fontWeight: "500",
-                  color: "REd",
-                }}
-              >
-                {handleSumColumn(sortedEmployees, "result").toLocaleString()}
-              </td>
-              <td colSpan="2"></td>
-            </tr>
-          </tfoot>
+          {sortedEmployees && sortedEmployees.length > 0 && (
+            <tfoot>
+              <tr>
+                <td
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontWeight: "500",
+                    color: "REd",
+                  }}
+                  colSpan="3"
+                >
+                  Tổng
+                </td>
+                <td
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontWeight: "500",
+                    color: "REd",
+                  }}
+                >
+                  {handleSumColumn(sortedEmployees, "kpi").toLocaleString()}
+                </td>
+                <td
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontWeight: "500",
+                    color: "REd",
+                  }}
+                >
+                  {handleSumColumn(sortedEmployees, "result").toLocaleString()}
+                </td>
+                <td>
+                  <div className="mb-2">
+                    <div className="text-muted small">
+                      {getKpiPercentage(sortedEmployees)}
+                    </div>
+                    <div className="progress" style={{ height: "10px" }}>
+                      <div
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{
+                          width: `${progress}%`,
+                          backgroundColor:
+                            progress >= 100 ? "#28a745" : "#007bff",
+                        }}
+                        aria-valuenow={{ progress }}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  </div>
+                </td>
+                <td colSpan=""></td>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
 

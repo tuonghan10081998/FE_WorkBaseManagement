@@ -5,11 +5,11 @@ import $, { data } from "jquery";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 import moment from "moment";
-const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
+const KPISetting = ({ setRole, setshowPopup, setCheckAddFM, setPhongBanA }) => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const selectRef2 = useRef(null);
   const [isPhongBan, setPhongBan] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState(setPhongBanA);
 
   const [isDisable, setDisable] = useState(false);
   const currentYear = new Date().getFullYear();
@@ -35,7 +35,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
 
       const data = await response.json();
       setPhongBan(data);
-      setSelectedDepartment(data[0].dep_Code);
+      // setSelectedDepartment(data[0].dep_Code);
     } catch (error) {
       console.error(error.message);
     }
@@ -111,8 +111,11 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
       });
     }
   };
+  const handleRemoveLeadingZeros = (str) => {
+    return str.toString().replace(/^0+/, "") || "0";
+  };
   const handleKPIChange = (userID, newKPI) => {
-    const numericKPI = parseInt(newKPI) || 0;
+    const numericKPI = handleRemoveLeadingZeros(parseInt(newKPI) || 0);
 
     setUsers((prevUsers) =>
       prevUsers.map((user) =>
@@ -143,6 +146,14 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
   useEffect(() => {
     GetSetting();
   }, [selectedDepartment, selectedYear, selectedMonth]);
+  const handleSumColumn = (data = [], field = "") => {
+    if (!Array.isArray(data) || !field) return 0;
+
+    return data.reduce((sum, item) => {
+      const value = Number(item[field]) || 0;
+      return sum + value;
+    }, 0);
+  };
   return (
     <div className="">
       <div className="card">
@@ -156,6 +167,7 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                     className="form-control "
                     id="selectPD"
                     ref={selectRef2}
+                    value={selectedDepartment}
                     style={{ minWidth: "100px" }}
                   >
                     {isPhongBan.map((item) => (
@@ -205,7 +217,9 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                         <th style={{ fontSize: "14px", width: "200px" }}>
                           Họ tên
                         </th>
-                        <th style={{ fontSize: "14px" }}>KPI</th>
+                        <th style={{ fontSize: "14px", textAlign: "center" }}>
+                          KPI
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -234,6 +248,32 @@ const KPISetting = ({ setRole, setshowPopup, setCheckAddFM }) => {
                         </tr>
                       ))}
                     </tbody>
+                    {users && users.length > 0 && (
+                      <tfoot>
+                        <tr>
+                          <td
+                            style={{
+                              whiteSpace: "nowrap",
+                              fontWeight: "500",
+                              color: "REd",
+                            }}
+                            colSpan="1"
+                          >
+                            Tổng
+                          </td>
+                          <td
+                            style={{
+                              whiteSpace: "nowrap",
+                              fontWeight: "500",
+                              color: "REd",
+                              textAlign: "center",
+                            }}
+                          >
+                            {handleSumColumn(users, "kpi").toLocaleString()}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
               </div>

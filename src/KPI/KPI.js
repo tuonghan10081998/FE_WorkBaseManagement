@@ -235,7 +235,7 @@ const KPI = () => {
     GetTotalSetting();
   }, [isPhongBanValue, selectedYear, isCheckAddFM, isCheckAddM]);
   return (
-    <div>
+    <div className="contentItem">
       <div>
         <div className="tab-table">
           <div
@@ -374,6 +374,7 @@ const KPI = () => {
             setshowPopup={setshowPopup}
             setCheckAddFM={setCheckAddFM}
             setRole={isRole}
+            setPhongBanA={isPhongBanValue}
           />
         </Modal.Body>
       </Modal>

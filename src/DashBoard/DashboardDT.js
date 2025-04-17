@@ -26,7 +26,7 @@ const DashboardDT = ({ sectionTitle, items }) => {
 
   return (
     <div
-      className="col-12 col-lg-6 dashboard"
+      className="col-12 col-lg-12 dashboard"
       style={{ padding: "2px 5px", marginBottom: "0", borderRadius: "0" }}
     >
       <div className="card card-success">
@@ -50,7 +50,7 @@ const DashboardDT = ({ sectionTitle, items }) => {
 
         {/* Đây là phần thay thế card-body */}
         <div className="card-body py-2 p-0">
-          <div className="col-12 col-lg-6  ">
+          <div className="col-12 col-lg-12  ">
             {items?.map((item, index) => (
               <DashboardCardDT key={index} {...item} />
             ))}

@@ -99,6 +99,12 @@ const PurChaseOrder = () => {
       }
 
       const data = await response.json();
+      let object = {
+        dep_Code: "Clara",
+        dep_Name: "Clara",
+        id: 999,
+      };
+      data.push(object);
       setPhongBan(data);
       setPhongBanValue(data[0].dep_Code);
     } catch (error) {
@@ -159,7 +165,7 @@ const PurChaseOrder = () => {
     setPhongBanValue(value);
   };
   return (
-    <div>
+    <div className="contentItem">
       <div
         className="headerPur d-flex justify-content-between align-items-center  mt-1 p-2 div-select"
         style={{ flexWrap: "wrap", gap: "5px" }}
@@ -171,7 +177,7 @@ const PurChaseOrder = () => {
               <DateRangePicker onDateChange={handleDateChange} />
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD">
-              <label>Chọn phòng ban </label>{" "}
+              <label>Phòng ban </label>{" "}
               <SelectTable
                 setCheckAll={false}
                 dataSelect2={isPhongBan}

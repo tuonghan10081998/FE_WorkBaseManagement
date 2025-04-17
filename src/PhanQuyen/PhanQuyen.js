@@ -160,7 +160,7 @@ const PhanQuyen = () => {
     }
   };
   return (
-    <div className="py-2 px-2">
+    <div className="py-2 px-2 contentItem">
       <div className="row g-2">
         {/* Danh sách tài khoản */}
         <div className="col-md-12 col-lg-6 position-relative">

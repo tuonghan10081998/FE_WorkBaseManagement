@@ -4,6 +4,7 @@ import DashboardSection from "./DashboardSection";
 import SelectTable from "../CongViecList/select2GridTable";
 import DashboardDT from "./DashboardDT";
 import KPIChart from "./KPIChart";
+import DashboardPie from "./DashboardPie";
 import { TitleContext } from "../components/TitleContext";
 import DateRangePicker from "../Date/DateRangePicker";
 import "./Dashboard.css";
@@ -43,6 +44,31 @@ const Dashboard = () => {
       },
     ];
   };
+  const convertRevenue_Total = (rawData) => {
+    return [
+      {
+        title: "Tổng chi phí",
+        count: rawData == null ? 0 : rawData.totalExpenses ?? 0,
+        icon: "fas fa-tasks",
+        bg: "#17A2B8",
+        textDark: false,
+      },
+      {
+        title: "Tổng doanh thu",
+        count: rawData == null ? 0 : rawData.totalRevenue ?? 0,
+        icon: "fas fa-spinner",
+        bg: "#28A745",
+        textDark: false,
+      },
+      {
+        title: "Lợi nhuận",
+        count: rawData == null ? 0 : rawData.profit ?? 0,
+        icon: "fas fa-check-circle",
+        bg: "#FFC107",
+        textDark: true,
+      },
+    ];
+  };
   const convertNghiPhepData = (data) => {
     return [
       {
@@ -72,12 +98,16 @@ const Dashboard = () => {
   const [isLeader, setLeader] = useState("");
   const [isPhongBan, setPhongBan] = useState(null);
   const [isPhongBanValue, setPhongBanValue] = useState("");
+  const [isPhongBanText, setPhongBanText] = useState("");
   const [isKPI, setKPI] = useState([]);
   const [isCongViec, setCongViec] = useState([]);
   const [isKeToan, setKeToan] = useState([]);
   const [isDuAn, setDuAn] = useState([]);
   const [isNghiPhep, setNgayPhep] = useState([]);
   const [isDoanhThu, setDoanhThu] = useState([]);
+  const [isrevenue_Total, setrevenue_Total] = useState([]);
+  const [isdeps_RevenueDetail, setdeps_RevenueDetail] = useState([]);
+  const [isdep_Detail, setdep_Detail] = useState([]);
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -123,6 +153,9 @@ const Dashboard = () => {
   useEffect(() => {
     getPhanQuyen();
   }, [isUser]);
+  const handleTChange = (value) => {
+    setPhongBanText(value);
+  };
   useEffect(() => {
     isRole != "" && getPhongBan();
   }, [isRole]);
@@ -140,6 +173,7 @@ const Dashboard = () => {
       const data = await response.json();
       setPhongBan(data);
       setPhongBanValue(data[0].dep_Code);
+      setPhongBanText(data[0].dep_Name);
     } catch (error) {
       console.error(error.message);
     }
@@ -172,14 +206,41 @@ const Dashboard = () => {
       console.error(error.message);
     }
   };
+  const getDT = async () => {
+    const url = `${process.env.REACT_APP_URL_API}DashBoard/getdt?action=GetDT&para1=${isPhongBanValue}&para2=${dateRange.from}&para3=${dateRange.to}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const getTable = await response.json();
+      setrevenue_Total(getTable.revenue_Total);
+      setdeps_RevenueDetail(getTable.deps_RevenueDetail);
+      setdep_Detail(getTable.dep_Detail);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
   useEffect(() => {
-    isPhongBanValue && dateRange && getData();
+    if (isPhongBanValue && dateRange) {
+      getData();
+      getDT();
+    }
   }, [isPhongBanValue, dateRange]);
   return (
-    <div>
+    <div className="contentItem">
       <div
         className="d-flex justify-content-between align-items-center  mt-1 p-2 div-select"
-        style={{ flexWrap: "wrap", gap: "5px" }}
+        style={{
+          flexWrap: "wrap",
+          gap: "5px",
+          position: "fixed",
+          width: "100%",
+          background: "#fff",
+          zIndex: "99",
+          top: "50px",
+        }}
       >
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
@@ -189,6 +250,8 @@ const Dashboard = () => {
                 setCheckAll={false}
                 dataSelect2={isPhongBan}
                 onPhongBanChange={handlePBChange}
+                onChangeText={handleTChange}
+                setOnChangeText={true}
               />
             </div>
             <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0  col_search ItemCV">
@@ -202,36 +265,47 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="bg-light dashboardCard">
-        <DashboardSection
-          sectionTitle="Công Việc"
-          items={convertDataToDashboardItems(isCongViec)}
-        />
-        <DashboardSection
-          sectionTitle="Dự án"
-          items={convertDataToDashboardItems(isDuAn)}
-        />
-        <div
-          className="col-12 dashboard"
-          style={{
-            padding: "2px 10px",
-            marginBottom: "10px",
-            borderRadius: "0",
-          }}
-        >
-          <div className="row">
-            <DashboardDT
-              sectionTitle="Doanh thu"
-              items={convertDoanhThu(isDoanhThu)}
-            />
-            <DashboardDT
-              sectionTitle="Nghỉ Phép"
-              items={convertNghiPhepData(isNghiPhep)}
-            />
+      <div style={{ marginTop: "75px" }}>
+        <div className="bg-light dashboardCard">
+          <DashboardSection
+            sectionTitle="Công Việc"
+            items={convertDataToDashboardItems(isCongViec)}
+          />
+          <DashboardSection
+            sectionTitle="Dự án"
+            items={convertDataToDashboardItems(isDuAn)}
+          />
+          <DashboardSection
+            sectionTitle="Lợi nhuận tổng công cty"
+            items={convertRevenue_Total(isrevenue_Total)}
+          />
+          <div
+            className="col-12 dashboard"
+            style={{
+              padding: "2px 10px",
+              marginBottom: "10px",
+              borderRadius: "0",
+            }}
+          >
+            <div className="row">
+              {/* <DashboardDT
+                sectionTitle="Doanh thu"
+                items={convertDoanhThu(isDoanhThu)}
+              /> */}
+              <DashboardDT
+                sectionTitle="Nghỉ Phép"
+                items={convertNghiPhepData(isNghiPhep)}
+              />
+            </div>
           </div>
-        </div>
 
-        <KPIChart data={isKPI} dataKT={isKeToan} />
+          <DashboardPie dataKT={isKeToan} dataDepDT={isdeps_RevenueDetail} />
+          <KPIChart
+            setTextPB={isPhongBanText}
+            data={isKPI}
+            dataDepDetail={isdep_Detail}
+          />
+        </div>
       </div>
     </div>
   );

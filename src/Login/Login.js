@@ -11,24 +11,6 @@ const Login = () => {
   const selectRef = useRef(null);
   const { para1 } = useParams();
 
-  useEffect(() => {
-    if (selectRef.current) {
-      $(selectRef.current).select2({
-        placeholder: "Chọn phòng ban...",
-      });
-      $(selectRef.current).val(null).trigger("change");
-      $(selectRef.current).on("change", function () {
-        const value = $(this).val();
-        setPhongBanValue(value);
-      });
-    }
-    return () => {
-      if (selectRef.current) {
-        $(selectRef.current).select2("destroy");
-      }
-    };
-  }, []);
-
   const [isPhongBanValue, setPhongBanValue] = useState("");
   const [isPhongBan, setPhongBan] = useState([]);
   const [isRegister, setIsRegister] = useState(true);
@@ -48,11 +30,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isAccept, setIsAccpet] = useState("");
-  const [isCodeEmail, setIsCodeEmail] = useState("");
+  const [isCodeTele, setCodeTele] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isHoTen, setHoTen] = useState("");
   const [isTele, setTele] = useState("");
   const [isDisable, setDisable] = useState(false);
+  const [isForget, setForget] = useState(true);
+  const [options, setOption] = useState([]);
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -65,10 +49,21 @@ const Login = () => {
       }
 
       const data = await response.json();
-      setPhongBan(data);
+      const formattedOptions = data.map((dep) => ({
+        value: dep.dep_Code,
+        label: dep.dep_Name,
+      }));
+      console.log(formattedOptions);
+      setOption(formattedOptions);
     } catch (error) {
       console.error(error.message);
     }
+  };
+  useEffect(() => {
+    console.log(options);
+  }, [options]);
+  const handleChange = (option) => {
+    setPhongBanValue(option);
   };
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
@@ -162,13 +157,115 @@ const Login = () => {
     setshowMoadl(false);
   };
   const submit = async (e) => {
+    e.preventDefault();
     if (!isRegister) {
-      setDisable(true);
-      regicter();
+      isForget && regicter();
+      !isForget && handleChangePW();
     }
 
     if (isRegister) {
       handleLoginSubmit();
+    }
+  };
+  const handleChangePW = () => {
+    if (isCodeTele == "") {
+      iziToast.warning({
+        title: "Warning",
+        message: `Vui lòng điều mã xác nhận telegram .`,
+        position: "topRight",
+      });
+      setDisable(false);
+      return;
+    }
+    if (username == "" || password == "" || confirmPassword == "") {
+      iziToast.warning({
+        title: "Warning",
+        message: `Vui lòng điền đầy đủ thông tin .`,
+        position: "topRight",
+      });
+      setDisable(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      iziToast.warning({
+        title: "Warning",
+        message: `Vui lòng nhập đúng mật khẩu .`,
+        position: "topRight",
+      });
+      setDisable(false);
+      return;
+    }
+    const object = {
+      userName: username.toString(),
+      fullName: "",
+      passWord: password.toString(),
+      email: "",
+      telegram: "",
+      department: "",
+      userID: "string",
+      codeResetPass: isCodeTele,
+    };
+    setDisable(false);
+    PostForgot(object, "ResetPass");
+  };
+  const handlegetcode = async () => {
+    console.log(username);
+    if (username === "") {
+      iziToast.warning({
+        title: "Warning",
+        message: `Vui lòng nhập tài khoản .`,
+        position: "topRight",
+      });
+      setDisable(false);
+      return;
+    }
+    const object = {
+      userName: username.toString(),
+      fullName: "",
+      passWord: "",
+      email: "",
+      telegram: "",
+      department: "",
+      userID: "string",
+      codeResetPass: 0,
+    };
+    PostForgot(object, "ForgotPass");
+  };
+  const PostForgot = async (object, NamePort) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}User/${NamePort}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(object),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    setDisable(false);
+    if (data.statusCode == "200") {
+      iziToast.success({
+        title: "Success",
+        message: data.message,
+        position: "topRight",
+      });
+      if (NamePort == "ResetPass") {
+        loadUseState();
+        setIsRegister(true);
+        setForget(true);
+        btnSignIn.current.classList.remove("active");
+        btnSignUp.current.classList.add("active");
+        enregistrerSection.current.classList.add("active-section");
+        connexionSection.current.classList.remove("remove-section");
+      }
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: data.message,
+        position: "topRight",
+      });
     }
   };
   const regicter = async () => {
@@ -177,7 +274,7 @@ const Login = () => {
       password == "" ||
       confirmPassword == "" ||
       email == "" ||
-      isPhongBanValue == "" ||
+      isPhongBanValue.value == undefined ||
       isHoTen == "" ||
       isTele == ""
     ) {
@@ -186,6 +283,7 @@ const Login = () => {
         message: `Vui lòng điền đầy đủ thông tin .`,
         position: "topRight",
       });
+      setDisable(false);
       return;
     }
 
@@ -195,6 +293,7 @@ const Login = () => {
         message: `Vui lòng nhập đúng mật khẩu .`,
         position: "topRight",
       });
+      setDisable(false);
       return;
     }
     const object = {
@@ -256,6 +355,7 @@ const Login = () => {
   };
   const handleSignIN = async (event) => {
     event.preventDefault();
+    setForget(true);
     setIsRegister(true);
     btnSignIn.current.classList.remove("active");
     btnSignUp.current.classList.add("active");
@@ -265,12 +365,21 @@ const Login = () => {
   const handleSignUp = async (event) => {
     event.preventDefault();
     setIsRegister(false);
+    setForget(true);
     btnSignIn.current.classList.add("active");
     btnSignUp.current.classList.remove("active");
     enregistrerSection.current.classList.remove("active-section");
     connexionSection.current.classList.add("remove-section");
   };
-
+  const handleForget = async (e) => {
+    e.preventDefault();
+    setIsRegister(false);
+    setForget(false);
+    btnSignIn.current.classList.add("active");
+    btnSignUp.current.classList.remove("active");
+    enregistrerSection.current.classList.remove("active-section");
+    connexionSection.current.classList.add("remove-section");
+  };
   return (
     <>
       <div className="content">
@@ -292,7 +401,9 @@ const Login = () => {
                 ref={btnSignUp}
                 className="btn-enregistrer active"
               >
-                <h2 className="text-white">Đăng ký</h2>
+                <h2 className="text-white">
+                  {isForget ? "Đăng ký" : "Mật khẩu"}
+                </h2>
               </a>
             </div>
             <div className="connexion" ref={connexionSection}>
@@ -366,7 +477,7 @@ const Login = () => {
                 />
               </div>
               <hr />
-              <a target="_blank">
+              <a onClick={(e) => handleForget(e)} target="_blank">
                 <h4>Quên mật khẩu</h4>
               </a>
             </div>
@@ -374,7 +485,25 @@ const Login = () => {
               className="enregistrer active-section"
               ref={enregistrerSection}
             >
-              <div className="contact-form ">
+              <div
+                style={{ marginTop: `${isForget ? "0" : "100px"}` }}
+                className="contact-form "
+              >
+                {isForget && (
+                  <div className="col-12 m-0 p-0 my-2 mt-4">
+                    <div className="row">
+                      <div className="form-group col-12 m-0">
+                        <Select
+                          options={options}
+                          value={isPhongBanValue}
+                          onChange={handleChange}
+                          placeholder="Chọn phòng ban..."
+                          isSearchable
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <input
                   className="mt-4"
                   placeholder="Tài khoản"
@@ -383,30 +512,37 @@ const Login = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="off"
                 />
-                <input
-                  className="mt-4"
-                  placeholder="Họ tên"
-                  value={isHoTen}
-                  type="text"
-                  onChange={(e) => setHoTen(e.target.value)}
-                  autoComplete="off"
-                />
-                <input
-                  className="mt-4"
-                  placeholder="E-mail"
-                  value={email}
-                  type="text"
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="off"
-                />
-                <input
-                  className="mt-4"
-                  placeholder="Telegram"
-                  value={isTele}
-                  type="text"
-                  onChange={(e) => setTele(e.target.value)}
-                  autoComplete="off"
-                />
+
+                {isForget && (
+                  <>
+                    {" "}
+                    <input
+                      className="mt-4"
+                      placeholder="Họ tên"
+                      value={isHoTen}
+                      type="text"
+                      onChange={(e) => setHoTen(e.target.value)}
+                      autoComplete="off"
+                    />
+                    <input
+                      className="mt-4"
+                      placeholder="E-mail"
+                      value={email}
+                      type="text"
+                      onChange={(e) => setEmail(e.target.value)}
+                      autoComplete="off"
+                    />
+                    <input
+                      className="mt-4"
+                      placeholder="Telegram"
+                      value={isTele}
+                      type="text"
+                      onChange={(e) => setTele(e.target.value)}
+                      autoComplete="off"
+                    />
+                  </>
+                )}
+
                 <div className="item_father ">
                   <input
                     className="mt-4"
@@ -441,21 +577,19 @@ const Login = () => {
                     }  login_eye`}
                   ></i>
                 </div>
-                <div className="item_father mt-4">
-                  <select
-                    className="select_2 select2PhongBan"
-                    ref={selectRef}
-                    style={{ minWidth: "200px" }}
-                  >
-                    {" "}
-                    <option value=""></option>
-                    {isPhongBan?.map((item) => (
-                      <option key={item.dep_Code} value={item.dep_Code}>
-                        {item.dep_Name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+
+                {!isForget && (
+                  <div className="list_getCode mt-4">
+                    <input
+                      style={{ height: "40px" }}
+                      placeholder="Nhập mã telegram"
+                      value={isCodeTele}
+                      type="text"
+                      onChange={(e) => setCodeTele(e.target.value)}
+                    />
+                    <button onClick={handlegetcode}>Lấy mã</button>
+                  </div>
+                )}
 
                 <input
                   disabled={isDisable}

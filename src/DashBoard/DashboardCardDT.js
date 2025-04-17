@@ -3,7 +3,7 @@ import React from "react";
 const DashboardCardDT = ({ title, count, icon, bg, textDark }) => {
   const textClass = textDark ? "text-dark" : "text-white";
   return (
-    <div className="col-6 col-lg-6 p-0 m-0 g-3  itemDash">
+    <div className="col-6 col-lg-3 p-0 m-0 g-3  itemDash">
       <div className={`card  ${textClass}`} style={{ backgroundColor: bg }}>
         <div className=" d-flex align-items-center p-3 ">
           <div>

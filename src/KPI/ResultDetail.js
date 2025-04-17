@@ -22,9 +22,11 @@ const KPIDetailResult = ({
       setDataDetail(setData);
     }
   }, [setData]);
-
+  const handleRemoveLeadingZeros = (str) => {
+    return str.toString().replace(/^0+/, "") || "0";
+  };
   const handleKPIChange = (id, newKPI) => {
-    const numericKPI = parseInt(newKPI) || 0;
+    const numericKPI = handleRemoveLeadingZeros(parseInt(newKPI) || 0);
     setDataDetail((prevUsers) =>
       prevUsers.map((x) => (x.id === id ? { ...x, result: numericKPI } : x))
     );

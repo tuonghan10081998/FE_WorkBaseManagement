@@ -61,11 +61,10 @@ const Layout = () => {
       if (!isCollapsed) setIsCollapsed(true);
     }
   };
-
   return (
     <div className="d-flex">
       <div
-        className={`bg-dark text-white sidebar p-3 ${
+        className={`bg-dark text-white sidebar position-fixed p-3 ${
           isCollapsed ? "collapsed" : "expanded"
         }`}
         id="sidebar"
@@ -168,7 +167,7 @@ const Layout = () => {
           )} */}
           {isKT && (
             <div className="nav-item">
-              <a
+              <div
                 className="nav-link text-white d-flex justify-content-between align-items-center"
                 href="#"
               >
@@ -179,7 +178,7 @@ const Layout = () => {
                   ></i>
                   <span className="ms-2">Kế toán</span>
                 </div>
-              </a>
+              </div>
               {isHomeExpanded && (
                 <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
                   <Link
@@ -256,7 +255,10 @@ const Layout = () => {
         id="mainContent"
         onClick={handleClick}
       >
-        <div className="title">
+        <div
+          style={{ position: "fixed", width: "100%", top: "0" }}
+          className="title"
+        >
           <div
             className="brand menutable"
             id="toggleSidebar"
@@ -270,7 +272,12 @@ const Layout = () => {
               setShowInfo(true);
               setCheck(!isCheck);
             }}
-            style={{ marginRight: "15px", cursor: "pointer" }}
+            style={{
+              marginRight: "15px",
+              cursor: "pointer",
+              position: "fixed",
+              right: 0,
+            }}
             className="d-flex align-items-center icon-userName"
           >
             <i className="fas fa-user user-iconLayout"></i>

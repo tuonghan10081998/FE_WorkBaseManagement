@@ -21,6 +21,32 @@
 .dashboardCard {
   background-color: #fff !important;
 }
+.dashboardtab {
+  height: 32px;
+  font-size: 14px;
+  padding: 5px 0 !important;
+  width: 62px;
+  border-radius: 5px !important;
+  border-bottom: 1px solid #ccc !important;
+}
+.dashboard .tab-table {
+  margin: 0;
+  border: none;
+  margin-left: auto;
+  gap: 5px;
+}
+.trthdashboard {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+.trtfdashboard {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
 #mainContent .dashboard .card-body {
   width: calc(100vw - 272px);
 }

@@ -320,7 +320,7 @@ const ListCV = () => {
     setWorkItem(dataEdit);
   };
   return (
-    <div className="">
+    <div className="contentItem">
       {/* <div className="addtask addtaskleave d-flex">
         Thêm
         <button

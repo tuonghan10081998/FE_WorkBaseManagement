@@ -5,7 +5,13 @@ import "bootstrap/dist/js/bootstrap.js";
 import "select2/dist/css/select2.min.css";
 import "select2/dist/js/select2.min.js";
 
-const SelectTable = ({ dataSelect2, onPhongBanChange, setCheckAll = true }) => {
+const SelectTable = ({
+  dataSelect2,
+  onPhongBanChange,
+  setCheckAll = true,
+  onChangeText,
+  setOnChangeText = false,
+}) => {
   const selectRef = useRef(null);
   useEffect(() => {
     if (selectRef.current) {
@@ -14,7 +20,10 @@ const SelectTable = ({ dataSelect2, onPhongBanChange, setCheckAll = true }) => {
       });
       $(selectRef.current).on("change", function () {
         const value = $(this).val();
+        const text = $(this).find("option:selected").text();
         onPhongBanChange(value);
+
+        setOnChangeText && onChangeText(text);
       });
     }
     return () => {

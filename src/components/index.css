@@ -101,6 +101,9 @@ body {
 .collapsed .fa-bars {
   padding-left: 7px;
 }
+.contentItem {
+  margin-top: 55px;
+}
 @media (max-width: 800px) {
   .sidebar {
     width: 65px;

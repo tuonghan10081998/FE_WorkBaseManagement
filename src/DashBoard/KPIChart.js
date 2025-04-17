@@ -7,14 +7,36 @@ import "admin-lte/dist/js/adminlte.min.js";
 window.$ = $;
 window.jQuery = $;
 
-const KPIChart = ({ data, dataKT }) => {
+const KPIChart = ({ data, dataDepDetail, setTextPB }) => {
   const [categories, setCategories] = useState([]);
   const [thucHienData, setThucHienData] = useState([]);
   const [mucTieuData, setMucTieuData] = useState([]);
-  const [keToanData, setKeToanData] = useState([]);
-  const [categoriesKT, setCategoriesKT] = useState([]);
-  const [thuNhapData, setThuNhapData] = useState([]);
-  const [doanhthuData, setDoanhThuData] = useState([]);
+
+  const [categoriesCT, setCategoriesCT] = useState([]);
+  const [isExpensesCT, setExpensesCT] = useState([]);
+  const [isRevenueCT, setRevenueCT] = useState([]);
+  const [isProfitCT, setProfitCT] = useState([]);
+  const [isMinDT, setMinDT] = useState(null);
+  useEffect(() => {
+    if (dataDepDetail.length === 0) return;
+
+    const newcategoriesCT = [];
+    const newExpensesCT = [];
+    const newRevenueCT = [];
+    const newProfitCT = [];
+    Object.keys(dataDepDetail).forEach((key, index) => {
+      const [expensesct, revenuect] = dataDepDetail[key].split("/").map(Number);
+      newcategoriesCT.push(`T ${index + 1}`);
+      newExpensesCT.push(expensesct);
+      newRevenueCT.push(revenuect);
+      newProfitCT.push(revenuect - expensesct);
+    });
+    setMinDT(Math.min(...newProfitCT));
+    setCategoriesCT(newcategoriesCT);
+    setExpensesCT(newExpensesCT);
+    setRevenueCT(newRevenueCT);
+    setProfitCT(newProfitCT);
+  }, [dataDepDetail]);
   useEffect(() => {
     if (data.length === 0) return;
     // const kpiData = data[0];
@@ -32,25 +54,6 @@ const KPIChart = ({ data, dataKT }) => {
     setThucHienData(newThucHienData);
     setMucTieuData(newMucTieuData);
   }, [data]);
-  useEffect(() => {
-    if (dataKT.length === 0) return;
-    const newKeToanData = [];
-    const newCategoriesKT = [];
-    const newThuNhapData = [];
-    const newDoanhThuData = [];
-    Object.keys(dataKT).forEach((key, index) => {
-      const [chitieu, thunhap] = dataKT[key].split("/").map(Number);
-      newKeToanData.push(chitieu);
-      newThuNhapData.push(thunhap);
-      const doanhthu = thunhap - chitieu;
-      newDoanhThuData.push(doanhthu);
-      newCategoriesKT.push(`T ${index + 1}`);
-    });
-    setKeToanData(newKeToanData);
-    setCategoriesKT(newCategoriesKT);
-    setThuNhapData(newThuNhapData);
-    setDoanhThuData(newDoanhThuData);
-  }, [dataKT]);
 
   const options = {
     chart: {
@@ -109,11 +112,11 @@ const KPIChart = ({ data, dataKT }) => {
       text: "",
     },
     xAxis: {
-      categories: categoriesKT,
+      categories: categoriesCT,
       crosshair: true,
     },
     yAxis: {
-      min: 0,
+      min: isMinDT,
       title: { text: "Số Lượng" },
       opposite: false, // dùng true nếu muốn đưa trục y của line qua bên phải
     },
@@ -139,17 +142,17 @@ const KPIChart = ({ data, dataKT }) => {
     series: [
       {
         name: "Chi tiêu",
-        data: keToanData,
-        type: "column",
-      },
-      {
-        name: "Thu nhập",
-        data: thuNhapData,
+        data: isExpensesCT,
         type: "column",
       },
       {
         name: "Doanh thu",
-        data: doanhthuData,
+        data: isRevenueCT,
+        type: "column",
+      },
+      {
+        name: "Lợi nhuận",
+        data: isProfitCT,
         type: "line",
         color: "#FF5733",
         marker: {
@@ -191,44 +194,7 @@ const KPIChart = ({ data, dataKT }) => {
                   marginBottom: 0,
                 }}
               >
-                KPI
-              </h3>
-              <div className="card-tools">
-                <button
-                  type="button"
-                  className="btn btn-tool"
-                  data-card-widget="collapse"
-                >
-                  <i className="fas fa-minus text-black"></i>
-                </button>
-              </div>
-            </div>
-
-            <div className="card-body">
-              <div
-                style={{ padding: "0px 10px 0px 0px" }}
-                className="col-12 col-lg-6"
-              >
-                <HighchartsReact highcharts={Highcharts} options={options} />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{ padding: "2px 5px", borderRadius: "0px" }}
-          className="col-12 col-lg-6 m-0  dashboard"
-        >
-          <div className="card card-success">
-            <div className="card-header bg-white">
-              <h3
-                className="card-title text-black"
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                  marginBottom: 0,
-                }}
-              >
-                Kế toán
+                DT phòng {setTextPB}
               </h3>
               <div className="card-tools">
                 <button
@@ -247,6 +213,43 @@ const KPIChart = ({ data, dataKT }) => {
                 className="col-12 col-lg-6"
               >
                 <HighchartsReact highcharts={Highcharts} options={options2} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{ padding: "2px 5px", borderRadius: "0px" }}
+          className="col-12 col-lg-6 m-0  dashboard"
+        >
+          <div className="card card-success">
+            <div className="card-header bg-white">
+              <h3
+                className="card-title text-black"
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  marginBottom: 0,
+                }}
+              >
+                KPI phòng {setTextPB}
+              </h3>
+              <div className="card-tools">
+                <button
+                  type="button"
+                  className="btn btn-tool"
+                  data-card-widget="collapse"
+                >
+                  <i className="fas fa-minus text-black"></i>
+                </button>
+              </div>
+            </div>
+
+            <div className="card-body">
+              <div
+                style={{ padding: "0px 10px 0px 0px" }}
+                className="col-12 col-lg-6"
+              >
+                <HighchartsReact highcharts={Highcharts} options={options} />
               </div>
             </div>
           </div>
