@@ -402,7 +402,17 @@ a:not(.active) {
   border-radius: 10px;
   height: 44px !important;
 }
-
+.summitresgiter {
+  width: 100%;
+  border-radius: 11px;
+  outline: none;
+  border: none;
+  height: 43px;
+  font-weight: bold;
+  color: #fff;
+  background: #1161ee;
+  font-size: 18px;
+}
 .item_father
   .select2-container--default
   .select2-selection--single

@@ -6,9 +6,12 @@ import { TitleContext } from "../components/TitleContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../PhanQuyen/PhanQuyen.css";
 import iziToast from "izitoast";
+import Select from "react-select";
+import PQPositon from "./PQPositon";
 const PhanQuyen = () => {
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
-
+  const [showPopup, setshowPopup] = useState(false);
+  const [isNhanVienP, setNhanVienP] = useState("");
   const { setTitle, setIcon } = useContext(TitleContext);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isData, setData] = useState([]);
@@ -20,6 +23,40 @@ const PhanQuyen = () => {
   const [islstUserRole, setlstUserRole] = useState([]);
   const [isNhanVien, setNhanVien] = useState("");
   const [isCheckAdd, setCheckAdd] = useState(false);
+  const [options, setOption] = useState([]);
+  const [isPhongBanValue, setPhongBanValue] = useState("");
+  const [isUserID, setUserID] = useState("");
+  const [isPosition, setPosition] = useState("");
+  const [isPositionA, setPositionA] = useState(false);
+  useEffect(() => {
+    getPhongBan();
+  }, []);
+  const getPhongBan = async () => {
+    const url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const formattedOptions = data.map((dep) => ({
+        value: dep.dep_Code,
+        label: dep.dep_Name,
+      }));
+      formattedOptions.unshift({
+        value: "all",
+        label: "-- Tất cả --",
+      });
+      setOption(formattedOptions);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const handleChange = (option) => {
+    setPhongBanValue(option);
+  };
+
   useEffect(() => {
     setTitle(` Phân quyền `);
     setIcon(<i class="fa-solid fa-window-restore"></i>);
@@ -40,7 +77,6 @@ const PhanQuyen = () => {
         (x) => x.fullName.toLowerCase() !== "admin"
       );
       setData(dataNV);
-      dataNV && setID(dataNV[0].userID);
     } catch (error) {
       console.error(error.message);
     }
@@ -82,8 +118,8 @@ const PhanQuyen = () => {
     setlstUserPage(updatedData);
   };
   useEffect(() => {
-    isID && getPhanQuyen();
-  }, [isID, isCheckAdd]);
+    if (isDataNV.length > 0 && isID !== null) getPhanQuyen();
+  }, [isID, isCheckAdd, isDataNV]);
   useEffect(() => {
     let dataNV = isData.filter(
       (x) =>
@@ -91,8 +127,20 @@ const PhanQuyen = () => {
         x.fullName.toLowerCase().includes(isNhanVien.toLowerCase()) &&
         x.fullName !== "Admin"
     );
+    if (isPhongBanValue.value && isPhongBanValue.value != "all") {
+      dataNV = dataNV.filter((x) => x.dep_Code === isPhongBanValue.value);
+    }
+    if (dataNV.length > 0) {
+      setID(dataNV[0].userID);
+      setActiveIndex(0);
+    } else {
+      setlstUserDep([]);
+      setlstUserPage([]);
+      setlstUserRole([]);
+    }
+
     setDataNV(dataNV);
-  }, [isNhanVien, isData]);
+  }, [isNhanVien, isData, isPhongBanValue]);
   const handleSave = async () => {
     let arrUserDep = [];
     let arrUserPage = [];
@@ -159,11 +207,18 @@ const PhanQuyen = () => {
       });
     }
   };
+  useEffect(() => {
+    setData((prevData) =>
+      prevData.map((d) =>
+        d.userID === isUserID ? { ...d, position: isPosition } : d
+      )
+    );
+  }, [isPositionA]);
   return (
     <div className="py-2 px-2 contentItem">
       <div className="row g-2">
         {/* Danh sách tài khoản */}
-        <div className="col-md-12 col-lg-6 position-relative">
+        <div className="col-md-12 col-lg-7 position-relative">
           <div className="card">
             <div className="">
               <div className="h5 d-flex m-0 titlePQ">
@@ -174,23 +229,41 @@ const PhanQuyen = () => {
               </div>
             </div>
             <ul className="list-group list-group-flush">
-              <div>
+              <div className="row">
                 {" "}
-                <input
-                  type="text"
-                  id="projectFilter"
-                  className="form-control mr-2 mb-2"
-                  placeholder=""
-                  value={isNhanVien}
-                  onChange={(e) => setNhanVien(e.currentTarget.value)}
-                />
+                <div className="col-6">
+                  <label style={{ fontWeight: "bold", fontSize: "17px" }}>
+                    Phòng ban{" "}
+                  </label>{" "}
+                  <Select
+                    options={options}
+                    value={isPhongBanValue}
+                    onChange={handleChange}
+                    placeholder="-- Tất cả --"
+                    isSearchable
+                  />
+                </div>
+                <div className="col-6">
+                  <label style={{ fontWeight: "bold", fontSize: "17px" }}>
+                    Nhân viên
+                  </label>{" "}
+                  <input
+                    type="text"
+                    id="projectFilter"
+                    className="form-control mr-2 mb-2"
+                    placeholder=""
+                    value={isNhanVien}
+                    onChange={(e) => setNhanVien(e.currentTarget.value)}
+                  />
+                </div>
               </div>
               <div>
                 <li className="list-group-item ">
                   <div className="tilteLI sttPQ">Stt</div>
                   <div className="gridUL row m-0 p-0  w-100">
-                    <span className="tilteLI pqul col-6"> Họ tên</span>
-                    <span className="tilteLI pqul col-6"> Email</span>
+                    <span className="tilteLI pqul col-4"> Họ tên</span>
+                    <span className="tilteLI pqul col-4"> Email</span>
+                    <span className="tilteLI pqul col-4"> Chức vụ</span>
                   </div>
                 </li>
               </div>
@@ -205,15 +278,27 @@ const PhanQuyen = () => {
                     onClick={() => {
                       setActiveIndex(index);
                       setID(account.userID);
+                      setNhanVienP(account.fullName);
+                      setUserID(account.userID);
+                      setPosition(account.position);
                     }}
                   >
                     <div className="sttPQ">{index + 1}</div>
                     <div className="gridUL row m-0 p-0  w-100">
-                      <span className=" pqul col-6">
+                      <span className=" pqul  col-4">
                         {account.fullName || ""}
                       </span>
 
-                      <span className="pqul col-6">{account.email || ""}</span>
+                      <span className="pqul  pqul2 col-4">
+                        {account.email || ""}
+                      </span>
+                      <span className="pqul  col-4">
+                        {account.position || ""}
+                        <i
+                          onClick={() => setshowPopup(true)}
+                          class="fa-solid fa-circle-plus"
+                        ></i>
+                      </span>
                     </div>
                   </li>
                 ))}
@@ -247,7 +332,7 @@ const PhanQuyen = () => {
         </div>
 
         {/* Chi tiết tài khoản */}
-        <div className="col-md-12 col-lg-6">
+        <div className="col-md-12 col-lg-5">
           <div className="card" style={{ height: "50px" }}>
             <div className="card-header d-flex justify-content-between align-items-center">
               <h2 className="h5 mb-0 ">Chi tiết </h2>
@@ -302,6 +387,15 @@ const PhanQuyen = () => {
           </div>
         </div>
       </div>
+      <PQPositon
+        setNhanVien={isNhanVienP}
+        setShowPopup={setshowPopup}
+        showPopup={showPopup}
+        setUserID={isUserID}
+        setPosition={setPosition}
+        setIsPosition={isPosition}
+        setPositionA={setPositionA}
+      />
     </div>
   );
 };

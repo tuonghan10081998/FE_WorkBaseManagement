@@ -67,6 +67,7 @@
 .list-group-item.active {
   background-color: #00a9f6 !important;
   color: #fff;
+  z-index: 0;
 }
 .list-group-item:hover {
   background-color: #f1f1f1;
@@ -101,7 +102,7 @@
 }
 .listTK {
   overflow: auto;
-  max-height: calc(100vh - 185px);
+  max-height: calc(100vh - 285px);
 }
 .itemtableNamePQ {
   overflow: auto;
@@ -237,6 +238,15 @@
 .custom-modal-dialog {
   max-width: 50% !important;
 }
+.fa-circle-plus {
+  margin-left: auto;
+  font-size: 22px;
+  cursor: pointer;
+  color: #48a124;
+}
+.list-group-item.active .fa-circle-plus {
+  color: #fff;
+}
 @keyframes pulse-on-hover {
   0% {
     transform: scale(1);
@@ -278,7 +288,6 @@
 .pqul {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
   height: 45px;
   text-align: left;
@@ -290,6 +299,9 @@
   top: 8px;
   right: 10px;
   z-index: 999;
+}
+.pqul2 {
+  word-break: break-all;
 }
 .canclePQ {
   font-size: 25px;

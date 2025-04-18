@@ -7,7 +7,6 @@ import Select from "react-select";
 import Swal from "sweetalert2";
 import iziToast from "izitoast";
 
-import $ from "jquery";
 const Login = () => {
   const selectRef = useRef(null);
   const { para1 } = useParams();
@@ -161,6 +160,7 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     if (!isRegister) {
+      setDisable(true);
       isForget && regicter();
       !isForget && handleChangePW();
     }
@@ -304,7 +304,7 @@ const Login = () => {
       passWord: password.toString(),
       email: email,
       telegram: isTele,
-      department: isPhongBanValue.toString(),
+      department: isPhongBanValue.value.toString(),
     };
     PostRegister(object);
   };
@@ -587,22 +587,22 @@ const Login = () => {
                       placeholder="Nhập mã telegram"
                       value={isCodeTele}
                       type="text"
-                      disabled={isDisableLM}
                       onChange={(e) => {
                         setCodeTele(e.target.value);
                       }}
                     />
-                    <button onClick={handlegetcode}>Lấy mã</button>
+                    <button disabled={isDisableLM} onClick={handlegetcode}>
+                      Lấy mã
+                    </button>
                   </div>
                 )}
-
-                <input
+                <button
                   disabled={isDisable}
                   onClick={submit}
-                  className="submit mt-4"
-                  defaultValue="SIGN UP"
-                  type="submit"
-                />
+                  className="submit mt-4 summitresgiter"
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>

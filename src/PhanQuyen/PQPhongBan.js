@@ -10,6 +10,7 @@ const PQPhongBan = ({ isData, onchange, setCheckAdd }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [isDepCode, setDepCode] = useState("");
   const [isDepName, setDepName] = useState("");
+
   const handleSave = (e) => {
     e.preventDefault();
     if (isDepCode == "") {
@@ -135,7 +136,7 @@ const PQPhongBan = ({ isData, onchange, setCheckAdd }) => {
         <Modal.Body>
           <div className="card p-4 shadow-sm w-100">
             <div className="d-flex">
-              <h3 className="card-title text-center mb-4">Thêm Phòng Ban</h3>
+              <h4 className="card-title text-center mb-4">Thêm phòng ban</h4>
               <div
                 onClick={(e) => setShowPopup(false)}
                 className="mb-4"

@@ -275,11 +275,8 @@ const Dashboard = () => {
             sectionTitle="Dự án"
             items={convertDataToDashboardItems(isDuAn)}
           />
-          <DashboardSection
-            sectionTitle="Lợi nhuận tổng công cty"
-            items={convertRevenue_Total(isrevenue_Total)}
-          />
-          <div
+
+          {/* <div
             className="col-12 dashboard"
             style={{
               padding: "2px 10px",
@@ -292,13 +289,16 @@ const Dashboard = () => {
                 sectionTitle="Doanh thu"
                 items={convertDoanhThu(isDoanhThu)}
               /> */}
-              <DashboardDT
-                sectionTitle="Nghỉ Phép"
-                items={convertNghiPhepData(isNghiPhep)}
-              />
-            </div>
-          </div>
-
+          {/* </div>
+          </div> */}
+          <DashboardSection
+            sectionTitle="Nghỉ Phép"
+            items={convertNghiPhepData(isNghiPhep)}
+          />
+          <DashboardSection
+            sectionTitle="Lợi nhuận tổng công cty"
+            items={convertRevenue_Total(isrevenue_Total)}
+          />
           <DashboardPie dataKT={isKeToan} dataDepDT={isdeps_RevenueDetail} />
           <KPIChart
             setTextPB={isPhongBanText}
