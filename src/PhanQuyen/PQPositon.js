@@ -117,7 +117,6 @@ const PQPositon = ({
           </div>
         </Modal.Body>
       </Modal>
-      ;
     </div>
   );
 };

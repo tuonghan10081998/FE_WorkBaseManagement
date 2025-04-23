@@ -79,12 +79,12 @@ const Createleave = ({
       id: isID,
       title: isTitle,
       reason: reason.toString(),
-      fromDate: moment(isThoiGianBD, "DD/MM/YYYY HH:mm:ss")
-        .utc() // Chuyển thời gian về UTC
-        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
-      toDate: moment(isThoiGianKT, "DD/MM/YYYY HH:mm:ss")
-        .utc() // Chuyển thời gian về UTC
-        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      fromDate: moment(isThoiGianBD, "DD/MM/YYYY HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      ),
+      toDate: moment(isThoiGianKT, "DD/MM/YYYY HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      ),
       status: isSave.toString(),
       createDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       idRequester: checkSave == 0 ? isUser : "",
@@ -95,6 +95,10 @@ const Createleave = ({
     arrLeave.push(object);
     await PostSave(object, namePost);
   };
+  useEffect(() => {
+    console.log(isThoiGianBD);
+    console.log();
+  }, [isThoiGianBD]);
   const handleNotifi = (value) => {
     iziToast.warning({
       title: "Warning",

@@ -387,15 +387,17 @@ const PhanQuyen = () => {
           </div>
         </div>
       </div>
-      <PQPositon
-        setNhanVien={isNhanVienP}
-        setShowPopup={setshowPopup}
-        showPopup={showPopup}
-        setUserID={isUserID}
-        setPosition={setPosition}
-        setIsPosition={isPosition}
-        setPositionA={setPositionA}
-      />
+      <div>
+        <PQPositon
+          setNhanVien={isNhanVienP}
+          setShowPopup={setshowPopup}
+          showPopup={showPopup}
+          setUserID={isUserID}
+          setPosition={setPosition}
+          setIsPosition={isPosition}
+          setPositionA={setPositionA}
+        />
+      </div>
     </div>
   );
 };
