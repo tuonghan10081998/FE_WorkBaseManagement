@@ -6,6 +6,7 @@ import Info from "../Info/Info";
 const Layout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHomeExpanded, setIsHomeExpanded] = useState(false);
+  const [isMerketing, setMerketing] = useState(false);
   const { title, icon, iconAdd } = useContext(TitleContext);
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isfullName, setfullName] = useState(localStorage.getItem("fullName"));
@@ -208,6 +209,49 @@ const Layout = () => {
               )}
             </div>
           )}
+          <div className="nav-item">
+            <div
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              href="#"
+            >
+              <div onClick={() => setMerketing(!isMerketing)}>
+                <i className="fa-solid fa-filter-circle-dollar"></i>
+                <i
+                  style={{ color: "rgb(196 206 255)" }}
+                  class="fa-solid fa-megaphone"
+                ></i>
+                <span className="ms-2">Marketing</span>
+              </div>
+            </div>
+            {isMerketing && (
+              <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
+                <Link
+                  onClick={handleMenu}
+                  className="nav-link text-white"
+                  to="/layout/Marketing"
+                >
+                  <i
+                    style={{ color: "rgb(205 0 95)" }}
+                    className="fa-solid fa-share-from-square"
+                  ></i>
+
+                  <span className="ms-2">Chia data</span>
+                </Link>
+                <Link
+                  onClick={handleMenu}
+                  className="nav-link text-white"
+                  to="/layout/MarketingReport"
+                >
+                  <i
+                    style={{ color: "#f3b705" }}
+                    className="fa-solid fa-flag"
+                  ></i>
+
+                  <span className="ms-2">Báo cáo</span>
+                </Link>
+              </div>
+            )}
+          </div>
           {isPagePQ && (
             <div className="nav-item">
               <Link

@@ -12,8 +12,10 @@ import KPI from "./KPI/KPI";
 import Leave from "./Leave/Leave";
 import Project from "./Project/Project";
 import Dashboard from "./DashBoard/DashBoard";
+import ShareData from "./Marketing/ShareData";
 import PurChaseOrder from "./PurChaseOrder/PurChaseOrder";
 import Revenue from "./Revenue/Revenue";
+import ShareDataReport from "./Marketing/ShareDataReport";
 export default function App() {
   return (
     <BrowserRouter>
@@ -32,6 +34,11 @@ export default function App() {
             <Route path="/layout/Dashboard" element={<Dashboard />} />
             <Route path="/layout/PurChase" element={<PurChaseOrder />} />
             <Route path="/layout/Revenue" element={<Revenue />} />
+            <Route path="/layout/Marketing" element={<ShareData />} />
+            <Route
+              path="/layout/MarketingReport"
+              element={<ShareDataReport />}
+            />
           </Route>
         </Routes>
       </TitleProvider>

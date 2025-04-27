@@ -1,0 +1,17 @@
+.itemSelect2 input {
+  height: 25px;
+}
+.titleShare {
+  margin-bottom: 7px !important;
+}
+#mainContent {
+  width: calc(100vw - 250px);
+}
+#mainContent.active {
+  width: calc(100vw - 65px);
+}
+@media (max-width: 800px) {
+  #mainContent {
+    width: 100vw !important;
+  }
+}
