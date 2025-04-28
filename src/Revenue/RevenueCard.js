@@ -172,7 +172,11 @@ const RevenueCard = ({ setData, onChange }) => {
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button onClick={() => handleSave()} variant="primary">
+          <Button
+            disabled={isDisable}
+            onClick={() => handleSave()}
+            variant="primary"
+          >
             Đồng ý
           </Button>
         </Modal.Footer>

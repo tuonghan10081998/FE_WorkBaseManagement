@@ -17,6 +17,7 @@ const Layout = () => {
   const [isKT, setKT] = useState(false);
   const [isShowInfo, setShowInfo] = useState(false);
   const [isCheck, setCheck] = useState(false);
+  const [isRole, setRole] = useState("");
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -32,6 +33,15 @@ const Layout = () => {
       if (dataPQ[0].isChecked == 1) setPagePQ(true);
       if (dataDB[0].isChecked == 1) setDB(true);
       if (dataKT[0].isChecked == 1) setKT(true);
+
+      const priorityRoles = data.lstUserRole.map((item) => item.roleID);
+      const currentHighestRole =
+        priorityRoles.find((roleID) =>
+          data.lstUserRole.some(
+            (item) => item.roleID === roleID && item.isChecked === 1
+          )
+        ) || "Member";
+      setRole(currentHighestRole);
     } catch (error) {
       console.error(error.message);
     }
@@ -220,23 +230,11 @@ const Layout = () => {
                   style={{ color: "rgb(196 206 255)" }}
                   class="fa-solid fa-megaphone"
                 ></i>
-                <span className="ms-2">Marketing</span>
+                <span className="ms-2">Dữ liệu marketing</span>
               </div>
             </div>
             {isMerketing && (
               <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
-                <Link
-                  onClick={handleMenu}
-                  className="nav-link text-white"
-                  to="/layout/Marketing"
-                >
-                  <i
-                    style={{ color: "rgb(205 0 95)" }}
-                    className="fa-solid fa-share-from-square"
-                  ></i>
-
-                  <span className="ms-2">Chia data</span>
-                </Link>
                 <Link
                   onClick={handleMenu}
                   className="nav-link text-white"
@@ -247,8 +245,22 @@ const Layout = () => {
                     className="fa-solid fa-flag"
                   ></i>
 
-                  <span className="ms-2">Báo cáo</span>
+                  <span className="ms-2">Xem</span>
                 </Link>
+                {isRole === "Administrator" && (
+                  <Link
+                    onClick={handleMenu}
+                    className="nav-link text-white"
+                    to="/layout/Marketing"
+                  >
+                    <i
+                      style={{ color: "rgb(205 0 95)" }}
+                      className="fa-solid fa-share-from-square"
+                    ></i>
+
+                    <span className="ms-2">Chia data</span>
+                  </Link>
+                )}
               </div>
             )}
           </div>

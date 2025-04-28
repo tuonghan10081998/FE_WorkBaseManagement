@@ -10,6 +10,15 @@
 #mainContent.active {
   width: calc(100vw - 65px);
 }
+.MuiFormControl-root {
+  width: 100%;
+}
+.MuiPickersSectionList-root {
+  padding: 0 !important;
+}
+.MuiPickersInputBase-root {
+  height: 38px !important;
+}
 @media (max-width: 800px) {
   #mainContent {
     width: 100vw !important;

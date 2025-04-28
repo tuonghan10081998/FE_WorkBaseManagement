@@ -172,7 +172,6 @@ const CreatePurChase = ({
     }
   }, [setCheckSave]);
   useEffect(() => {
-    console.log(setPhongBanValueA);
     setPhongBanValue(setPhongBanValueA);
   }, [setPhongBanValueA]);
   return (

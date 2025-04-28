@@ -54,15 +54,12 @@ const Login = () => {
         value: dep.dep_Code,
         label: dep.dep_Name,
       }));
-      console.log(formattedOptions);
       setOption(formattedOptions);
     } catch (error) {
       console.error(error.message);
     }
   };
-  useEffect(() => {
-    console.log(options);
-  }, [options]);
+
   const handleChange = (option) => {
     setPhongBanValue(option);
   };

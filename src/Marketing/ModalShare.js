@@ -14,6 +14,7 @@ const ModalShare = ({
   const [isCongViec, setCongViec] = useState(null);
   const handleSave = (e) => {
     e.preventDefault();
+    setDisable(true);
     if (dataNV.filter((x) => x.isChecked === 1).length === 0) {
       iziToast.warning({
         title: "Warning",
@@ -57,11 +58,66 @@ const ModalShare = ({
       }
     });
 
-    setChange((x) => !x);
-    setData([...data]);
-    setClick(false);
+    var dataSave = [...data];
+    dataSave = dataSave.filter((x) => x.isChecked === 1);
+    var arrSave = [];
+    dataSave.map((x) => {
+      let object = {
+        id: x.id,
+        date: "string",
+        name: "string",
+        phone: "string",
+        mail: "string",
+        question: "string",
+        utmSource: "string",
+        utmCampaign: "string",
+        status: 0,
+        preBroker: "string",
+        ftd: 0,
+        broker: "string",
+        dealDate: "2025-04-28T13:49:17.047Z",
+        note: "string",
+        createUser: "string",
+        createDate: "2025-04-28T13:49:17.047Z",
+        receiverID: x.receiverID,
+        oldReceiverID: "string",
+        isChecked: 1,
+      };
+      arrSave.push(object);
+    });
+    PostSave(arrSave, ...data);
   };
-
+  const PostSave = async (arrPost, dataF) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}MarketingData/PostShare`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    setDisable(false);
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+      // setData(dataF);
+      setClick(false);
+      setChange((x) => !x);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
+  };
   useEffect(() => {
     setShareData(data.filter((item) => item.isChecked !== 1).length);
   }, [data, setIsClick]);
@@ -78,15 +134,19 @@ const ModalShare = ({
     }
   };
   useEffect(() => {
-    console.log(dataNV);
     if (dataNV?.filter((x) => x.isChecked === 1).length === 0) {
       setCongViec("Vui lòng chọn nhân viên");
     } else
-      setCongViec(
-        `Từng thành viên sẽ có ích nhất ${parseInt(
-          isShareData / dataNV?.filter((x) => x.isChecked === 1).length
-        )} công việc`
+      var result = parseInt(
+        isShareData / dataNV?.filter((x) => x.isChecked === 1).length
       );
+
+    setCongViec(
+      <>
+        Từng thành viên sẽ có ích nhất{" "}
+        <span className="text-danger fw-bold fs-5">{result}</span> công việc
+      </>
+    );
   }, [dataNV, isShareData]);
   return (
     <>

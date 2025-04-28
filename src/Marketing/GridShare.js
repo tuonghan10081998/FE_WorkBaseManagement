@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import ModalShare from "./ModalShare";
 import GoogleSheetForm from "./GoogleSheetForm ";
+import iziToast from "izitoast";
 const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDataF, setDataF] = useState([]);
@@ -63,6 +64,64 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const handleSave = async (e) => {
     e.preventDefault();
     setDisable(true);
+    var arrSave = [];
+    var dataSave = listData;
+    dataSave.map((x) => {
+      let object = {
+        id: x.id,
+        date: "string",
+        name: "string",
+        phone: "string",
+        mail: "string",
+        question: "string",
+        utmSource: "string",
+        utmCampaign: "string",
+        status: 0,
+        preBroker: "string",
+        ftd: 0,
+        broker: "string",
+        dealDate: "2025-04-28T13:49:17.047Z",
+        note: "string",
+        createUser: "string",
+        createDate: "2025-04-28T13:49:17.047Z",
+        receiverID: x.receiverID,
+        oldReceiverID: "string",
+        isChecked: 1,
+      };
+      arrSave.push(object);
+    });
+    PostSave(arrSave, ...data);
+  };
+  const PostSave = async (arrPost, dataF) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}MarketingData/PostShare`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    setDisable(false);
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+      // setData(dataF);
+      setClick(false);
+      setChange((x) => !x);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
   };
   const handleCheckAll = () => {
     const Check = isCheckAll === 1 ? 0 : 1;

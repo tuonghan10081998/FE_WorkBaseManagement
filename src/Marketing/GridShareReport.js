@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import ModalShare from "./ModalShare";
-
+import ModalShareReport from "./ModalShareReport";
+import moment from "moment";
 const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
   const [isShow, setShow] = useState(false);
   const [isDataF, setDataF] = useState([]);
   useEffect(() => {
-    console.log(listData);
     const dataF = listData?.filter((x) => {
       const matchChienDich =
         setChienDich === "all"
@@ -17,7 +17,7 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
       const matchReceiver =
         setNhanVien === "all"
           ? x.dep_Code === setPhongBan
-          : x.oldReceiverID === setNhanVien;
+          : x.receiverID === setNhanVien;
 
       return matchChienDich && matchReceiver;
     });
@@ -27,7 +27,10 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
   useEffect(() => {
     data && setListData(data);
   }, [data]);
-
+  const handleClick = (id) => {
+    setID(id);
+    setShow(true);
+  };
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -49,13 +52,17 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                         <td scope="col">SĐT</td>
                         <td scope="col">Mail</td>
                         <td scope="col">Câu hỏi</td>
-                        <td scope="col">Sàn trước đây</td>
-                        <td scope="col">Ftd</td>
-                        <td scope="col">Sàn đầu tư</td>
-                        <td scope="col">Ngày deal</td>
-                        <td scope="col">Người nhận cũ</td>
+
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
+                        <td scope="col">Tên sales</td>
+                        <td scope="col">Trạng thái</td>
+                        <td scope="col">Ftd</td>
+                        <td scope="col">Sàn trước đây</td>
+
+                        <td scope="col">Sàn đầu tư</td>
+                        <td scope="col">Ngày chốt</td>
+
                         <td style={{ width: "100px" }} scope="col">
                           Hành động
                         </td>
@@ -64,7 +71,12 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                     <tbody>
                       {isDataF?.map((x, index) => {
                         return (
-                          <tr key={x.id}>
+                          <tr
+                            key={x.id}
+                            style={{
+                              background: index % 2 == 0 ? "#fff" : "#f3f3f3",
+                            }}
+                          >
                             <td style={{ whiteSpace: "nowrap" }}>
                               <p
                                 style={{
@@ -112,47 +124,6 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.preBroker}</p>
-                            </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "100",
-                              }}
-                            >
-                              <p>{x.ftd.toLocaleString()}</p>
-                            </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "100px",
-                              }}
-                            >
-                              <p>{x.broker}</p>
-                            </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "100px",
-                              }}
-                            >
-                              <p>{x.dealDate || ""}</p>
-                            </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "100px",
-                              }}
-                            >
-                              <p>{x.oldReceiver}</p>
-                            </td>
-
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "100px",
-                              }}
-                            >
                               <p>{x.utmSource}</p>
                             </td>
                             <td
@@ -169,7 +140,58 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                                 minWidth: "100px",
                               }}
                             >
+                              <p>{x.receiver}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "120px",
+                              }}
+                            >
+                              <p>{x.statusName}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
+                              <p>{!x.ftd ? "" : x.ftd.toLocaleString()}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
+                              <p>{x.preBroker}</p>
+                            </td>
+
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
+                              <p>{x.broker}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
+                              <p>{x.dealDate || ""}</p>
+                            </td>
+
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
                               <div
+                                onClick={(e) => handleClick(x.id)}
                                 style={{
                                   display: "flex",
                                   justifyContent: "center",
@@ -196,6 +218,13 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
           </div>
         </div>
       </div>
+      <ModalShareReport
+        setShow={setShow}
+        setIsShow={isShow}
+        setData={setListData}
+        data={listData}
+        setID={isID}
+      />
     </div>
   );
 };

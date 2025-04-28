@@ -101,10 +101,8 @@ const ShareDataReport = () => {
       }
 
       const staffData = await response.json();
-      let dataNV = staffData.filter(
-        (x) => x.fullName.toLowerCase() !== "admin"
-      );
-      setDataNV(dataNV);
+
+      setDataNV(staffData);
     } catch (error) {
       console.error(error.message);
     }
