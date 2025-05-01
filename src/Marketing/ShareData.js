@@ -19,7 +19,10 @@ const ShareData = () => {
   const [selectedCD, setSelectedCD] = useState(null);
   const [isChienDich, setChienDich] = useState("");
   const [isData, setData] = useState(null);
+  const [isDataF, setDataF] = useState(null);
   const [isClick, setClick] = useState(false);
+  const [isCheckLate, setCheckLate] = useState(false);
+  const [isWeek, setWeek] = useState(3);
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -84,19 +87,6 @@ const ShareData = () => {
     var dataNV = isDataNV;
     dataNV = dataNV.filter((x) => x.dep_Code === selectedPB.value);
 
-    // const formattedOptions = [
-    //   { value: "all", label: " Tất cả " },
-    //   ...dataNV.map((x) => ({
-    //     value: x.userID,
-    //     label: x.fullName,
-    //   })),
-    // ];
-    // setOptionNV(formattedOptions);
-
-    // if (selectedNV?.value && selectedNV.value !== "all") {
-    //   console.log(selectedNV.value);
-    //   dataNV = dataNV.filter((x) => x.userID === selectedNV.value);
-    // }
     setDataNVF(dataNV);
   }, [isDataNV, selectedPB, selectedNV]);
 
@@ -123,27 +113,13 @@ const ShareData = () => {
   };
 
   const getData = async () => {
-    const url = `${process.env.REACT_APP_URL_API}MarketingData/Get?action=GetShare&para1=${dateRange.from}&para2=${dateRange.to}`;
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/Get?action=GetShare&para1=${dateRange.from}&para2=${dateRange.to}&para3=${isWeek}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-
       const getTable = await response.json();
-      const uniqueDataNV = getTable.filter(
-        (item, index, self) =>
-          index === self.findIndex((t) => t.utmCampaign === item.utmCampaign)
-      );
-      const formattedOptions = [
-        { value: "all", label: " Tất cả " },
-        ...uniqueDataNV.map((x) => ({
-          value: x.utmCampaign,
-          label: x.utmCampaign,
-        })),
-      ];
-
-      setOptionCD(formattedOptions);
       setData(getTable);
     } catch (error) {
       console.error(error.message);
@@ -151,7 +127,37 @@ const ShareData = () => {
   };
   useEffect(() => {
     getData();
-  }, [dateRange]);
+  }, [dateRange, isWeek]);
+
+  useEffect(() => {
+    if (isData == null || isData.length === 0) return;
+    console.log(isData);
+    console.log(isCheckLate);
+    var dataF = isData;
+    if (!isCheckLate) dataF = dataF?.filter((x) => x.dataStatus === 1);
+    else dataF = dataF.filter((x) => x.dataStatus !== 1);
+    const uniqueDataNV = dataF.filter(
+      (item, index, self) =>
+        index === self.findIndex((t) => t.utmCampaign === item.utmCampaign)
+    );
+    const formattedOptions = [
+      { value: "all", label: " Tất cả " },
+      ...uniqueDataNV.map((x) => ({
+        value: x.utmCampaign,
+        label: x.utmCampaign,
+      })),
+    ];
+    console.log(dataF);
+    setOptionCD(formattedOptions);
+
+    setDataF(dataF);
+  }, [isData, isCheckLate]);
+  const handleCheckLate = (value) => {
+    setCheckLate(value);
+  };
+  const handleWeek = (value) => {
+    setWeek(value);
+  };
 
   return (
     <div className="contentItem">
@@ -163,13 +169,15 @@ const ShareData = () => {
         selectedPB={selectedPB}
         selectedNV={selectedNV}
         handleDateChange={handleDateChange}
-        setIsChienDich={isChienDich}
-        setChienDich={setChienDich}
         setClick={setClick}
+        setCheckLate={isCheckLate}
+        onChangeLate={handleCheckLate}
+        setWeek={isWeek}
+        onChangeWeek={handleWeek}
       />
       <GridShare
         dataNV={isDataNVF}
-        data={isData}
+        data={isDataF}
         setChienDich={selectedCD?.value || "all"}
         setIsClick={isClick}
         setClick={setClick}

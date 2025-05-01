@@ -42,7 +42,10 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
               <div className=" ">
                 <div
                   className="item-table"
-                  style={{ maxHeight: "calc(100vh - 230px)", overflow: "auto" }}
+                  style={{
+                    maxHeight: "calc(100vh - 160px )",
+                    overflow: "auto",
+                  }}
                 >
                   <table className="task-table">
                     <thead>

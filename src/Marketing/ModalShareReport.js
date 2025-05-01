@@ -44,7 +44,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
   };
   const handleSave = (e) => {
     e.preventDefault();
-    setDisable(true);
+
     if (!isStatusV || !isStatusV.value) {
       iziToast.warning({
         title: "Warning",
@@ -61,6 +61,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
       });
       return;
     }
+    setDisable(true);
     var dataFi = data.map((item) =>
       item.id === setID
         ? {

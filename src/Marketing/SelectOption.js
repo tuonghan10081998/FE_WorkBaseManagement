@@ -9,9 +9,11 @@ const SelectOption = ({
   selectedPB,
   selectedCD,
   handleDateChange,
-  setIsChienDich,
-  setChienDich,
   setClick,
+  setCheckLate,
+  onChangeLate,
+  setWeek,
+  onChangeWeek,
 }) => {
   return (
     <div
@@ -24,7 +26,7 @@ const SelectOption = ({
             <label>Thời gian </label>{" "}
             <DateRangePicker onDateChange={handleDateChange} />
           </div>
-          <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1 col_search ItemCV ItemCVPD itemSelect2">
+          <div className="col-6 col-md-6 col-lg-2 col-xl-2 m-0 px-1 col_search ItemCV ItemCVPD itemSelect2">
             <label>Phòng ban </label>
             <Select
               options={dataPB}
@@ -34,16 +36,6 @@ const SelectOption = ({
             />
           </div>
 
-          {/* <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0 px-1  col_search ItemCV ItemCVPD itemSelect2">
-            <label>Nhân viên</label>{" "}
-            <Select
-              options={dataNV}
-              value={selectedNV}
-              onChange={OnChangeNV}
-              placeholder="Tất cả"
-              isSearchable
-            />
-          </div> */}
           <div className="col-6 col-md-6 col-lg-3 col-xl-2 col_search ItemCV itemSelect2">
             <label>Chiến dịch </label>{" "}
             <Select
@@ -54,7 +46,42 @@ const SelectOption = ({
               isSearchable
             />
           </div>
-          <div className="col-6 col-md-6 col-lg-3 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
+          <div className="col-6 col-md-6 col-lg-2 col-xl-3 m-0 px-1  col_search ItemCV ItemCVPD itemSelect2">
+            <div className="row">
+              <div className="col-4 col-lg-5">
+                <label style={{ whiteSpace: "nowrap" }}>Trễ deal</label>{" "}
+                <div
+                  style={{
+                    height: "38px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <input
+                    value={setCheckLate}
+                    onChange={(e) => onChangeLate(!setCheckLate)}
+                    type="checkbox"
+                  />
+                </div>
+              </div>
+              <div className="col-8 col-lg-7">
+                <label>Tuần</label>{" "}
+                <select
+                  style={{ border: "1px solid #DEE2E6" }}
+                  value={setWeek}
+                  onChange={(e) => onChangeWeek(e.currentTarget.value)}
+                  id="select2_uutien"
+                  className="select_uutien"
+                >
+                  <option value="1">Tuần 1</option>
+                  <option value="2">Tuần 2</option>
+                  <option value="3">Tuần 3</option>
+                  <option value="4">Tuần 4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-md-12 col-lg-2 col-xl-3 m-0 px-1  col_search ItemCV itemadd">
             <button
               style={{ marginTop: "25px" }}
               onClick={() => {
