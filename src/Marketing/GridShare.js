@@ -9,6 +9,7 @@ const GridShare = ({
   setClick,
   setIsClick,
   setIsWeek,
+  setData,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDataF, setDataF] = useState([]);
@@ -20,7 +21,7 @@ const GridShare = ({
   const [isShow, setShow] = useState(false);
   const [isDisable, setDisable] = useState(false);
   const [isCheckAllData, setCheckAllData] = useState(false);
-
+  const [isGGSheet, setGGSheet] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
     console.log(listData);
@@ -175,6 +176,9 @@ const GridShare = ({
   const handleGet = () => {
     setShow(true);
   };
+  useEffect(() => {
+    setData(listData);
+  }, [isGGSheet]);
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -425,6 +429,7 @@ const GridShare = ({
         setShow={setShow}
         setData={setListData}
         setIsWeek={setIsWeek}
+        setGGSheet={setGGSheet}
       />
     </div>
   );

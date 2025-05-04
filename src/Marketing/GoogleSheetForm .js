@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import iziToast from "izitoast";
-const GoogleSheetForm = ({ setIsShow, setShow, setData, setIsWeek }) => {
+const GoogleSheetForm = ({
+  setIsShow,
+  setShow,
+  setData,
+  setIsWeek,
+  setGGSheet,
+}) => {
   const [link, setLink] = useState(
     "1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ"
   );
@@ -21,6 +27,7 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData, setIsWeek }) => {
       if (data.statusCode === 200) {
         setData(data.data);
         setShow(false);
+        setGGSheet((x) => !x);
         iziToast.success({
           title: "Success",
           message: data.message,
@@ -91,7 +98,7 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData, setIsWeek }) => {
                         type="submit"
                         className="btn btn-primary w-100 fw-semibold"
                       >
-                        Gửi
+                        Lấy dữ liệu
                       </button>
                     </form>
                   </div>

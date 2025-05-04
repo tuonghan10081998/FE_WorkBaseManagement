@@ -797,7 +797,7 @@ const AddTask = ({
                 </div>
                 <div className="form-group col-12 m-0 p-0  ">
                   <div className="position-relative">
-                    <label htmlFor="endDate">Chọn file</label>
+                    <label htmlFor="endDate">File đính kèm</label>
                     <input
                       type="text"
                       className="form-control"

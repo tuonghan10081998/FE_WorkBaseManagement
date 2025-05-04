@@ -183,6 +183,7 @@ const ShareData = () => {
         setIsClick={isClick}
         setClick={setClick}
         setIsWeek={isWeek}
+        setData={setData}
       />
     </div>
   );

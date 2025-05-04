@@ -598,7 +598,7 @@ const GridWork = ({
                           </div>
                            <div class="task_item item_detail" style="gap: 2px;">
                           <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
-                            <i style="color:#97bb27" class="fa-solid fa-folder-closed"></i> File:
+                            <i style="color:#97bb27" class="fa-solid fa-folder-closed"></i> File đính kèm:
                             <div style="margin-left: 5px;">${
                               row.values.requestFile || ""
                             }</div> 
