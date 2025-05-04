@@ -168,7 +168,7 @@ const TextEditor = ({ setClass, setStateValue, setSetterValue, setHeight }) => {
             contentEditable="true"
             className="border p-3 rounded form-control"
             style={{
-              minHeight: `${setHeight != 100 ? 150 : 100}px`,
+              minHeight: `${setHeight != 100 ? 105 : 100}px`,
               outline: "none",
               border: "1px solid #ccc !important",
               maxHeight: `${setHeight != 100 ? 500 : 400}px`,

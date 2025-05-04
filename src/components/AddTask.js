@@ -68,7 +68,9 @@ const AddTask = ({
   const [isMaTicket, setMaTicket] = useState("");
   const [message, setMessage] = useState("");
   const [messageTN, setMessageTN] = useState("");
-
+  const [isFile, setFile] = useState("");
+  const [fileName, setFileName] = useState("");
+  const inputRef = useState(null);
   useEffect(() => {
     if (selectRef2.current) {
       $(selectRef2.current).select2();
@@ -174,7 +176,7 @@ const AddTask = ({
       fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
       toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
       remindDate: moment(isThoiGianBao, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      completeDate: null,
+      completeDate: moment().format("YYYY-MM-DD"),
       idResponsible: arrNvTN,
       idApprover: "",
       statusHT: value,
@@ -188,32 +190,44 @@ const AddTask = ({
     PostSave(object, namePost);
   };
   const PostSave = async (arrPost, namePost) => {
+    const formData = new FormData();
+    for (const key in arrPost) {
+      formData.append(key, arrPost[key]);
+    }
+    formData.append("File", isFile);
+
     const request = new Request(
       `${process.env.REACT_APP_URL_API}Work/Post?action=${namePost}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(arrPost),
+        body: formData,
       }
     );
-    let response = await fetch(request);
-    let data = await response.json();
-    setDisable(false);
-    if (data.status == "OK") {
-      iziToast.success({
-        title: "Success",
-        message: `Lưu thành công`,
-        position: "topRight",
-      });
 
-      setShowPopup((prev) => !prev); // Tắt form khi thêm task
-      setCheckAdd((prev) => !prev);
-    } else {
-      iziToast.warning({
-        title: "Warning",
-        message: `Lưu thất bại`,
+    try {
+      let response = await fetch(request);
+      let data = await response.json();
+      setDisable(false);
+
+      if (data.status === "OK") {
+        iziToast.success({
+          title: "Success",
+          message: `Lưu thành công`,
+          position: "topRight",
+        });
+        setShowPopup((prev) => !prev);
+        setCheckAdd((prev) => !prev);
+      } else {
+        iziToast.warning({
+          title: "Warning",
+          message: `Lưu thất bại`,
+          position: "topRight",
+        });
+      }
+    } catch (error) {
+      iziToast.error({
+        title: "Error",
+        message: "Lỗi khi gọi API",
         position: "topRight",
       });
     }
@@ -318,6 +332,8 @@ const AddTask = ({
       if (d.status != 3) setCheckTille(true);
       setCheckSave(true);
       setTitle(` Hoàn thành & Cập nhật`);
+      setFileName(d.requestFile);
+      setFile(null);
     } else {
       handleReturn();
     }
@@ -342,7 +358,7 @@ const AddTask = ({
   }, [preloadedMentionsTN]);
   const handleFocusInput = (inputRef) => {
     if (inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.click();
     }
   };
 
@@ -471,7 +487,10 @@ const AddTask = ({
       setIsPopupVisibleTN(false);
     }
   };
-
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]); // Lưu file vào state
+    setFileName(e.target.files[0].name);
+  };
   return (
     <div className="">
       <div className="card">
@@ -633,6 +652,7 @@ const AddTask = ({
                 </div>
               </div>
             </div>
+
             <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
               <div className="row">
                 <div className="form-group col-6 m-0 p-0 pe-1">
@@ -732,6 +752,44 @@ const AddTask = ({
                     setSetterValue={setGhiChu}
                     setClass={"Ghichu"}
                   />
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-12 col-xl-12 m-0 p-0 my-2  ">
+              <div className="row">
+                <div className="form-group col-6 m-0 p-0 pe-1 d-none">
+                  <label htmlFor="endDate">File</label>
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    className="form-control"
+                    onChange={(e) => handleFileChange(e)}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="form-group col-12 m-0 p-0  ">
+                  <div className="position-relative">
+                    <label htmlFor="endDate">Chọn file</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      autoComplete="off"
+                      onClick={() => handleFocusInput(inputRef)}
+                      value={fileName || ""}
+                    />
+                    <i
+                      style={{
+                        position: "absolute",
+                        top: "40px",
+                        right: "11px",
+                        fontSize: "20px",
+                        color: " #9cb12b",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleFocusInput(inputRef)}
+                      className="fa-solid fa-file-medical"
+                    ></i>
+                  </div>
                 </div>
               </div>
             </div>

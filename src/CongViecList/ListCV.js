@@ -236,7 +236,7 @@ const ListCV = () => {
           x.idRequester?.includes(isNhanVienValue) ||
           x.idResponsible?.includes(isNhanVienValue)
       );
-    filteredData = filteredData.filter((x) =>
+    filteredData = filteredData?.filter((x) =>
       x.workName.toLowerCase().includes(IsDuAn.toLowerCase())
     );
     setdataFilter(filteredData);

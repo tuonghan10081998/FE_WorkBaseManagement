@@ -12,10 +12,11 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const [isCheckAll, setCheckAll] = useState(1);
   const [isShow, setShow] = useState(false);
   const [isDisable, setDisable] = useState(false);
+  const [isCheckAllData, setCheckAllData] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
     const newData = listData.map((x) => {
-      if (x.id === id) {
+      if (x.id === id && x.oldReceiverID !== isID) {
         return { ...x, isChecked: isChecked, receiverID: isID };
       }
       return x;
@@ -27,6 +28,24 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
       x.userID === id ? { ...x, isChecked: x.isChecked === 1 ? 0 : 1 } : x
     );
     setNVNew(newData);
+  };
+  const handleCheckData = (checked) => {
+    const updated = listData.map((item) => {
+      if (checked) {
+        if (item.isChecked === 0 && item.oldReceiverID !== isID) {
+          return { ...item, isChecked: 1, receiverID: isID };
+        }
+        return item;
+      } else {
+        if (item.receiverID === isID && item.oldReceiverID !== isID) {
+          return { ...item, isChecked: 0 };
+        }
+        return item;
+      }
+    });
+
+    setListData(updated);
+    setCheckAllData(checked);
   };
   const handleClick = (e, index, userID) => {
     setActiveIndex(index);
@@ -49,9 +68,10 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
           : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
 
       const matchReceiver =
-        x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
-      // ||
-      // x.oldReceiverID === isID
+        x.isChecked !== 1 ||
+        (x.isChecked === 1 && x.receiverID === isID) ||
+        (x.oldReceiverID &&
+          x.oldReceiverID.split(",").includes(isID.toString()));
 
       return matchChienDich && matchReceiver;
     });
@@ -59,7 +79,12 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
     setDataF(dataF);
   }, [isID, listData, setChienDich, isChange]);
   useEffect(() => {
-    data && setListData(data);
+    if (data && Array.isArray(data)) {
+      setListData(data);
+      const isAllChecked = data.every((item) => item.isChecked === 1);
+
+      setCheckAllData(isAllChecked);
+    }
   }, [data]);
   const handleSave = async (e) => {
     e.preventDefault();
@@ -248,7 +273,19 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
                   <table className="task-table">
                     <thead>
                       <tr className="trthdashboard">
-                        <td scope="col">Chọn </td>
+                        <td scope="col">
+                          {" "}
+                          <div style={{ marginTop: "8px" }}>
+                            <input
+                              style={{ width: "20px", height: "20px" }}
+                              type="checkbox"
+                              checked={isCheckAllData}
+                              onChange={(e) =>
+                                handleCheckData(e.target.checked)
+                              }
+                            />
+                          </div>{" "}
+                        </td>
                         <td scope="col">Ngày</td>
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
