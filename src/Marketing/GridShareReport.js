@@ -50,6 +50,7 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                   <table className="task-table">
                     <thead>
                       <tr className="trthdashboard">
+                        <td scope="col">Stt</td>
                         <td scope="col">Ngày</td>
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
@@ -86,6 +87,15 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                                   whiteSpace: "nowrap",
                                 }}
                               >
+                                {index + 1}
+                              </p>
+                            </td>
+                            <td style={{ whiteSpace: "nowrap" }}>
+                              <p
+                                style={{
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
                                 {x.date}
                               </p>
                             </td>
@@ -93,6 +103,8 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "120px",
+                                color: "#F40925",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.name}</p>
@@ -101,6 +113,8 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "120px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.phone}</p>
@@ -109,6 +123,8 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "150px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.mail}</p>
@@ -149,6 +165,8 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "120px",
+                                color: x.status === 1 ? "green" : "orange",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.statusName}</p>
@@ -157,6 +175,8 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "100px",
+                                color: "#FA1235",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{!x.ftd ? "" : x.ftd.toLocaleString()}</p>

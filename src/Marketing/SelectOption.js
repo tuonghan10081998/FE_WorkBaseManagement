@@ -47,27 +47,9 @@ const SelectOption = ({
               isSearchable
             />
           </div>
-          <div className="col-6 col-md-6 col-lg-2 col-xl-3 m-0 px-1  col_search ItemCV ItemCVPD itemSelect2">
+          <div className="col-6 col-md-6 col-lg-6 col-xl-3 m-0 px-1  col_search ItemCV ItemCVPD itemSelect2">
             <div className="row">
-              <div className="col-4 col-lg-5">
-                <label style={{ whiteSpace: "nowrap" }}>
-                  Trễ deal (<span className="text-danger">{setIsTreDeal}</span>)
-                </label>{" "}
-                <div
-                  style={{
-                    height: "38px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    value={setCheckLate}
-                    onChange={(e) => onChangeLate(!setCheckLate)}
-                    type="checkbox"
-                  />
-                </div>
-              </div>
-              <div className="col-8 col-lg-7">
+              <div className="col-6 col-lg-6">
                 <label>Tuần trễ</label>{" "}
                 <select
                   style={{ border: "1px solid #DEE2E6" }}
@@ -76,15 +58,37 @@ const SelectOption = ({
                   id="select2_uutien"
                   className="select_uutien"
                 >
-                  <option value="1"> 1 tuần</option>
-                  <option value="2"> 2 tuần</option>
-                  <option value="3"> 3 tuần</option>
-                  <option value="4"> 4 tuần</option>
+                  <option value="1"> 1 </option>
+                  <option value="2"> 2 </option>
+                  <option value="3"> 3 </option>
+                  <option value="4"> 4 </option>
                 </select>
+              </div>
+              <div className="col-6 col-lg-6">
+                <div className="d-flex justify-content-start align-items-center h-100 gap-2 mt-3">
+                  <div
+                    style={{
+                      height: "38px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      style={{ width: "30px" }}
+                      value={setCheckLate}
+                      onChange={(e) => onChangeLate(!setCheckLate)}
+                      type="checkbox"
+                    />
+                  </div>
+                  <label style={{ whiteSpace: "nowrap" }}>
+                    Trễ deal (
+                    <span className="text-danger">{setIsTreDeal}</span>)
+                  </label>{" "}
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-12 col-lg-2 col-xl-3 m-0 px-1  col_search ItemCV itemadd">
+          <div className="col-12 col-md-12 col-lg-6 col-xl-3 m-0 px-1  col_search ItemCV itemadd">
             <button
               style={{ marginTop: "25px" }}
               onClick={() => {

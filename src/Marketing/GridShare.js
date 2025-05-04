@@ -335,6 +335,8 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "160px",
+                                color: "#F40925",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.name}</p>
@@ -343,6 +345,8 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "160px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.phone}</p>
@@ -351,6 +355,8 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "200px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
                               }}
                             >
                               <p>{x.mail}</p>
