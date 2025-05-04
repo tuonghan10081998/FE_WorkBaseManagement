@@ -172,9 +172,7 @@ const LeaveCart = ({
                           data-id={task.id}
                           onClick={(e) => {
                             handleShow(e);
-                            setTiTleBody(
-                              "Bạn xác nhận duyệt phiếu xin nghỉ này"
-                            );
+                            setTiTleBody("Bạn xác nhận duyệt phiếu này");
                             setCheckHandle(1);
                             setCheckPhieu(1);
                           }}
@@ -189,9 +187,7 @@ const LeaveCart = ({
                           data-id={task.id}
                           onClick={(e) => {
                             handleShow(e);
-                            setTiTleBody(
-                              "Bạn xác nhận không duyệt phiếu xin nghỉ này"
-                            );
+                            setTiTleBody("Bạn xác nhận không duyệt phiếu này");
                             setCheckHandle(1);
                             setCheckPhieu(2);
                           }}
@@ -222,7 +218,7 @@ const LeaveCart = ({
                         data-id={task.id}
                         onClick={(e) => {
                           handleShow(e);
-                          setTiTleBody("Bạn xác nhận xóa phiếu xin nghỉ này");
+                          setTiTleBody("Bạn xác nhận xóa phiếu này");
                           setCheckHandle(0);
                           setCheckPhieu(0);
                         }}

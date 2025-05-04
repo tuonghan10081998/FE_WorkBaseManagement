@@ -142,6 +142,12 @@ const AddTask = ({
       handleNotifi("nhập mã ticket");
       return;
     }
+    const uniqueArray = [...new Set(arrNv.filter((item) => item !== ""))];
+
+    if (uniqueArray == null || uniqueArray.length == 0) {
+      handleNotifi("chọn nhân viên ");
+      return;
+    }
     if (isThoiGianBD == "") {
       handleNotifi("chọn ngày bắt đầu");
       return;
@@ -154,16 +160,13 @@ const AddTask = ({
       handleNotifi("chọn ngày báo deadline");
       return;
     }
-    if (arrNv == null || arrNv.length == 0) {
-      handleNotifi("chọn nhân viên ");
-      return;
-    }
+
     if (arrNvTN == "") {
       handleNotifi("chọn người chịu trách nhiệm");
       return;
     }
     setDisable(true);
-    const uniqueArray = [...new Set(arrNv.filter((item) => item !== ""))];
+
     const object = {
       id: isID,
       ticket: isMaTicket.toString(),
@@ -302,8 +305,8 @@ const AddTask = ({
         }))
         .filter((x) => {
           // Kiểm tra nếu userID của x có nằm trong danh sách userID của d.idImplementer không
-          const userIDs = userID.split(","); // Tạo mảng userID từ chuỗi
-          return userIDs.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
+          const userIDs = userID?.split(","); // Tạo mảng userID từ chuỗi
+          return userIDs?.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
         });
       const nhanvienTN = setDataNV
         .map((user) => ({
@@ -311,8 +314,8 @@ const AddTask = ({
           fullName: user.fullName,
         }))
         .filter((x) => {
-          const userIDs = responsible.split(","); // Tạo mảng userID từ chuỗi
-          return userIDs.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
+          const userIDs = responsible?.split(","); // Tạo mảng userID từ chuỗi
+          return userIDs?.includes(x.userID); // Kiểm tra nếu userID của user trong mảng d.idImplementer
         });
       setID(d.id);
       setWorkName(d.workName);
@@ -322,7 +325,7 @@ const AddTask = ({
       setUuTien(d.priority);
       setGhiChu(d.note);
       setNoiDung(d.description);
-      setIDNV(d.idImplementer.split(","));
+      setIDNV(d.idImplementer?.split(","));
       setIDNVTN(d.idRequester);
       setpreloadedMentionsTN(nhanvienTN);
       setMaTicket(d.ticket);
@@ -490,7 +493,12 @@ const AddTask = ({
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const allowedExtensions = [".rar", ".zip"];
-
+    console.log(file);
+    if (!file) {
+      setFile(null);
+      setFileName("");
+      return;
+    }
     if (file) {
       const fileName = file.name.toLowerCase();
       const isValidExtension = allowedExtensions.some((ext) =>
@@ -506,7 +514,7 @@ const AddTask = ({
         return;
       }
 
-      setFile(file); // Lưu file vào state
+      setFile(file);
       setFileName(file.name);
     }
   };
