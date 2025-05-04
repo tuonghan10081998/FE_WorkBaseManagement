@@ -19,8 +19,7 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
     const newData = listData.map((x) => {
       if (
         x.id === id &&
-        x.oldReceiverID &&
-        !x.oldReceiverID.split(",").includes(isID.toString())
+        !x.oldReceiverID?.split(",").includes(isID.toString())
       ) {
         return { ...x, isChecked: isChecked, receiverID: isID };
       }
@@ -39,8 +38,7 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
       if (checked) {
         if (
           item.isChecked === 0 &&
-          item.oldReceiverID &&
-          !item.oldReceiverID.split(",").includes(isID.toString())
+          !item.oldReceiverID?.split(",").includes(isID.toString())
         ) {
           return { ...item, isChecked: 1, receiverID: isID };
         }
@@ -48,8 +46,7 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
       } else {
         if (
           item.receiverID === isID &&
-          item.oldReceiverID &&
-          !item.oldReceiverID.split(",").includes(isID.toString())
+          !item.oldReceiverID?.split(",").includes(isID.toString())
         ) {
           return { ...item, isChecked: 0, receiverID: "" };
         }
