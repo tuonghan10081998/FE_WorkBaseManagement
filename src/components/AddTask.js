@@ -488,8 +488,27 @@ const AddTask = ({
     }
   };
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Lưu file vào state
-    setFileName(e.target.files[0].name);
+    const file = e.target.files[0];
+    const allowedExtensions = [".rar", ".zip"];
+
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      const isValidExtension = allowedExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
+
+      if (!isValidExtension) {
+        iziToast.error({
+          title: "Error",
+          message: "Vui lòng chọn file .rar hoặc .zip",
+          position: "topRight",
+        });
+        return;
+      }
+
+      setFile(file); // Lưu file vào state
+      setFileName(file.name);
+    }
   };
   return (
     <div className="">
@@ -765,6 +784,7 @@ const AddTask = ({
                     className="form-control"
                     onChange={(e) => handleFileChange(e)}
                     autoComplete="off"
+                    accept=".rar,.zip"
                   />
                 </div>
                 <div className="form-group col-12 m-0 p-0  ">

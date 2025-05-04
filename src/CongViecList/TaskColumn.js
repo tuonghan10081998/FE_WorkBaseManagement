@@ -198,6 +198,39 @@ const TaskColumn = ({
       });
     }
   };
+  window.handleDownFile = (e) => {
+    const id = e.getAttribute("data-id");
+    const dataF = tasks.filter((x) => x.id.toString() === id.toString());
+
+    const thoigian = moment(dataF[0].createDate, "DD/MM/YYYY").format(
+      "YYYYMMDD"
+    );
+    const file = dataF[0].requestFile;
+    downLoad(thoigian, file);
+  };
+  const downLoad = async (thoigian, file) => {
+    const url = `${process.env.REACT_APP_URL_API}Work/Download?thoiGian=${thoigian}&fileName=${file}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const blob = await response.blob(); // 👈 lấy file dưới dạng blob
+
+      // Tạo link download
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = file; // 👈 đặt tên file khi tải về
+      link.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error("Lỗi khi tải file:", error.message);
+    }
+  };
   return (
     <div className="col-md-6 col-lg-3" style={{ padding: "0 10px" }}>
       <div className="task-column">
@@ -322,6 +355,22 @@ const TaskColumn = ({
                             </div>
                           </div>
                            <div class="task_item item_detail" style="gap: 2px;">
+                             <div style="display: flex;justify-content: center;align-items: center;gap: 5px;">
+                              <i  style="color:#97bb27" class="fa-solid fa-folder-closed"></i> File : 
+                              <div style="margin-left: 5px;">${
+                                task.requestFile || ""
+                              }</div> 
+                             </div>
+                             <div>
+                                <i   onclick="handleDownFile(this)" data-id="${
+                                  task.id
+                                }" style="display: ${
+                          !task.requestFile ? "none" : ""
+                        }; color: #0d6efd; cursor: pointer; font-size: 20px;"  class="fa-solid fa-download"></i>
+                             </div>
+                           
+                          </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                               <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : 
                               <div style="margin-left: 20px;">${
@@ -329,6 +378,7 @@ const TaskColumn = ({
                               }</div> 
                             </div>
                           </div>
+                          
                            <div class="task_item item_detail" style="gap: 2px;">
                       <div style="width: 100%;">
                         <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:

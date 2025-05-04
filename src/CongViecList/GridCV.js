@@ -275,7 +275,39 @@ const GridWork = ({
       );
     }
   };
+  window.handleDownFile = (e) => {
+    const id = e.getAttribute("data-id");
+    const dataF = setDataGrid.filter((x) => x.id.toString() === id.toString());
 
+    const thoigian = moment(dataF[0].createDate, "DD/MM/YYYY").format(
+      "YYYYMMDD"
+    );
+    const file = dataF[0].requestFile;
+    downLoad(thoigian, file);
+  };
+  const downLoad = async (thoigian, file) => {
+    const url = `${process.env.REACT_APP_URL_API}Work/Download?thoiGian=${thoigian}&fileName=${file}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const blob = await response.blob(); // 👈 lấy file dưới dạng blob
+
+      // Tạo link download
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = file; // 👈 đặt tên file khi tải về
+      link.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error("Lỗi khi tải file:", error.message);
+    }
+  };
   const columns = useMemo(
     () => [
       { Header: "id", accessor: "id" },
@@ -295,6 +327,7 @@ const GridWork = ({
       { Header: "Hành động", accessor: "complete" },
       { Header: "Hành động", accessor: "remindDate" },
       { Header: "Hành động", accessor: "feedback" },
+      { Header: "Hành động", accessor: "requestFile" },
     ],
     []
   );
@@ -334,6 +367,7 @@ const GridWork = ({
         "remindDate",
         ,
         "feedback",
+        "requestFile",
       ].includes(column.id)
     ) {
       return {
@@ -562,6 +596,25 @@ const GridWork = ({
                             }
                             </div>
                           </div>
+                           <div class="task_item item_detail" style="gap: 2px;">
+                          <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                            <i style="color:#97bb27" class="fa-solid fa-folder-closed"></i> File:
+                            <div style="margin-left: 5px;">${
+                              row.values.requestFile || ""
+                            }</div> 
+                          </div>
+
+                          <div>
+                            <i 
+                              style="display: ${
+                                !row.values.requestFile ? "none" : ""
+                              }; color: #0d6efd; cursor: pointer; font-size: 20px;" 
+                              onclick="handleDownFile(this)" 
+                              data-id="${row.values.id}" 
+                              class="fa-solid fa-download"
+                            ></i>
+                          </div>
+                        </div>
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                              <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
@@ -577,6 +630,7 @@ const GridWork = ({
                               }</div> 
                             </div>
                           </div>
+                         
                             <div class="task_item item_detail" style="gap: 2px;">
                       <div style="width: 100%;">
                         <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:

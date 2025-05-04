@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
   const [link, setLink] = useState(
-    "https://docs.google.com/spreadsheets/d/1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ/edit?gid=0#gid=0"
+    "1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ"
   );
 
   const handleSubmit = (e) => {
@@ -18,7 +18,6 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
       }
 
       const getData = await response.json();
-      console.log(getData);
     } catch (error) {
       console.error(error.message);
     }
@@ -39,7 +38,7 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
           <div className="modal-content">
             <div style={{ padding: "10px 20px" }} className="modal-header">
               <h5 className="modal-title" id="popupModalHeader">
-                Nhập đường link Google Sheet
+                ID Google Sheet
               </h5>
               <button
                 onClick={() => setShow(false)}
@@ -62,10 +61,10 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
                           htmlFor="gsheet-link"
                           className="form-label fw-medium text-secondary"
                         >
-                          Đường link Google Sheet
+                          ID Google Sheet
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           className="form-control"
                           id="gsheet-link"
                           name="gsheet-link"

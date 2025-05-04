@@ -15,8 +15,13 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const [isCheckAllData, setCheckAllData] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
+    console.log(listData);
     const newData = listData.map((x) => {
-      if (x.id === id && x.oldReceiverID !== isID) {
+      if (
+        x.id === id &&
+        x.oldReceiverID &&
+        !x.oldReceiverID.split(",").includes(isID.toString())
+      ) {
         return { ...x, isChecked: isChecked, receiverID: isID };
       }
       return x;
@@ -32,18 +37,25 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const handleCheckData = (checked) => {
     const updated = listData.map((item) => {
       if (checked) {
-        if (item.isChecked === 0 && item.oldReceiverID !== isID) {
+        if (
+          item.isChecked === 0 &&
+          item.oldReceiverID &&
+          !item.oldReceiverID.split(",").includes(isID.toString())
+        ) {
           return { ...item, isChecked: 1, receiverID: isID };
         }
         return item;
       } else {
-        if (item.receiverID === isID && item.oldReceiverID !== isID) {
-          return { ...item, isChecked: 0 };
+        if (
+          item.receiverID === isID &&
+          item.oldReceiverID &&
+          !item.oldReceiverID.split(",").includes(isID.toString())
+        ) {
+          return { ...item, isChecked: 0, receiverID: "" };
         }
         return item;
       }
     });
-
     setListData(updated);
     setCheckAllData(checked);
   };
@@ -68,14 +80,10 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
           : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
 
       const matchReceiver =
-        x.isChecked !== 1 ||
-        (x.isChecked === 1 && x.receiverID === isID) ||
-        (x.oldReceiverID &&
-          x.oldReceiverID.split(",").includes(isID.toString()));
+        x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
 
       return matchChienDich && matchReceiver;
     });
-
     setDataF(dataF);
   }, [isID, listData, setChienDich, isChange]);
   useEffect(() => {
@@ -88,9 +96,9 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   }, [data]);
   const handleSave = async (e) => {
     e.preventDefault();
-    setDisable(true);
+
     var arrSave = [];
-    var dataSave = listData;
+    var dataSave = listData.filter((x) => x.isChecked === 1);
     dataSave.map((x) => {
       let object = {
         id: x.id,
@@ -115,9 +123,10 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
       };
       arrSave.push(object);
     });
-    PostSave(arrSave, ...data);
+    arrSave && PostSave(arrSave, ...data);
   };
   const PostSave = async (arrPost, dataF) => {
+    setDisable(true);
     const request = new Request(
       `${process.env.REACT_APP_URL_API}MarketingData/PostShare`,
       {
