@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-
-const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
+import iziToast from "izitoast";
+const GoogleSheetForm = ({ setIsShow, setShow, setData, setIsWeek }) => {
   const [link, setLink] = useState(
     "1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ"
   );
@@ -10,14 +10,28 @@ const GoogleSheetForm = ({ setIsShow, setShow, setData }) => {
     getData();
   };
   const getData = async () => {
-    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetGGSheetDataB?url=${link}`;
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetGGSheetData?spreadsheetId=${link}&weeknumber=${setIsWeek}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
 
-      const getData = await response.json();
+      const data = await response.json();
+      if (data.statusCode === 200) {
+        setData(data.data);
+        setShow(false);
+        iziToast.success({
+          title: "Success",
+          message: data.message,
+          position: "topRight",
+        });
+      } else {
+        iziToast.warning({
+          message: data.message,
+          position: "topRight",
+        });
+      }
     } catch (error) {
       console.error(error.message);
     }

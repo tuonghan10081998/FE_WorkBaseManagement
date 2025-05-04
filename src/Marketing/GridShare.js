@@ -2,7 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import ModalShare from "./ModalShare";
 import GoogleSheetForm from "./GoogleSheetForm ";
 import iziToast from "izitoast";
-const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
+const GridShare = ({
+  dataNV,
+  data,
+  setChienDich,
+  setClick,
+  setIsClick,
+  setIsWeek,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDataF, setDataF] = useState([]);
   const [listData, setListData] = useState([]);
@@ -13,6 +20,7 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
   const [isShow, setShow] = useState(false);
   const [isDisable, setDisable] = useState(false);
   const [isCheckAllData, setCheckAllData] = useState(false);
+
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
     console.log(listData);
@@ -416,6 +424,7 @@ const GridShare = ({ dataNV, data, setChienDich, setClick, setIsClick }) => {
         setIsShow={isShow}
         setShow={setShow}
         setData={setListData}
+        setIsWeek={setIsWeek}
       />
     </div>
   );

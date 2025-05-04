@@ -182,6 +182,7 @@ const ShareData = () => {
         setChienDich={selectedCD?.value || "all"}
         setIsClick={isClick}
         setClick={setClick}
+        setIsWeek={isWeek}
       />
     </div>
   );

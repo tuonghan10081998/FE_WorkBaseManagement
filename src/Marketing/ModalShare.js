@@ -119,7 +119,7 @@ const ModalShare = ({
     }
   };
   useEffect(() => {
-    setShareData(data.filter((item) => item.isChecked !== 1).length);
+    setShareData(data?.filter((item) => item.isChecked !== 1).length);
   }, [data, setIsClick]);
   const handleChange = (e) => {
     const value = Number(e.currentTarget.value);
@@ -189,7 +189,7 @@ const ModalShare = ({
                               id="projectName"
                               placeholder=""
                               value={
-                                data.filter((item) => item.isChecked !== 1)
+                                data?.filter((item) => item.isChecked !== 1)
                                   .length
                               }
                               autoComplete="off"
