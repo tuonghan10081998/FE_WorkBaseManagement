@@ -8,6 +8,7 @@ const ModalShare = ({
   dataNV,
   setData,
   setChange,
+  setChienDich,
 }) => {
   const [isShareData, setShareData] = useState(null);
   const [isDisable, setDisable] = useState(false);
@@ -24,7 +25,11 @@ const ModalShare = ({
       return;
     }
     const tasksToAssign = data
-      .filter((item) => item.isChecked !== 1)
+      .filter(
+        (item) =>
+          item.isChecked !== 1 &&
+          (setChienDich === "all" || item.utmCampaign === setChienDich)
+      )
       .slice(0, isShareData);
     distributeTasks(
       dataNV.filter((x) => x.isChecked === 1),
@@ -85,6 +90,7 @@ const ModalShare = ({
       };
       arrSave.push(object);
     });
+
     PostSave(arrSave, ...data);
   };
   const PostSave = async (arrPost, dataF) => {
@@ -119,7 +125,13 @@ const ModalShare = ({
     }
   };
   useEffect(() => {
-    setShareData(data?.filter((item) => item.isChecked !== 1).length);
+    setShareData(
+      data?.filter(
+        (item) =>
+          item.isChecked !== 1 &&
+          (setChienDich === "all" || item.utmCampaign === setChienDich)
+      ).length
+    );
   }, [data, setIsClick]);
   const handleChange = (e) => {
     const value = Number(e.currentTarget.value);
@@ -189,8 +201,12 @@ const ModalShare = ({
                               id="projectName"
                               placeholder=""
                               value={
-                                data?.filter((item) => item.isChecked !== 1)
-                                  .length
+                                data?.filter(
+                                  (item) =>
+                                    item.isChecked !== 1 &&
+                                    (setChienDich === "all" ||
+                                      item.utmCampaign === setChienDich)
+                                ).length
                               }
                               autoComplete="off"
                             />
@@ -234,7 +250,7 @@ const ModalShare = ({
                  
                           }`}
                           >
-                            <i className="fas fa-paper-plane"></i> Share data
+                            <i className="fas fa-paper-plane"></i> Lưu
                           </button>
                         </div>
                       </div>

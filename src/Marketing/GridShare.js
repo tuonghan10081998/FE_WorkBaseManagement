@@ -423,6 +423,7 @@ const GridShare = ({
         dataNV={isNVNew}
         setData={setListData}
         setChange={setChange}
+        setChienDich={setChienDich}
       />
       <GoogleSheetForm
         setIsShow={isShow}

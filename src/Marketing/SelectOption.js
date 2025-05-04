@@ -52,7 +52,7 @@ const SelectOption = ({
               <div className="col-6 col-lg-6">
                 <label>Tuần trễ</label>{" "}
                 <select
-                  style={{ border: "1px solid #DEE2E6" }}
+                  style={{ border: "1px solid #DEE2E6", height: "40px" }}
                   value={setWeek}
                   onChange={(e) => onChangeWeek(e.currentTarget.value)}
                   id="select2_uutien"
