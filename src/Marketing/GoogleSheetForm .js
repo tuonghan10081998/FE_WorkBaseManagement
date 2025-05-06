@@ -10,9 +10,10 @@ const GoogleSheetForm = ({
   const [link, setLink] = useState(
     "1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ"
   );
-
+  const [isDisable, setDisable] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
+    setDisable(true);
     getData();
   };
   const getData = async () => {
@@ -24,6 +25,7 @@ const GoogleSheetForm = ({
       }
 
       const data = await response.json();
+      setDisable(false);
       if (data.statusCode === 200) {
         setData(data.data);
         setShow(false);
@@ -95,6 +97,7 @@ const GoogleSheetForm = ({
                         />
                       </div>
                       <button
+                        disabled={isDisable}
                         type="submit"
                         className="btn btn-primary w-100 fw-semibold"
                       >

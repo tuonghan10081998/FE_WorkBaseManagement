@@ -2,7 +2,18 @@ import React, { useState, useEffect, useContext } from "react";
 import ModalShare from "./ModalShare";
 import ModalShareReport from "./ModalShareReport";
 import moment from "moment";
-const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
+import StatusForm from "./StatusForm";
+const GridShareReport = ({
+  data,
+  setChienDich,
+  setNhanVien,
+  setPhongBan,
+  setTrangThai,
+  setTimKiem,
+  setIsShowS,
+  setShowS,
+  setIsRole,
+}) => {
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
   const [isShow, setShow] = useState(false);
@@ -19,11 +30,25 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
           ? x.dep_Code === setPhongBan
           : x.receiverID === setNhanVien;
 
-      return matchChienDich && matchReceiver;
+      const matchTrangThai =
+        setTrangThai === "all" ? true : x.status === setTrangThai;
+      const matchSearch =
+        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
+
+      return matchChienDich && matchReceiver && matchTrangThai && matchSearch;
     });
 
     setDataF(dataF);
-  }, [listData, setChienDich, setNhanVien, setPhongBan]);
+  }, [
+    listData,
+    setChienDich,
+    setNhanVien,
+    setPhongBan,
+    setTrangThai,
+    setTimKiem,
+  ]);
   useEffect(() => {
     data && setListData(data);
   }, [data]);
@@ -213,22 +238,25 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
                                 minWidth: "100px",
                               }}
                             >
-                              <div
-                                onClick={(e) => handleClick(x.id)}
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <i
+                              {(x.status !== 1 ||
+                                setIsRole === "Administrator") && (
+                                <div
+                                  onClick={(e) => handleClick(x.id)}
                                   style={{
-                                    fontSize: "20px",
-                                    cursor: "pointer",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                   }}
-                                  class="fa-solid fa-user-pen"
-                                ></i>
-                              </div>
+                                >
+                                  <i
+                                    style={{
+                                      fontSize: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                    className="fa-solid fa-user-pen" // ⚠️ class -> className
+                                  ></i>
+                                </div>
+                              )}
                             </td>
                           </tr>
                         );
@@ -248,6 +276,7 @@ const GridShareReport = ({ data, setChienDich, setNhanVien, setPhongBan }) => {
         data={listData}
         setID={isID}
       />
+      <StatusForm data={isDataF} setIsShowS={setIsShowS} setShowS={setShowS} />
     </div>
   );
 };

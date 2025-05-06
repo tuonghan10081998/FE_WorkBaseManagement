@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TitleContext } from "../components/TitleContext";
 import SelectOptionReport from "./SelectOptionReport";
 import GridShareReport from "./GridShareReport";
+
 import moment from "moment";
 const ShareDataReport = () => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
@@ -11,14 +12,19 @@ const ShareDataReport = () => {
   const [options, setOption] = useState([]);
   const [optionsNV, setOptionNV] = useState([]);
   const [optionsCD, setOptionCD] = useState([]);
+  const [optionsS, setOptionS] = useState([]);
   const [selectedPB, setSelectedPB] = useState(null);
   const [selectedNV, setSelectedNV] = useState(null);
   const [selectedCD, setSelectedCD] = useState(null);
+  const [selectedS, setSelectedS] = useState(null);
   const [isLeader, setLeader] = useState("");
   const [isData, setData] = useState(null);
   const [isopera, setopera] = useState(true);
   const [isRole, setRole] = useState("");
+  const [isRoleT, setRoleT] = useState("");
+  const [isSearch, setSearch] = useState("");
   const [isDataNV, setDataNV] = useState([]);
+  const [isShowS, setShowS] = useState(false);
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -51,15 +57,24 @@ const ShareDataReport = () => {
             (item) => item.roleID === roleID && item.isChecked === 1
           )
         ) || "Member";
+      var selectedDepCodesLD = data.lstUserDep.some(
+        (dep) => dep.dep_Code === "MKT" && dep.isChecked === 1
+      );
       if (currentHighestRole === "Leader") {
         const selectedDepCodes = data.lstUserDep
           .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
           .map((dep) => dep.dep_Code) // Lấy mã phòng ban
           .join(",");
+
         setLeader(selectedDepCodes);
       }
+
       currentHighestRole === "Member" && setopera(false);
-      setRole(currentHighestRole);
+      if (selectedDepCodesLD && currentHighestRole === "Leader") {
+        console.log(1);
+        setRole("Administrator");
+      } else setRole(currentHighestRole);
+      setRoleT(currentHighestRole);
     } catch (error) {
       console.error(error.message);
     }
@@ -70,7 +85,7 @@ const ShareDataReport = () => {
   //phòng ban
   useEffect(() => {
     getPhongBan();
-  }, []);
+  }, [isUser, isRole]);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
     isRole !== "Administrator" &&
@@ -221,6 +236,47 @@ const ShareDataReport = () => {
       setSelectedCD(null);
     }
   }, [optionsCD]);
+
+  useEffect(() => {
+    getStatus();
+  }, []);
+
+  const getStatus = async () => {
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetDealStatus`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const formattedOptions = [
+        { value: "all", label: " Tất cả " },
+        ...data.map((x) => ({
+          value: x.statusID,
+          label: x.name,
+        })),
+      ];
+
+      setOptionS(formattedOptions);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const OnChangeS = (selectedOption) => {
+    setSelectedS(selectedOption);
+  };
+  useEffect(() => {
+    if (optionsS.length > 0 && !selectedS) {
+      setSelectedS(optionsS[0]);
+    }
+  }, [optionsS, selectedS]);
+  const OnChangeSearch = (value) => {
+    setSearch(value);
+  };
+  const OnClickView = () => {
+    setShowS(true);
+  };
   return (
     <div className="contentItem">
       <SelectOptionReport
@@ -234,12 +290,23 @@ const ShareDataReport = () => {
         dataCD={optionsCD}
         OnChangeCD={OnChangeCD}
         selectedCD={selectedCD}
+        dataS={optionsS}
+        OnChangeS={OnChangeS}
+        selectedS={selectedS}
+        setIsSearch={isSearch}
+        OnChangeSearch={OnChangeSearch}
+        OnClickView={OnClickView}
       />
       <GridShareReport
         data={isData}
         setChienDich={selectedCD?.value || "all"}
         setNhanVien={selectedNV?.value || "all"}
         setPhongBan={selectedPB?.value || "all"}
+        setTrangThai={selectedS?.value || "all"}
+        setTimKiem={isSearch}
+        setIsShowS={isShowS}
+        setShowS={setShowS}
+        setIsRole={isRoleT}
       />
     </div>
   );

@@ -12,12 +12,27 @@ const SelectOptionReport = ({
   dataCD,
   OnChangeCD,
   selectedCD,
+  dataS,
+  OnChangeS,
+  selectedS,
+  setIsSearch,
+  OnChangeSearch,
+  OnClickView,
 }) => {
   return (
     <div
       className="d-flex justify-content-between align-items-center  mt-1 p-2 div-select"
       style={{ flexWrap: "wrap", gap: "5px" }}
     >
+      <button
+        onClick={OnClickView}
+        type="button"
+        class="btn-view"
+        aria-label="Xem"
+      >
+        <i class="fas fa-eye" aria-hidden="true"></i>
+        Phân tích
+      </button>
       <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
         <div className="row  w-100 m-0 p-0" style={{}}>
           <div className="col-6 col-md-6 col-lg-3 col-xl-2 m-0  col_search ItemCV">
@@ -54,17 +69,28 @@ const SelectOptionReport = ({
               isSearchable
             />
           </div>
-          {/* <div className="col-6 col-md-6 col-lg-3 col-xl-6 m-0 px-1  col_search ItemCV itemadd">
-            <button
-              style={{ marginTop: "25px" }}
-              onClick={() => {
-                setClick((x) => !x);
-              }}
-              class="btn btn-primary mr-2"
-            >
-              <i class="fas fa-plus"></i> Chia tự động
-            </button>
-          </div> */}
+          <div className="col-6 col-md-6 col-lg-3 col-xl-2 col_search ItemCV itemSelect2">
+            <label>Trạng thái </label>{" "}
+            <Select
+              options={dataS}
+              value={selectedS}
+              onChange={OnChangeS}
+              placeholder="Tất cả"
+              isSearchable
+            />
+          </div>
+          <div className="col-6 col-md-6 col-lg-3 col-xl-2 col_search ItemCV itemSelect2">
+            <label>Tìm kiếm </label>{" "}
+            <input
+              style={{ height: "40px" }}
+              type="text"
+              id="projectFilter"
+              className="form-control mr-2"
+              placeholder=""
+              value={setIsSearch}
+              onChange={(e) => OnChangeSearch(e.currentTarget.value)}
+            />
+          </div>
         </div>
       </div>
     </div>
