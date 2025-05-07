@@ -1,7 +1,24 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
-  console.log(setID);
+  useEffect(() => {
+    setID && getHistory();
+  }, [setID]);
+  const [isData, setData] = useState([]);
+  const getHistory = async () => {
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetCustomerHistory?action=GetCustomerHistory&para1=${setID}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
   return (
     <Modal
       show={setIsShowH}
@@ -64,30 +81,90 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                             <tr className="trthdashboard">
                               <td scope="col">Thời gian</td>
                               <td scope="col">Trạng thái</td>
-                              <td scope="col">FTD</td>
                               <td scope="col">MT4/MT5</td>
+                              <td scope="col">FTD</td>
+                              <td scope="col">Sàn trước đây</td>
+                              <td scope="col">Sàn đầu tư</td>
+
                               <td scope="col">Ghi chú</td>
                             </tr>
                           </thead>
                           <tbody>
-                            {/* {dataDepDT?.map((x, index) => {
-                                return (
-                                  <tr key={x.id}>
-                                    <td style={{ whiteSpace: "nowrap" }}>
-                                      {x.dep_Name}
-                                    </td>
-                                    <td style={{ whiteSpace: "nowrap" }}>
-                                      {x.totalExpenses.toLocaleString()}
-                                    </td>
-                                    <td style={{ whiteSpace: "nowrap" }}>
-                                      {x.totalRevenue.toLocaleString()}
-                                    </td>
-                                    <td style={{ whiteSpace: "nowrap" }}>
-                                      {x.profit.toLocaleString()}
-                                    </td>
-                                  </tr>
-                                );
-                              })} */}
+                            {isData?.map((x, index) => {
+                              return (
+                                <tr key={x.id}>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "60px",
+                                    }}
+                                  >
+                                    <p
+                                      style={{
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      {x.dealDate}
+                                    </p>
+                                  </td>
+
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                      color:
+                                        x.status === 1 ? "green" : "orange",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    <p>{x.statusName}</p>
+                                  </td>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                    }}
+                                  >
+                                    <p>{x.account}</p>
+                                  </td>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                    }}
+                                  >
+                                    <p>
+                                      {!x.ftd ? "" : x.ftd.toLocaleString()}
+                                    </p>
+                                  </td>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                    }}
+                                  >
+                                    <p>{x.preBroker}</p>
+                                  </td>
+
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                    }}
+                                  >
+                                    <p>{x.broker}</p>
+                                  </td>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "200px",
+                                    }}
+                                  >
+                                    <p>{x.note}</p>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

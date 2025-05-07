@@ -15,6 +15,7 @@ const GridShare = ({
   setTrangThai,
   setTimKiem,
   setIsSelectData,
+  setRole,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDataF, setDataF] = useState([]);
@@ -392,16 +393,18 @@ const GridShare = ({
             <div className="card-header d-flex justify-content-between align-items-center">
               <div className="d-flex gap-2">
                 <h2 className="h5 mb-0 ">Chia data </h2>
-                <button
-                  disabled={isDisableDelete}
-                  onClick={(e) => setShowDelete(true)}
-                  type="button"
-                  class="save-buttonShare btn btn-primary d-flex align-items-center gap-2 "
-                  style={{ backgroundColor: "rgb(255 0 82)" }}
-                >
-                  <i class="fa-solid fa-trash"></i>
-                  Xóa
-                </button>
+                {setRole === "Administrator" && (
+                  <button
+                    disabled={isDisableDelete}
+                    onClick={(e) => setShowDelete(true)}
+                    type="button"
+                    class="save-buttonShare btn btn-primary d-flex align-items-center gap-2 "
+                    style={{ backgroundColor: "rgb(255 0 82)" }}
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                    Xóa
+                  </button>
+                )}
               </div>
               <div className="d-flex " style={{ gap: "10px" }}>
                 <button
@@ -479,6 +482,7 @@ const GridShare = ({
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
+                        <td scope="col">Quốc gia</td>
                         <td scope="col">Xóa</td>
                       </tr>
                     </thead>
@@ -582,6 +586,14 @@ const GridShare = ({
                               }}
                             >
                               <p>{x.utmCampaign}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "80px",
+                              }}
+                            >
+                              <p>{x.country}</p>
                             </td>
                             <td
                               className="text-center"

@@ -28,6 +28,7 @@ const ShareData = () => {
   const [isCheckLate, setCheckLate] = useState(false);
   const [isWeek, setWeek] = useState(3);
   const [isTreDeal, setTreDeal] = useState(null);
+  const [isRole, setRole] = useState("");
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -200,6 +201,31 @@ const ShareData = () => {
   const OnChangeSelectData = (value) => {
     setSelectData(value);
   };
+  const getPhanQuyen = async () => {
+    const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const priorityRoles = data.lstUserRole.map((item) => item.roleID);
+      const currentHighestRole =
+        priorityRoles.find((roleID) =>
+          data.lstUserRole.some(
+            (item) => item.roleID === roleID && item.isChecked === 1
+          )
+        ) || "Member";
+
+      setRole(currentHighestRole);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getPhanQuyen();
+  }, [isUser]);
   return (
     <div className="contentItem">
       <SelectOption
@@ -235,6 +261,7 @@ const ShareData = () => {
         setTrangThai={selectedS?.value || "all"}
         setTimKiem={isSearch}
         setIsSelectData={isSelectData}
+        setRole={isRole}
       />
     </div>
   );

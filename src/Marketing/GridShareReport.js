@@ -102,11 +102,12 @@ const GridShareReport = ({
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
                         <td scope="col">Mail</td>
-                        <td scope="col">MT4/MTP</td>
+                        <td scope="col">MT4/MT5</td>
                         <td scope="col">Câu hỏi</td>
 
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
+                        <td scope="col">Quốc gia</td>
                         <td scope="col">Tên sales</td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Ftd</td>
@@ -156,11 +157,11 @@ const GridShareReport = ({
                               }}
                             >
                               <div
-                                // onClick={(e) => {
-                                //   setID(x.id);
-                                //   setNameKH(x.name);
-                                //   setShowH(true);
-                                // }}
+                                onClick={(e) => {
+                                  setID(x.id);
+                                  setNameKH(x.name);
+                                  setShowH(true);
+                                }}
                                 style={{
                                   cursor: "pointer",
                                 }}
@@ -213,7 +214,7 @@ const GridShareReport = ({
                                 fontWeight: "bold",
                               }}
                             >
-                              <p></p>
+                              <p>{x.account}</p>
                             </td>
                             <td
                               style={{
@@ -238,6 +239,14 @@ const GridShareReport = ({
                               }}
                             >
                               <p>{x.utmCampaign}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "80px",
+                              }}
+                            >
+                              <p>{x.country}</p>
                             </td>
                             <td
                               style={{

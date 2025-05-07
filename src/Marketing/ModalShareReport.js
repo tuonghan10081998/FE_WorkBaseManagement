@@ -71,6 +71,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
             broker: isBroker,
             ftd: isFtd || 0,
             note: isNote,
+            account: isMT,
             preBroker: isPrebroker,
             status: isStatusV?.value,
             statusName: isStatusV?.label,
@@ -93,6 +94,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
       broker: isBroker,
       dealDate: isdealdate.format("YYYY-MM-DD"),
       note: isNote,
+      account: isMT,
       createUser: "string",
       createDate: "2025-04-28T16:04:56.506Z",
       receiverID: "string",
@@ -261,7 +263,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
                           </div>
                         </div>
                       </div>
-                      {/* <div className="col-12 m-0 p-0 my-2 ">
+                      <div className="col-12 m-0 p-0 my-2 ">
                         <div className="row">
                           <div className="form-group col-12 m-0 p-0 ">
                             <label htmlFor="projectName">MT4/MT5</label>
@@ -276,7 +278,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
                             />
                           </div>
                         </div>
-                      </div> */}
+                      </div>
                       <div className="col-12 m-0 p-0 my-2 ">
                         <div className="row">
                           <div className="form-group col-12 m-0 p-0 ">
