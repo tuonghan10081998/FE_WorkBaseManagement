@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import ModalShare from "./ModalShare";
 import GoogleSheetForm from "./GoogleSheetForm ";
 import iziToast from "izitoast";
+import { Modal, Button } from "react-bootstrap";
+import moment from "moment";
 const GridShare = ({
   dataNV,
   data,
@@ -10,6 +12,9 @@ const GridShare = ({
   setIsClick,
   setIsWeek,
   setData,
+  setTrangThai,
+  setTimKiem,
+  setIsSelectData,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isDataF, setDataF] = useState([]);
@@ -22,9 +27,12 @@ const GridShare = ({
   const [isDisable, setDisable] = useState(false);
   const [isCheckAllData, setCheckAllData] = useState(false);
   const [isGGSheet, setGGSheet] = useState(false);
+  const [isShowDelete, setShowDelete] = useState(false);
+  const [isSortNgay, setSortNgay] = useState(false);
+  const [isSorCheck, setSortCheck] = useState(false);
+  const [isDisableDelete, setDisableDelete] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
-    console.log(listData);
     const newData = listData.map((x) => {
       if (
         x.id === id &&
@@ -33,6 +41,13 @@ const GridShare = ({
         return { ...x, isChecked: isChecked, receiverID: isID };
       }
       return x;
+    });
+    setListData(newData);
+  };
+  const handleChangeCheckDelete = (e, id, isChecked) => {
+    e.preventDefault();
+    const newData = listData.map((x) => {
+      return x.id === id ? { ...x, isCheckDelete: isChecked } : x;
     });
     setListData(newData);
   };
@@ -88,10 +103,44 @@ const GridShare = ({
       const matchReceiver =
         x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
 
-      return matchChienDich && matchReceiver;
+      // const matchTrangThai =
+      //   setTrangThai === "all" ? true : x.status === setTrangThai;
+
+      // const matchShareData =
+      //   setIsSelectData.toString() === "1"
+      //     ? true
+      //     : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1);
+      return (
+        matchChienDich && matchReceiver
+        // && matchTrangThai && matchShareData
+      );
     });
     setDataF(dataF);
   }, [isID, listData, setChienDich, isChange]);
+  useEffect(() => {
+    const dataF = listData?.filter((x) => {
+      const matchChienDich =
+        setChienDich === "all"
+          ? true
+          : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
+
+      const matchTrangThai =
+        setTrangThai === "all" ? true : x.status === setTrangThai;
+      const matchSearch =
+        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
+      const matchShareData =
+        setIsSelectData.toString() === "1"
+          ? true
+          : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1);
+
+      return matchChienDich && matchTrangThai && matchSearch && matchShareData;
+    });
+    setDataF(dataF);
+
+    setDataF(dataF);
+  }, [setTimKiem, setTrangThai, setIsSelectData]);
   useEffect(() => {
     if (data && Array.isArray(data)) {
       setListData(data);
@@ -179,6 +228,87 @@ const GridShare = ({
   useEffect(() => {
     setData(listData);
   }, [isGGSheet]);
+  const handleDelete = () => {
+    const dataDelete = listData.filter((x) => x.isCheckDelete === 1);
+    setListData(listData.filter((x) => x.isCheckDelete !== 1));
+    var arrDelete = [];
+    dataDelete.map((x) => {
+      let object = {
+        id: x.id,
+        date: "string",
+        name: "string",
+        phone: "string",
+        mail: "string",
+        question: "string",
+        utmSource: "string",
+        utmCampaign: "string",
+        status: 0,
+        preBroker: "string",
+        ftd: 0,
+        broker: "string",
+        dealDate: "2025-05-07T13:44:49.189Z",
+        note: "string",
+        createUser: "string",
+        createDate: "2025-05-07T13:44:49.189Z",
+        receiverID: "string",
+        oldReceiverID: "string",
+        isChecked: 0,
+        isCheckDelete: 1,
+      };
+      arrDelete.push(object);
+    });
+    if (arrDelete.length == 0) {
+      setShowDelete(false);
+      return;
+    }
+    PostDelete(arrDelete);
+  };
+
+  const handleSortNgay = (value) => {
+    const dataSort = isDataF.sort((a, b) => {
+      const dateA = moment(a.date, "DD/MM/YYYY");
+      const dateB = moment(b.date, "DD/MM/YYYY");
+      return value ? dateB - dateA : dateA - dateB; // Sắp xếp giảm dần
+    });
+    setDataF(dataSort);
+  };
+  const handleSortCheck = (value) => {
+    const sortedData = isDataF.sort((a, b) =>
+      value ? a.isChecked - b.isChecked : b.isChecked - a.isChecked
+    );
+    setDataF(sortedData);
+  };
+  const PostDelete = async (arrPost) => {
+    setDisableDelete(true);
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}MarketingData/PostDelete`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    setDisableDelete(false);
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Xóa thành công`,
+        position: "topRight",
+      });
+      setShowDelete(false);
+      setListData(listData.filter((x) => x.isCheckDelete !== 1));
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Xóa thất bại`,
+        position: "topRight",
+      });
+    }
+  };
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -260,12 +390,24 @@ const GridShare = ({
         <div className="col-md-12 col-lg-9 col-xl-10">
           <div className="card" style={{ height: "50px" }}>
             <div className="card-header d-flex justify-content-between align-items-center">
-              <h2 className="h5 mb-0 ">Chia data </h2>
+              <div className="d-flex gap-2">
+                <h2 className="h5 mb-0 ">Chia data </h2>
+                <button
+                  disabled={isDisableDelete}
+                  onClick={(e) => setShowDelete(true)}
+                  type="button"
+                  class="save-buttonShare btn btn-primary d-flex align-items-center gap-2 "
+                  style={{ backgroundColor: "rgb(255 0 82)" }}
+                >
+                  <i class="fa-solid fa-trash"></i>
+                  Xóa
+                </button>
+              </div>
               <div className="d-flex " style={{ gap: "10px" }}>
                 <button
                   onClick={(e) => handleGet(e)}
                   type="button"
-                  class="save-button btn btn-primary d-flex align-items-center gap-2 "
+                  class="save-buttonShare btn btn-primary d-flex align-items-center gap-2 "
                   style={{ backgroundColor: "#0d6efd" }}
                 >
                   <i class="fas fa-download"></i>
@@ -275,7 +417,7 @@ const GridShare = ({
                 <button
                   disabled={isDisable}
                   onClick={(e) => handleSave(e)}
-                  className="save-button"
+                  className="save-buttonShare"
                 >
                   <i className="fas fa-save" />
                   Lưu
@@ -293,7 +435,15 @@ const GridShare = ({
                       <tr className="trthdashboard">
                         <td scope="col">
                           {" "}
-                          <div style={{ marginTop: "8px" }}>
+                          <div
+                            style={{
+                              display: "flex",
+
+                              justifyContent: "center",
+                              alignItems: "center",
+                              gap: "5px",
+                            }}
+                          >
                             <input
                               style={{ width: "20px", height: "20px" }}
                               type="checkbox"
@@ -302,16 +452,34 @@ const GridShare = ({
                                 handleCheckData(e.target.checked)
                               }
                             />
+                            <i
+                              onClick={() => {
+                                setSortCheck(!isSorCheck);
+                                handleSortCheck(!isSorCheck);
+                              }}
+                              class="fa-solid fa-sort icon-sort"
+                            ></i>
                           </div>{" "}
                         </td>
-                        <td scope="col">Ngày</td>
+                        <td scope="col">
+                          Ngày{" "}
+                          <i
+                            onClick={() => {
+                              setSortNgay(!isSortNgay);
+                              handleSortNgay(!isSortNgay);
+                            }}
+                            class="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
                         <td scope="col">Mail</td>
                         <td scope="col">Câu hỏi</td>
                         <td scope="col">Người nhận cũ</td>
+                        <td scope="col">Trạng thái</td>
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
+                        <td scope="col">Xóa</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -392,6 +560,16 @@ const GridShare = ({
                             <td
                               style={{
                                 whiteSpace: "nowrap",
+                                minWidth: "120px",
+                                color: x.status === 1 ? "green" : "orange",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <p>{x.statusName}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
                                 minWidth: "140px",
                               }}
                             >
@@ -404,6 +582,25 @@ const GridShare = ({
                               }}
                             >
                               <p>{x.utmCampaign}</p>
+                            </td>
+                            <td
+                              className="text-center"
+                              style={{ whiteSpace: "nowrap" }}
+                            >
+                              <div style={{ marginTop: "8px" }}>
+                                <input
+                                  style={{ width: "20px", height: "20px" }}
+                                  onChange={(e) =>
+                                    handleChangeCheckDelete(
+                                      e,
+                                      x.id,
+                                      x.isCheckDelete == 1 ? 0 : 1
+                                    )
+                                  }
+                                  type="checkbox"
+                                  checked={x.isCheckDelete == 1}
+                                />
+                              </div>
                             </td>
                           </tr>
                         );
@@ -424,6 +621,9 @@ const GridShare = ({
         setData={setListData}
         setChange={setChange}
         setChienDich={setChienDich}
+        setTrangThai={setTrangThai}
+        setTimKiem={setTimKiem}
+        setIsSelectData={setIsSelectData}
       />
       <GoogleSheetForm
         setIsShow={isShow}
@@ -432,6 +632,30 @@ const GridShare = ({
         setIsWeek={setIsWeek}
         setGGSheet={setGGSheet}
       />
+      <Modal
+        show={isShowDelete}
+        // onHide={false}
+        dialogClassName="modal-dialog-centered"
+        aria-labelledby="popupModalLabel"
+        backdrop="static"
+        keyboard={false}
+        className="modalHT"
+      >
+        <Modal.Header closeButton={false}>
+          <Modal.Title id="popupModalLabel">Thông báo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Bạn muốn xóa các data này</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDelete(false)}>
+            Hủy
+          </Button>
+          <Button onClick={() => handleDelete()} variant="primary">
+            Đồng ý
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

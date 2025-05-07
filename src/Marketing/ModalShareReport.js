@@ -13,6 +13,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
   const [isBroker, setBroker] = useState("");
   const [isFtd, setFtd] = useState("");
   const [isNote, setNote] = useState("");
+  const [isMT, setMT] = useState("");
   const [isDisable, setDisable] = useState(false);
   const [optionS, setOptionS] = useState([]);
   const [isStatusV, setStatusV] = useState(null);
@@ -154,6 +155,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
     setFtd(dataF.ftd || "");
     setNote(dataF.note || "");
     setPrebroker(dataF.preBroker || "");
+    setMT("");
   }, [setIsShow, setID]);
 
   return (
@@ -259,6 +261,22 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
                           </div>
                         </div>
                       </div>
+                      {/* <div className="col-12 m-0 p-0 my-2 ">
+                        <div className="row">
+                          <div className="form-group col-12 m-0 p-0 ">
+                            <label htmlFor="projectName">MT4/MT5</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="projectName"
+                              placeholder=""
+                              value={isMT}
+                              onChange={(e) => setMT(e.currentTarget.value)}
+                              autoComplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div> */}
                       <div className="col-12 m-0 p-0 my-2 ">
                         <div className="row">
                           <div className="form-group col-12 m-0 p-0 ">

@@ -11,9 +11,12 @@ const ShareData = () => {
   const [options, setOption] = useState([]);
   const [optionsNV, setOptionNV] = useState([]);
   const [optionsCD, setOptionCD] = useState([]);
+  const [optionsS, setOptionS] = useState([]);
+  const [selectedS, setSelectedS] = useState(null);
   const [isNVValue, setNVValue] = useState("");
   const [isDataNVF, setDataNVF] = useState([]);
   const [isDataNV, setDataNV] = useState([]);
+  const [isSearch, setSearch] = useState("");
   const [selectedPB, setSelectedPB] = useState(null);
   const [selectedNV, setSelectedNV] = useState(null);
   const [selectedCD, setSelectedCD] = useState(null);
@@ -21,6 +24,7 @@ const ShareData = () => {
   const [isData, setData] = useState(null);
   const [isDataF, setDataF] = useState(null);
   const [isClick, setClick] = useState(false);
+  const [isSelectData, setSelectData] = useState(1);
   const [isCheckLate, setCheckLate] = useState(false);
   const [isWeek, setWeek] = useState(3);
   const [isTreDeal, setTreDeal] = useState(null);
@@ -33,7 +37,32 @@ const ShareData = () => {
     setIcon(<i className="fa-duotone fa-solid fa-briefcase"></i>);
     setIconAdd();
   };
+  useEffect(() => {
+    getStatus();
+  }, []);
 
+  const getStatus = async () => {
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetDealStatus`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const formattedOptions = [
+        { value: "all", label: " Tất cả " },
+        ...data.map((x) => ({
+          value: x.statusID,
+          label: x.name,
+        })),
+      ];
+
+      setOptionS(formattedOptions);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
   useEffect(() => {
     funTitle();
   }, [setTitle, setIcon]);
@@ -147,7 +176,6 @@ const ShareData = () => {
         label: x.utmCampaign,
       })),
     ];
-    console.log(dataF);
     setOptionCD(formattedOptions);
 
     setDataF(dataF);
@@ -158,7 +186,20 @@ const ShareData = () => {
   const handleWeek = (value) => {
     setWeek(value);
   };
-
+  const OnChangeS = (selectedOption) => {
+    setSelectedS(selectedOption);
+  };
+  useEffect(() => {
+    if (optionsS.length > 0 && !selectedS) {
+      setSelectedS(optionsS[0]);
+    }
+  }, [optionsS, selectedS]);
+  const OnChangeSearch = (value) => {
+    setSearch(value);
+  };
+  const OnChangeSelectData = (value) => {
+    setSelectData(value);
+  };
   return (
     <div className="contentItem">
       <SelectOption
@@ -175,6 +216,13 @@ const ShareData = () => {
         setWeek={isWeek}
         onChangeWeek={handleWeek}
         setIsTreDeal={isTreDeal}
+        dataS={optionsS}
+        OnChangeS={OnChangeS}
+        selectedS={selectedS}
+        setIsSearch={isSearch}
+        OnChangeSearch={OnChangeSearch}
+        setIsSelectData={isSelectData}
+        OnChangeSelectData={OnChangeSelectData}
       />
       <GridShare
         dataNV={isDataNVF}
@@ -184,6 +232,9 @@ const ShareData = () => {
         setClick={setClick}
         setIsWeek={isWeek}
         setData={setData}
+        setTrangThai={selectedS?.value || "all"}
+        setTimKiem={isSearch}
+        setIsSelectData={isSelectData}
       />
     </div>
   );

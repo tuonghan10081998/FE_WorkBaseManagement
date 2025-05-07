@@ -9,6 +9,9 @@ const ModalShare = ({
   setData,
   setChange,
   setChienDich,
+  setTrangThai,
+  setTimKiem,
+  setIsSelectData,
 }) => {
   const [isShareData, setShareData] = useState(null);
   const [isDisable, setDisable] = useState(false);
@@ -28,7 +31,14 @@ const ModalShare = ({
       .filter(
         (item) =>
           item.isChecked !== 1 &&
-          (setChienDich === "all" || item.utmCampaign === setChienDich)
+          (setChienDich === "all" || item.utmCampaign === setChienDich) &&
+          (setTrangThai === "all" ? true : item.status === setTrangThai) &&
+          (item.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            item.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            item.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+          (setIsSelectData.toString() === "1"
+            ? true
+            : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
       )
       .slice(0, isShareData);
     distributeTasks(
@@ -64,7 +74,18 @@ const ModalShare = ({
     });
 
     var dataSave = [...data];
-    dataSave = dataSave.filter((x) => x.isChecked === 1);
+    dataSave = dataSave.filter(
+      (x) =>
+        x.isChecked === 1 &&
+        (setChienDich === "all" || x.utmCampaign === setChienDich) &&
+        (setTrangThai === "all" ? true : x.status === setTrangThai) &&
+        (x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+          x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+          x.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+        (setIsSelectData.toString() === "1"
+          ? true
+          : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
+    );
     var arrSave = [];
     dataSave.map((x) => {
       let object = {
@@ -90,7 +111,6 @@ const ModalShare = ({
       };
       arrSave.push(object);
     });
-
     PostSave(arrSave, ...data);
   };
   const PostSave = async (arrPost, dataF) => {
@@ -129,7 +149,14 @@ const ModalShare = ({
       data?.filter(
         (item) =>
           item.isChecked !== 1 &&
-          (setChienDich === "all" || item.utmCampaign === setChienDich)
+          (setChienDich === "all" || item.utmCampaign === setChienDich) &&
+          (setTrangThai === "all" ? true : item.status === setTrangThai) &&
+          (item.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            item.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            item.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+          (setIsSelectData.toString() === "1"
+            ? true
+            : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
       ).length
     );
   }, [data, setIsClick]);
@@ -205,7 +232,25 @@ const ModalShare = ({
                                   (item) =>
                                     item.isChecked !== 1 &&
                                     (setChienDich === "all" ||
-                                      item.utmCampaign === setChienDich)
+                                      item.utmCampaign === setChienDich) &&
+                                    (setTrangThai === "all"
+                                      ? true
+                                      : item.status === setTrangThai) &&
+                                    (item.name
+                                      .toUpperCase()
+                                      .includes(setTimKiem.toUpperCase()) ||
+                                      item.phone
+                                        .toUpperCase()
+                                        .includes(setTimKiem.toUpperCase()) ||
+                                      item.mail
+                                        .toUpperCase()
+                                        .includes(setTimKiem.toUpperCase())) &&
+                                    (setIsSelectData.toString() === "1"
+                                      ? true
+                                      : item.isChecked ===
+                                        (setIsSelectData.toString() === "3"
+                                          ? 0
+                                          : 1))
                                 ).length
                               }
                               autoComplete="off"

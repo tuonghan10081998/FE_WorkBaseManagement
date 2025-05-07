@@ -3,6 +3,7 @@ import ModalShare from "./ModalShare";
 import ModalShareReport from "./ModalShareReport";
 import moment from "moment";
 import StatusForm from "./StatusForm";
+import ModalShareReportHis from "./ModalShareReportHis";
 const GridShareReport = ({
   data,
   setChienDich,
@@ -17,7 +18,11 @@ const GridShareReport = ({
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
   const [isShow, setShow] = useState(false);
+  const [isShowH, setShowH] = useState(false);
   const [isDataF, setDataF] = useState([]);
+  const [isNameKH, setNameKH] = useState("");
+
+  const [isSortNgay, setSortNgay] = useState(false);
   useEffect(() => {
     const dataF = listData?.filter((x) => {
       const matchChienDich =
@@ -56,6 +61,14 @@ const GridShareReport = ({
     setID(id);
     setShow(true);
   };
+  const handleSortNgay = (value) => {
+    const dataSort = isDataF.sort((a, b) => {
+      const dateA = moment(a.date, "DD/MM/YYYY");
+      const dateB = moment(b.date, "DD/MM/YYYY");
+      return value ? dateB - dateA : dateA - dateB; // Sắp xếp giảm dần
+    });
+    setDataF(dataSort);
+  };
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -76,10 +89,20 @@ const GridShareReport = ({
                     <thead>
                       <tr className="trthdashboard">
                         <td scope="col">Stt</td>
-                        <td scope="col">Ngày</td>
+                        <td scope="col">
+                          Ngày{" "}
+                          <i
+                            onClick={() => {
+                              setSortNgay(!isSortNgay);
+                              handleSortNgay(!isSortNgay);
+                            }}
+                            class="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
                         <td scope="col">Mail</td>
+                        <td scope="col">MT4/MTP</td>
                         <td scope="col">Câu hỏi</td>
 
                         <td scope="col">Nguồn UTM</td>
@@ -91,7 +114,7 @@ const GridShareReport = ({
 
                         <td scope="col">Sàn đầu tư</td>
                         <td scope="col">Ngày chốt</td>
-
+                        <td scope="col">Ghi chú</td>
                         <td style={{ width: "100px" }} scope="col">
                           Hành động
                         </td>
@@ -127,12 +150,40 @@ const GridShareReport = ({
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "120px",
+                                minWidth: "150px",
                                 color: "#F40925",
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{x.name}</p>
+                              <div
+                                // onClick={(e) => {
+                                //   setID(x.id);
+                                //   setNameKH(x.name);
+                                //   setShowH(true);
+                                // }}
+                                style={{
+                                  cursor: "pointer",
+                                }}
+                                className="d-flex  justify-content-around gap-2 px-2"
+                              >
+                                <p>{x.name}</p>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  {/* <i
+                                    style={{
+                                      fontSize: "15px",
+                                      cursor: "pointer",
+                                      color: "#743abb",
+                                    }}
+                                    className="fa-solid fa-clock-rotate-left" // ⚠️ class -> className
+                                  ></i> */}
+                                </div>
+                              </div>
                             </td>
                             <td
                               style={{
@@ -153,6 +204,16 @@ const GridShareReport = ({
                               }}
                             >
                               <p>{x.mail}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "120px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <p></p>
                             </td>
                             <td
                               style={{
@@ -186,6 +247,7 @@ const GridShareReport = ({
                             >
                               <p>{x.receiver}</p>
                             </td>
+
                             <td
                               style={{
                                 whiteSpace: "nowrap",
@@ -231,32 +293,41 @@ const GridShareReport = ({
                             >
                               <p>{x.dealDate || ""}</p>
                             </td>
-
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "150px",
+                              }}
+                            >
+                              <p>{x.note}</p>
+                            </td>
                             <td
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "100px",
                               }}
                             >
-                              {(x.status !== 1 ||
-                                setIsRole === "Administrator") && (
-                                <div
-                                  onClick={(e) => handleClick(x.id)}
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <i
+                              <div className="d-flex justify-content-around gap-2 px-2">
+                                {(x.status !== 1 ||
+                                  setIsRole === "Administrator") && (
+                                  <div
+                                    onClick={(e) => handleClick(x.id)}
                                     style={{
-                                      fontSize: "20px",
-                                      cursor: "pointer",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
                                     }}
-                                    className="fa-solid fa-user-pen" // ⚠️ class -> className
-                                  ></i>
-                                </div>
-                              )}
+                                  >
+                                    <i
+                                      style={{
+                                        fontSize: "18px",
+                                        cursor: "pointer",
+                                      }}
+                                      className="fa-solid fa-user-pen" // ⚠️ class -> className
+                                    ></i>
+                                  </div>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -277,6 +348,12 @@ const GridShareReport = ({
         setID={isID}
       />
       <StatusForm data={isDataF} setIsShowS={setIsShowS} setShowS={setShowS} />
+      <ModalShareReportHis
+        setIsShowH={isShowH}
+        setShowH={setShowH}
+        setID={isID}
+        setTenKH={isNameKH}
+      />
     </div>
   );
 };
