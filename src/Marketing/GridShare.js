@@ -104,16 +104,22 @@ const GridShare = ({
       const matchReceiver =
         x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
 
-      // const matchTrangThai =
-      //   setTrangThai === "all" ? true : x.status === setTrangThai;
-
-      // const matchShareData =
-      //   setIsSelectData.toString() === "1"
-      //     ? true
-      //     : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1);
+      const matchTrangThai =
+        setTrangThai === "all" ? true : x.status === setTrangThai;
+      const matchSearch =
+        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
+      const matchShareData =
+        setIsSelectData.toString() === "1"
+          ? true
+          : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1);
       return (
-        matchChienDich && matchReceiver
-        // && matchTrangThai && matchShareData
+        matchChienDich &&
+        matchReceiver &&
+        matchSearch &&
+        matchTrangThai &&
+        matchShareData
       );
     });
     setDataF(dataF);
