@@ -29,6 +29,7 @@ const ShareData = () => {
   const [isWeek, setWeek] = useState(3);
   const [isTreDeal, setTreDeal] = useState(null);
   const [isRole, setRole] = useState("");
+
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng

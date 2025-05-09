@@ -21,7 +21,6 @@ const GridShareReport = ({
   const [isShowH, setShowH] = useState(false);
   const [isDataF, setDataF] = useState([]);
   const [isNameKH, setNameKH] = useState("");
-
   const [isSortNgay, setSortNgay] = useState(false);
   useEffect(() => {
     const dataF = listData?.filter((x) => {
@@ -318,7 +317,8 @@ const GridShareReport = ({
                             >
                               <div className="d-flex justify-content-around gap-2 px-2">
                                 {(x.status !== 1 ||
-                                  setIsRole === "Administrator") && (
+                                  setIsRole ===
+                                    "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db") && (
                                   <div
                                     onClick={(e) => handleClick(x.id)}
                                     style={{

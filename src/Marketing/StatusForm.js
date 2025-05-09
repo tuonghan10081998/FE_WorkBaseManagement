@@ -91,7 +91,7 @@ const StatusForm = ({ setIsShowS, setShowS, data }) => {
                       type="text"
                       value={count}
                       readOnly
-                      className="form-control w-25 ms-3 inputS"
+                      className="form-control w-25 ms-3 inputS text-danger"
                     />
                   </div>
                 );

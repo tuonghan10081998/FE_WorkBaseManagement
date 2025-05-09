@@ -57,24 +57,14 @@ const ShareDataReport = () => {
             (item) => item.roleID === roleID && item.isChecked === 1
           )
         ) || "Member";
-      var selectedDepCodesLD = data.lstUserDep.some(
-        (dep) => dep.dep_Code === "MKT" && dep.isChecked === 1
+      const priorityPage = data.lstUserPage.some(
+        (item) => item.pageID === "MKT" && item.isChecked === 1
       );
-      if (currentHighestRole === "Leader") {
-        const selectedDepCodes = data.lstUserDep
-          .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
-          .map((dep) => dep.dep_Code) // Lấy mã phòng ban
-          .join(",");
-
-        setLeader(selectedDepCodes);
-      }
-
-      currentHighestRole === "Member" && setopera(false);
-      if (selectedDepCodesLD && currentHighestRole === "Leader") {
-        console.log(1);
+      if (priorityPage) {
         setRole("Administrator");
-      } else setRole(currentHighestRole);
-      setRoleT(currentHighestRole);
+      } else {
+        setRole(currentHighestRole);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -306,7 +296,7 @@ const ShareDataReport = () => {
         setTimKiem={isSearch}
         setIsShowS={isShowS}
         setShowS={setShowS}
-        setIsRole={isRoleT}
+        setIsRole={isUser}
       />
     </div>
   );

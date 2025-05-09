@@ -18,6 +18,7 @@ const GridShare = ({
   setRole,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDataF, setDataF] = useState([]);
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
@@ -235,6 +236,41 @@ const GridShare = ({
   useEffect(() => {
     setData(listData);
   }, [isGGSheet]);
+  const ExportCsv = () => {
+    const result = ["Name|Phone|Mail|Country"];
+
+    isDataF.forEach((row) => {
+      const combined = `${row.name}|${row.phone}|${row.mail}|${
+        row.country ?? ""
+      }`;
+      result.push(combined);
+    });
+    let dataToSend = JSON.stringify({
+      ArrBody: result,
+    });
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/export-csv`;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: dataToSend,
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const csvUrl = window.URL.createObjectURL(
+          new Blob([blob], { type: "text/plain" })
+        );
+        const a = document.createElement("a");
+        a.href = csvUrl;
+        a.download = "ExportedData.txt";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(csvUrl);
+        document.body.removeChild(a);
+      });
+  };
   const handleDelete = () => {
     const dataDelete = listData.filter((x) => x.isCheckDelete === 1);
     setListData(listData.filter((x) => x.isCheckDelete !== 1));
@@ -399,7 +435,7 @@ const GridShare = ({
             <div className="card-header d-flex justify-content-between align-items-center">
               <div className="d-flex gap-2">
                 <h2 className="h5 mb-0 ">Chia data </h2>
-                {setRole === "Administrator" && (
+                {isUser === "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db" && (
                   <button
                     disabled={isDisableDelete}
                     onClick={(e) => setShowDelete(true)}
@@ -413,6 +449,16 @@ const GridShare = ({
                 )}
               </div>
               <div className="d-flex " style={{ gap: "10px" }}>
+                <button
+                  onClick={(e) => ExportCsv(e)}
+                  type="button"
+                  class="save-buttonShare btn btn-primary d-flex align-items-center gap-2 "
+                  style={{ backgroundColor: "rgb(174 217 91)", color: "#000" }}
+                >
+                  <i class="fa-solid fa-file-export"></i>
+                  Export-csv
+                </button>
+
                 <button
                   onClick={(e) => handleGet(e)}
                   type="button"
@@ -489,7 +535,9 @@ const GridShare = ({
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
                         <td scope="col">Quốc gia</td>
-                        <td scope="col">Xóa</td>
+                        {isUser === "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db" && (
+                          <td scope="col">Xóa</td>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -601,29 +649,77 @@ const GridShare = ({
                             >
                               <p>{x.country}</p>
                             </td>
-                            <td
-                              className="text-center"
-                              style={{ whiteSpace: "nowrap" }}
-                            >
-                              <div style={{ marginTop: "8px" }}>
-                                <input
-                                  style={{ width: "20px", height: "20px" }}
-                                  onChange={(e) =>
-                                    handleChangeCheckDelete(
-                                      e,
-                                      x.id,
-                                      x.isCheckDelete == 1 ? 0 : 1
-                                    )
-                                  }
-                                  type="checkbox"
-                                  checked={x.isCheckDelete == 1}
-                                />
-                              </div>
-                            </td>
+                            {isUser ===
+                              "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db" && (
+                              <td
+                                className="text-center"
+                                style={{ whiteSpace: "nowrap" }}
+                              >
+                                <div style={{ marginTop: "8px" }}>
+                                  <input
+                                    style={{ width: "20px", height: "20px" }}
+                                    onChange={(e) =>
+                                      handleChangeCheckDelete(
+                                        e,
+                                        x.id,
+                                        x.isCheckDelete == 1 ? 0 : 1
+                                      )
+                                    }
+                                    type="checkbox"
+                                    checked={x.isCheckDelete == 1}
+                                  />
+                                </div>
+                              </td>
+                            )}
                           </tr>
                         );
                       })}
                     </tbody>
+                    <tfoot>
+                      <tr className="trtfdashboard">
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "500",
+                            color: "REd",
+                          }}
+                          colSpan="2"
+                        >
+                          Tổng data: <span>{isDataF.length}</span>
+                        </td>
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "500",
+                          }}
+                          colSpan="1"
+                        >
+                          Data đã chia:{" "}
+                          <span>
+                            {isDataF.filter((x) => x.isChecked === 1).length}
+                          </span>
+                        </td>
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "500",
+                          }}
+                          colSpan="1"
+                        >
+                          Data chưa chia:{" "}
+                          <span>
+                            {isDataF.filter((x) => x.isChecked === 0).length}
+                          </span>
+                        </td>
+                        <td
+                          colSpan={
+                            isUser === "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db"
+                              ? 8
+                              : 7
+                          }
+                        ></td>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>

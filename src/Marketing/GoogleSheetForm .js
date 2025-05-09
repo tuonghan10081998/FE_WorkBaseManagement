@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import iziToast from "izitoast";
+import GGSheetForm from "./GGSheetForm";
 const GoogleSheetForm = ({
   setIsShow,
   setShow,
@@ -11,6 +12,8 @@ const GoogleSheetForm = ({
     "1l7ixGEkBvPZGeQz9qPaKhu8DcEYtd0EM6P_ZTIiIHMQ"
   );
   const [isDisable, setDisable] = useState(false);
+  const [isShowS, setShowS] = useState(null);
+  const [isresultUpdate, setresultUpdate] = useState(null);
   const handleSubmit = (e) => {
     e.preventDefault();
     setDisable(true);
@@ -30,6 +33,8 @@ const GoogleSheetForm = ({
         setData(data.data);
         setShow(false);
         setGGSheet((x) => !x);
+        setShowS(true);
+        setresultUpdate(data.resultUpdate);
         iziToast.success({
           title: "Success",
           message: data.message,
@@ -46,72 +51,79 @@ const GoogleSheetForm = ({
     }
   };
   return (
-    <>
-      {setIsShow && (
-        <div className="modal-backdrop fade show"></div> // Thêm lớp backdrop khi modal mở
-      )}
-      <div
-        className={`modal ${setIsShow ? "d-block" : "d-none"}`} // Điều khiển modal mở hay đóng
-        tabIndex={-1}
-        role="dialog"
-        id="customModal"
-        aria-labelledby="popupModalHeader"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div style={{ padding: "10px 20px" }} className="modal-header">
-              <h5 className="modal-title" id="popupModalHeader">
-                ID Google Sheet
-              </h5>
-              <button
-                onClick={() => setShow(false)}
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body cardleave" style={{ padding: "2px" }}>
-              <div className="">
-                <div className="card px-2">
-                  <div className="card-body  px-2 py-2">
-                    <form
-                      className="bg-white p-1 p-md-1 rounded shadow-sm w-100"
-                      onSubmit={handleSubmit}
-                    >
-                      <div className="mb-3">
-                        <label
-                          htmlFor="gsheet-link"
-                          className="form-label fw-medium text-secondary"
-                        >
-                          ID Google Sheet
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="gsheet-link"
-                          name="gsheet-link"
-                          required
-                          value={link}
-                          onChange={(e) => setLink(e.target.value)}
-                        />
-                      </div>
-                      <button
-                        disabled={isDisable}
-                        type="submit"
-                        className="btn btn-primary w-100 fw-semibold"
+    <div>
+      <>
+        {setIsShow && (
+          <div className="modal-backdrop fade show"></div> // Thêm lớp backdrop khi modal mở
+        )}
+        <div
+          className={`modal ${setIsShow ? "d-block" : "d-none"}`} // Điều khiển modal mở hay đóng
+          tabIndex={-1}
+          role="dialog"
+          id="customModal"
+          aria-labelledby="popupModalHeader"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div style={{ padding: "10px 20px" }} className="modal-header">
+                <h5 className="modal-title" id="popupModalHeader">
+                  ID Google Sheet
+                </h5>
+                <button
+                  onClick={() => setShow(false)}
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body cardleave" style={{ padding: "2px" }}>
+                <div className="">
+                  <div className="card px-2">
+                    <div className="card-body  px-2 py-2">
+                      <form
+                        className="bg-white p-1 p-md-1 rounded shadow-sm w-100"
+                        onSubmit={handleSubmit}
                       >
-                        Lấy dữ liệu
-                      </button>
-                    </form>
+                        <div className="mb-3">
+                          <label
+                            htmlFor="gsheet-link"
+                            className="form-label fw-medium text-secondary"
+                          >
+                            ID Google Sheet
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="gsheet-link"
+                            name="gsheet-link"
+                            required
+                            value={link}
+                            onChange={(e) => setLink(e.target.value)}
+                          />
+                        </div>
+                        <button
+                          disabled={isDisable}
+                          type="submit"
+                          className="btn btn-primary w-100 fw-semibold"
+                        >
+                          Lấy dữ liệu
+                        </button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+        <GGSheetForm
+          setIsShowS={isShowS}
+          setShowS={setShowS}
+          data={isresultUpdate}
+        />
+      </>
+    </div>
   );
 };
 
