@@ -74,9 +74,10 @@ const GridShareReport = ({
     const result = ["Name|Phone|Mail|Country"];
 
     isDataF.forEach((row) => {
-      const combined = `${row.name}|${row.phone}|${row.mail}|${
-        row.country ?? ""
-      }`;
+      const combined = `${(row.name ?? "").trim()}|${(
+        row.phone ?? ""
+      ).trim()}|${(row.mail ?? "").trim()}|${(row.country ?? "").trim()}`;
+
       result.push(combined);
     });
     let dataToSend = JSON.stringify({

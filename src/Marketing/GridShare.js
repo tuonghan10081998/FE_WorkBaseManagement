@@ -241,11 +241,13 @@ const GridShare = ({
   }, [isGGSheet]);
   const ExportCsv = () => {
     const result = ["Name|Phone|Mail|Country"];
-
+    console.log(isDataF);
     isDataF.forEach((row) => {
-      const combined = `${row.name}|${row.phone}|${row.mail}|${
-        row.country ?? ""
-      }`;
+      const combined = `${(row.name ?? "").trim()}|${(
+        row.phone ?? ""
+      ).trim()}|${(row.mail ?? "").trim()}|${(row.country ?? "").trim()}`;
+
+      // console.log(combined);
       result.push(combined);
     });
     let dataToSend = JSON.stringify({
@@ -463,7 +465,7 @@ const GridShare = ({
                   style={{ backgroundColor: "rgb(174 217 91)", color: "#000" }}
                 >
                   <i class="fa-solid fa-file-export"></i>
-                  Export-csv
+                  Export
                 </button>
 
                 <button
