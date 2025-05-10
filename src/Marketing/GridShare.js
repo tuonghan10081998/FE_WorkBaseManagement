@@ -3,6 +3,7 @@ import ModalShare from "./ModalShare";
 import GoogleSheetForm from "./GoogleSheetForm ";
 import iziToast from "izitoast";
 import { Modal, Button } from "react-bootstrap";
+import ModalUpdate from "./ModalUpdate";
 import moment from "moment";
 const GridShare = ({
   dataNV,
@@ -26,12 +27,14 @@ const GridShare = ({
   const [isNVNew, setNVNew] = useState(null);
   const [isCheckAll, setCheckAll] = useState(1);
   const [isShow, setShow] = useState(false);
+  const [isShowU, setShowU] = useState(false);
   const [isDisable, setDisable] = useState(false);
   const [isCheckAllData, setCheckAllData] = useState(false);
   const [isGGSheet, setGGSheet] = useState(false);
   const [isShowDelete, setShowDelete] = useState(false);
   const [isSortNgay, setSortNgay] = useState(false);
   const [isSorCheck, setSortCheck] = useState(false);
+  const [isIDU, setIDU] = useState("");
   const [isDisableDelete, setDisableDelete] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
@@ -352,6 +355,10 @@ const GridShare = ({
       });
     }
   };
+  const handleUpdateData = (value) => {
+    setIDU(value);
+    setShowU(true);
+  };
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -570,11 +577,13 @@ const GridShare = ({
                               </p>
                             </td>
                             <td
+                              onClick={(e) => handleUpdateData(x.id)}
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "160px",
                                 color: "#F40925",
                                 fontWeight: "bold",
+                                cursor: "pointer",
                               }}
                             >
                               <p>{x.name}</p>
@@ -681,11 +690,11 @@ const GridShare = ({
                           style={{
                             whiteSpace: "nowrap",
                             fontWeight: "500",
-                            color: "REd",
                           }}
                           colSpan="2"
                         >
-                          Tổng data: <span>{isDataF.length}</span>
+                          Data:{" "}
+                          <span className="text-danger">{isDataF.length}</span>
                         </td>
                         <td
                           style={{
@@ -694,8 +703,8 @@ const GridShare = ({
                           }}
                           colSpan="1"
                         >
-                          Data đã chia:{" "}
-                          <span>
+                          Đã chia:{" "}
+                          <span className="text-danger">
                             {isDataF.filter((x) => x.isChecked === 1).length}
                           </span>
                         </td>
@@ -706,8 +715,8 @@ const GridShare = ({
                           }}
                           colSpan="1"
                         >
-                          Data chưa chia:{" "}
-                          <span>
+                          Chưa chia:{" "}
+                          <span className="text-danger">
                             {isDataF.filter((x) => x.isChecked === 0).length}
                           </span>
                         </td>
@@ -745,6 +754,13 @@ const GridShare = ({
         setData={setListData}
         setIsWeek={setIsWeek}
         setGGSheet={setGGSheet}
+      />
+      <ModalUpdate
+        setShowU={setShowU}
+        setIsShowU={isShowU}
+        data={listData}
+        setData={setListData}
+        setID={isIDU}
       />
       <Modal
         show={isShowDelete}

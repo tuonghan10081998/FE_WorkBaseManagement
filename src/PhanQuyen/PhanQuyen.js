@@ -9,8 +9,10 @@ import "../PhanQuyen/PhanQuyen.css";
 import iziToast from "izitoast";
 import Select from "react-select";
 import PQPositon from "./PQPositon";
+import PQIDGGSheet from "./PQIDGGSheet";
 const PhanQuyen = () => {
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [showPopup, setshowPopup] = useState(false);
   const [isNhanVienP, setNhanVienP] = useState("");
   const { setTitle, setIcon } = useContext(TitleContext);
@@ -29,6 +31,7 @@ const PhanQuyen = () => {
   const [isUserID, setUserID] = useState("");
   const [isPosition, setPosition] = useState("");
   const [isPositionA, setPositionA] = useState(false);
+  const [isGGSheet, setGGSheet] = useState([]);
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -50,6 +53,24 @@ const PhanQuyen = () => {
         label: "-- Tất cả --",
       });
       setOption(formattedOptions);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getIDGGSheet();
+  }, []);
+  const getIDGGSheet = async () => {
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/GetGGInfo`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setGGSheet(data);
     } catch (error) {
       console.error(error.message);
     }
@@ -370,6 +391,16 @@ const PhanQuyen = () => {
                   <i class="fa-solid fa-gamepad"></i>
                   Chức năng
                 </div>
+                {isUser === "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db" && (
+                  <div
+                    onClick={() => setTab(4)}
+                    className={`item-table ${isTab == 4 ? "active" : ""}`}
+                  >
+                    {" "}
+                    <i class="fa-solid fa-gamepad"></i>
+                    ID GGSheet
+                  </div>
+                )}
               </div>
               <div className={` ${isTab == 1 ? "d-flex" : "d-none"}`}>
                 <PQPhongBan
@@ -383,6 +414,9 @@ const PhanQuyen = () => {
               </div>
               <div className={` ${isTab == 3 ? "d-flex" : "d-none"}`}>
                 <PQRole isData={islstUserRole} onchange={handleCheckRole} />
+              </div>
+              <div className={` ${isTab == 4 ? "d-flex" : "d-none"}`}>
+                <PQIDGGSheet data={isGGSheet} setData={setGGSheet} />
               </div>
             </div>
           </div>
