@@ -689,7 +689,7 @@ const GridShare = ({
                         <td
                           style={{
                             whiteSpace: "nowrap",
-                            fontWeight: "500",
+                            fontWeight: "700",
                           }}
                           colSpan="2"
                         >
@@ -699,7 +699,7 @@ const GridShare = ({
                         <td
                           style={{
                             whiteSpace: "nowrap",
-                            fontWeight: "500",
+                            fontWeight: "700",
                           }}
                           colSpan="1"
                         >
@@ -711,7 +711,7 @@ const GridShare = ({
                         <td
                           style={{
                             whiteSpace: "nowrap",
-                            fontWeight: "500",
+                            fontWeight: "700",
                           }}
                           colSpan="1"
                         >

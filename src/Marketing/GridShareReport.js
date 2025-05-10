@@ -14,6 +14,7 @@ const GridShareReport = ({
   setIsShowS,
   setShowS,
   setIsRole,
+  setIsExport,
 }) => {
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
@@ -68,6 +69,42 @@ const GridShareReport = ({
     });
     setDataF(dataSort);
   };
+  useEffect(() => {
+    if (!setIsExport) return;
+    const result = ["Name|Phone|Mail|Country"];
+
+    isDataF.forEach((row) => {
+      const combined = `${row.name}|${row.phone}|${row.mail}|${
+        row.country ?? ""
+      }`;
+      result.push(combined);
+    });
+    let dataToSend = JSON.stringify({
+      ArrBody: result,
+    });
+    const url = `${process.env.REACT_APP_URL_API}MarketingData/export-csv`;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: dataToSend,
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const csvUrl = window.URL.createObjectURL(
+          new Blob([blob], { type: "text/plain" })
+        );
+        const a = document.createElement("a");
+        a.href = csvUrl;
+        a.download = "ExportedData.txt";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(csvUrl);
+        document.body.removeChild(a);
+      });
+  }, [setIsExport]);
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -101,7 +138,7 @@ const GridShareReport = ({
                         <td scope="col">Tên</td>
                         <td scope="col">SĐT</td>
                         <td scope="col">Mail</td>
-                        <td scope="col">MT4/MT5</td>
+
                         <td scope="col">Câu hỏi</td>
 
                         <td scope="col">Nguồn UTM</td>
@@ -110,6 +147,7 @@ const GridShareReport = ({
                         <td scope="col">Tên sales</td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Ftd</td>
+                        <td scope="col">MT4/MT5</td>
                         <td scope="col">Sàn trước đây</td>
 
                         <td scope="col">Sàn đầu tư</td>
@@ -205,16 +243,7 @@ const GridShareReport = ({
                             >
                               <p>{x.mail}</p>
                             </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "120px",
-                                color: "#0207F7",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              <p>{x.account}</p>
-                            </td>
+
                             <td
                               style={{
                                 whiteSpace: "nowrap",
@@ -275,6 +304,16 @@ const GridShareReport = ({
                               }}
                             >
                               <p>{!x.ftd ? "" : x.ftd.toLocaleString()}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "120px",
+                                color: "#0207F7",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <p>{x.account}</p>
                             </td>
                             <td
                               style={{
@@ -342,6 +381,35 @@ const GridShareReport = ({
                         );
                       })}
                     </tbody>
+                    <tfoot>
+                      <tr className="trtfdashboard">
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "700",
+                          }}
+                          colSpan="2"
+                        >
+                          Data:{" "}
+                          <span className="text-danger">{isDataF.length}</span>
+                        </td>
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "700",
+                          }}
+                          colSpan="1"
+                        ></td>
+                        <td
+                          style={{
+                            whiteSpace: "nowrap",
+                            fontWeight: "700",
+                          }}
+                          colSpan="1"
+                        ></td>
+                        <td colSpan="14"></td>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>

@@ -91,7 +91,8 @@ const StatusForm = ({ setIsShowS, setShowS, data }) => {
                       type="text"
                       value={count}
                       readOnly
-                      className="form-control w-25 ms-3 inputS text-danger"
+                      className="form-control w-25 ms-3 inputS text-danger "
+                      style={{ fontWeight: 700 }}
                     />
                   </div>
                 );
@@ -113,6 +114,7 @@ const StatusForm = ({ setIsShowS, setShowS, data }) => {
                   value={data.length}
                   readOnly
                   className="form-control w-25 ms-3 fw-semibold text-primary inputS"
+                  style={{ fontWeight: 700 }}
                 />
               </div>
             </form>

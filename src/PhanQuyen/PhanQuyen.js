@@ -397,7 +397,7 @@ const PhanQuyen = () => {
                     className={`item-table ${isTab == 4 ? "active" : ""}`}
                   >
                     {" "}
-                    <i class="fa-solid fa-gamepad"></i>
+                    <i class="fa-brands fa-google-drive"></i>
                     ID GGSheet
                   </div>
                 )}

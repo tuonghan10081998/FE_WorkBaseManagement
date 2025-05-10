@@ -42,6 +42,7 @@ const GGSheetForm = ({ setIsShowS, setShowS, data }) => {
                   value={data?.insertQuantity ?? 0}
                   readOnly
                   className="form-control w-25 ms-3 inputS text-danger"
+                  style={{ fontWeight: 700 }}
                 />
               </div>
               <div className="mb-3 d-flex align-items-center ">
@@ -58,6 +59,7 @@ const GGSheetForm = ({ setIsShowS, setShowS, data }) => {
                   value={data?.lstInputDuplicate.length ?? 0}
                   readOnly
                   className="form-control w-25 ms-3 inputS text-danger"
+                  style={{ fontWeight: 700 }}
                 />
               </div>
               <div className="mb-3 d-flex align-items-center">
@@ -74,6 +76,7 @@ const GGSheetForm = ({ setIsShowS, setShowS, data }) => {
                   value={data?.lstInputDuplicateDB.length ?? 0}
                   readOnly
                   className="form-control w-25 ms-3 inputS text-danger"
+                  style={{ fontWeight: 700 }}
                 />
               </div>
               <hr className="my-4" />
