@@ -426,6 +426,7 @@ const PhanQuyen = () => {
                   onchange={handleCheckRole}
                   setIsDataLeader={isUserLeader}
                   setOptionPBLeader={isOptionPBLeader}
+                  setID={isID}
                 />
               </div>
               <div className={` ${isTab == 4 ? "d-flex" : "d-none"}`}>

@@ -4,8 +4,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "../CongViecList/GridCV.css";
 import "../PhanQuyen/PhanQuyen.css";
-
-const PQRole = ({ isData, onchange, setIsDataLeader, setOptionPBLeader }) => {
+import ModalNVUserLeader from "./ModalNVUserLeader";
+const PQRole = ({
+  isData,
+  onchange,
+  setIsDataLeader,
+  setOptionPBLeader,
+  setID,
+}) => {
   const [isShow, setShow] = useState(false);
 
   return (
@@ -46,9 +52,9 @@ const PQRole = ({ isData, onchange, setIsDataLeader, setOptionPBLeader }) => {
                     >
                       <div className="d-flex justify-content-between gap-2 px-2">
                         <div> {row.role}</div>
-                        {/* {row.roleID === "UnderLeader" && (
+                        {row.roleID === "UnderLeader" && row.isChecked == 1 && (
                           <div
-                            // onClick={(e) => handleClick(x.id)}
+                            onClick={(e) => setShow(true)}
                             style={{
                               display: "flex",
                               justifyContent: "center",
@@ -63,7 +69,7 @@ const PQRole = ({ isData, onchange, setIsDataLeader, setOptionPBLeader }) => {
                               className="fa-solid fa-user-pen" // ⚠️ class -> className
                             ></i>
                           </div>
-                        )} */}
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -73,6 +79,13 @@ const PQRole = ({ isData, onchange, setIsDataLeader, setOptionPBLeader }) => {
           </table>
         </div>
       </div>
+      <ModalNVUserLeader
+        setShow={setShow}
+        setIsShow={isShow}
+        dataNV={setIsDataLeader}
+        dataOption={setOptionPBLeader}
+        setID={setID}
+      />
     </div>
   );
 };
