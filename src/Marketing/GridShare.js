@@ -103,7 +103,9 @@ const GridShare = ({
       const matchChienDich =
         setChienDich === "all"
           ? true
-          : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
+          : (x.utmCampaign ?? "")
+              .toUpperCase()
+              .includes(setChienDich.toUpperCase());
 
       const matchReceiver =
         x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
@@ -133,7 +135,9 @@ const GridShare = ({
       const matchChienDich =
         setChienDich === "all"
           ? true
-          : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
+          : (x.utmCampaign ?? "")
+              .toUpperCase()
+              .includes(setChienDich.toUpperCase());
 
       const matchTrangThai =
         setTrangThai === "all" ? true : x.status === setTrangThai;

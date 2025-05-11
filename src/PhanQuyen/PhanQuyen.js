@@ -32,6 +32,9 @@ const PhanQuyen = () => {
   const [isPosition, setPosition] = useState("");
   const [isPositionA, setPositionA] = useState(false);
   const [isGGSheet, setGGSheet] = useState([]);
+  const [isOptionPBLeader, setOptionPBLeader] = useState([]);
+  const [isUserLeader, setUserLeader] = useState([]);
+
   const [isCheckGGSheet, setCheckGGSheet] = useState(null);
   useEffect(() => {
     getPhongBan();
@@ -54,6 +57,7 @@ const PhanQuyen = () => {
         label: "-- Tất cả --",
       });
       setOption(formattedOptions);
+      setOptionPBLeader(formattedOptions);
     } catch (error) {
       console.error(error.message);
     }
@@ -70,7 +74,6 @@ const PhanQuyen = () => {
       }
 
       const data = await response.json();
-      console.log(data);
       setGGSheet(data);
     } catch (error) {
       console.error(error.message);
@@ -116,6 +119,7 @@ const PhanQuyen = () => {
       setlstUserDep(data.lstUserDep);
       setlstUserPage(data.lstUserPage);
       setlstUserRole(data.lstUserRole);
+      setUserLeader(data.lstUserLeader);
     } catch (error) {
       console.error(error.message);
     }
@@ -417,7 +421,12 @@ const PhanQuyen = () => {
                 <PQModule isData={islstUserPage} onchange={handleCheckModule} />
               </div>
               <div className={` ${isTab == 3 ? "d-flex" : "d-none"}`}>
-                <PQRole isData={islstUserRole} onchange={handleCheckRole} />
+                <PQRole
+                  isData={islstUserRole}
+                  onchange={handleCheckRole}
+                  setIsDataLeader={isUserLeader}
+                  setOptionPBLeader={isOptionPBLeader}
+                />
               </div>
               <div className={` ${isTab == 4 ? "d-flex" : "d-none"}`}>
                 <PQIDGGSheet

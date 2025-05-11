@@ -5,7 +5,9 @@ import "bootstrap/dist/js/bootstrap.js";
 import "../CongViecList/GridCV.css";
 import "../PhanQuyen/PhanQuyen.css";
 
-const PQRole = ({ isData, onchange }) => {
+const PQRole = ({ isData, onchange, setIsDataLeader, setOptionPBLeader }) => {
+  const [isShow, setShow] = useState(false);
+
   return (
     <div className="grid-table w-100" style={{ padding: "12px" }}>
       <div className="itemtableNamePQ">
@@ -42,7 +44,27 @@ const PQRole = ({ isData, onchange }) => {
                       }}
                       className=""
                     >
-                      {row.role}
+                      <div className="d-flex justify-content-between gap-2 px-2">
+                        <div> {row.role}</div>
+                        {/* {row.roleID === "UnderLeader" && (
+                          <div
+                            // onClick={(e) => handleClick(x.id)}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <i
+                              style={{
+                                fontSize: "18px",
+                                cursor: "pointer",
+                              }}
+                              className="fa-solid fa-user-pen" // ⚠️ class -> className
+                            ></i>
+                          </div>
+                        )} */}
+                      </div>
                     </td>
                   </tr>
                 );

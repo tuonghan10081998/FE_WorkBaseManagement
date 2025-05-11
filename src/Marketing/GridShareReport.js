@@ -30,7 +30,9 @@ const GridShareReport = ({
       const matchChienDich =
         setChienDich === "all"
           ? true
-          : x.utmCampaign.toUpperCase().includes(setChienDich.toUpperCase());
+          : (x.utmCampaign ?? "")
+              .toUpperCase()
+              .includes(setChienDich.toUpperCase());
 
       const matchReceiver =
         setNhanVien === "all"
