@@ -24,6 +24,7 @@ const GridShareReport = ({
   const [isNameKH, setNameKH] = useState("");
   const [isSortNgay, setSortNgay] = useState(false);
   const [ispreBroker, setpreBroker] = useState(false);
+  const [isBroker, setBroker] = useState(false);
   useEffect(() => {
     const dataF = listData?.filter((x) => {
       const matchChienDich =
@@ -42,7 +43,8 @@ const GridShareReport = ({
         (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        (x.preBroker ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
+        (x.preBroker ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.broker ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
       return matchChienDich && matchReceiver && matchTrangThai && matchSearch;
     });
 
@@ -70,11 +72,11 @@ const GridShareReport = ({
     });
     setDataF(dataSort);
   };
-  const handleSortPreBroker = (value) => {
+  const handleSortPreBroker = (value, valueSort) => {
     const sortedData = [...isDataF].sort((a, b) =>
       value
-        ? (a.preBroker || "").localeCompare(b.preBroker || "")
-        : (b.preBroker || "").localeCompare(a.preBroker || "")
+        ? (a[valueSort] || "").localeCompare(b[valueSort] || "")
+        : (b[valueSort] || "").localeCompare(a[valueSort] || "")
     );
     setDataF(sortedData);
   };
@@ -164,14 +166,23 @@ const GridShareReport = ({
                           Sàn trước đây
                           <i
                             onClick={() => {
-                              setSortNgay(!ispreBroker);
-                              handleSortPreBroker(!ispreBroker);
+                              setpreBroker(!ispreBroker);
+                              handleSortPreBroker(!ispreBroker, "preBroker");
                             }}
-                            class="fa-solid fa-sort icon-sort"
+                            className="fa-solid fa-sort icon-sort"
                           ></i>
                         </td>
 
-                        <td scope="col">Sàn đầu tư</td>
+                        <td scope="col">
+                          Sàn đầu tư
+                          <i
+                            onClick={() => {
+                              setBroker(!isBroker);
+                              handleSortPreBroker(!isBroker, "broker");
+                            }}
+                            className="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
                         <td scope="col">Ngày chốt</td>
                         <td scope="col">Ghi chú</td>
                         <td style={{ width: "100px" }} scope="col">
