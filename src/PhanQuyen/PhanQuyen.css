@@ -312,6 +312,13 @@
   border-radius: 5px;
   background: #e3fdcc;
 }
+.actionGGSheet {
+  justify-content: space-around !important;
+}
+.actionGGSheet i {
+  font-size: 18px;
+  cursor: pointer;
+}
 @media (max-width: 1400px) {
   .custom-modal-dialog {
     max-width: 70% !important;

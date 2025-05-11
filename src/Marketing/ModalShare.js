@@ -33,9 +33,13 @@ const ModalShare = ({
           item.isChecked !== 1 &&
           (setChienDich === "all" || item.utmCampaign === setChienDich) &&
           (setTrangThai === "all" ? true : item.status === setTrangThai) &&
-          (item.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-            item.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-            item.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+          ((item.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            (item.phone ?? "")
+              .toUpperCase()
+              .includes(setTimKiem.toUpperCase()) ||
+            (item.mail ?? "")
+              .toUpperCase()
+              .includes(setTimKiem.toUpperCase())) &&
           (setIsSelectData.toString() === "1"
             ? true
             : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
@@ -79,9 +83,9 @@ const ModalShare = ({
         x.isChecked === 1 &&
         (setChienDich === "all" || x.utmCampaign === setChienDich) &&
         (setTrangThai === "all" ? true : x.status === setTrangThai) &&
-        (x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-          x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-          x.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+        ((x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+          (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+          (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase())) &&
         (setIsSelectData.toString() === "1"
           ? true
           : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
@@ -151,9 +155,13 @@ const ModalShare = ({
           item.isChecked !== 1 &&
           (setChienDich === "all" || item.utmCampaign === setChienDich) &&
           (setTrangThai === "all" ? true : item.status === setTrangThai) &&
-          (item.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-            item.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-            item.mail.toUpperCase().includes(setTimKiem.toUpperCase())) &&
+          ((item.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+            (item.phone ?? "")
+              .toUpperCase()
+              .includes(setTimKiem.toUpperCase()) ||
+            (item.mail ?? "")
+              .toUpperCase()
+              .includes(setTimKiem.toUpperCase())) &&
           (setIsSelectData.toString() === "1"
             ? true
             : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
@@ -236,13 +244,13 @@ const ModalShare = ({
                                     (setTrangThai === "all"
                                       ? true
                                       : item.status === setTrangThai) &&
-                                    (item.name
+                                    ((item.name ?? "")
                                       .toUpperCase()
                                       .includes(setTimKiem.toUpperCase()) ||
-                                      item.phone
+                                      (item.phone ?? "")
                                         .toUpperCase()
                                         .includes(setTimKiem.toUpperCase()) ||
-                                      item.mail
+                                      (item.mail ?? "")
                                         .toUpperCase()
                                         .includes(setTimKiem.toUpperCase())) &&
                                     (setIsSelectData.toString() === "1"

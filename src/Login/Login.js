@@ -138,6 +138,7 @@ const Login = () => {
     setPassword("");
     setConfirmPassword("");
     setHoTen("");
+    setTele("");
     setAgree(false);
   };
 
@@ -157,7 +158,6 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     if (!isRegister) {
-      setDisable(true);
       isForget && regicter();
       !isForget && handleChangePW();
     }
@@ -282,7 +282,6 @@ const Login = () => {
         message: `Vui lòng điền đầy đủ thông tin .`,
         position: "topRight",
       });
-      setDisable(false);
       return;
     }
 
@@ -292,7 +291,6 @@ const Login = () => {
         message: `Vui lòng nhập đúng mật khẩu .`,
         position: "topRight",
       });
-      setDisable(false);
       return;
     }
     const object = {
@@ -303,6 +301,7 @@ const Login = () => {
       telegram: isTele,
       department: isPhongBanValue.value.toString(),
     };
+    setDisable(true);
     PostRegister(object);
   };
   const PostRegister = async (object) => {

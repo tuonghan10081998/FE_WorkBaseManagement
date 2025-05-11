@@ -111,9 +111,9 @@ const GridShare = ({
       const matchTrangThai =
         setTrangThai === "all" ? true : x.status === setTrangThai;
       const matchSearch =
-        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
+        (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
       const matchShareData =
         setIsSelectData.toString() === "1"
           ? true
@@ -138,9 +138,9 @@ const GridShare = ({
       const matchTrangThai =
         setTrangThai === "all" ? true : x.status === setTrangThai;
       const matchSearch =
-        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
+        (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
       const matchShareData =
         setIsSelectData.toString() === "1"
           ? true
@@ -243,11 +243,12 @@ const GridShare = ({
     const result = ["Name|Phone|Mail|Country"];
     console.log(isDataF);
     isDataF.forEach((row) => {
-      const combined = `${(row.name ?? "").trim()}|${(
-        row.phone ?? ""
-      ).trim()}|${(row.mail ?? "").trim()}|${(row.country ?? "").trim()}`;
+      const combined = `${(row.name ?? "").trim() || "null"}|${
+        (row.phone ?? "").trim() || "null"
+      }|${(row.mail ?? "").trim() || "null"}|${
+        (row.country ?? "").trim() || "null"
+      }`;
 
-      // console.log(combined);
       result.push(combined);
     });
     let dataToSend = JSON.stringify({

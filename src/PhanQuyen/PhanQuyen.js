@@ -32,6 +32,7 @@ const PhanQuyen = () => {
   const [isPosition, setPosition] = useState("");
   const [isPositionA, setPositionA] = useState(false);
   const [isGGSheet, setGGSheet] = useState([]);
+  const [isCheckGGSheet, setCheckGGSheet] = useState(null);
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -236,6 +237,9 @@ const PhanQuyen = () => {
       )
     );
   }, [isPositionA]);
+  useEffect(() => {
+    if (isCheckGGSheet !== null) getIDGGSheet();
+  }, [isCheckGGSheet]);
   return (
     <div className="py-2 px-2 contentItem">
       <div className="row g-2">
@@ -416,7 +420,11 @@ const PhanQuyen = () => {
                 <PQRole isData={islstUserRole} onchange={handleCheckRole} />
               </div>
               <div className={` ${isTab == 4 ? "d-flex" : "d-none"}`}>
-                <PQIDGGSheet data={isGGSheet} setData={setGGSheet} />
+                <PQIDGGSheet
+                  data={isGGSheet}
+                  setData={setGGSheet}
+                  setCheckGGSheet={setCheckGGSheet}
+                />
               </div>
             </div>
           </div>

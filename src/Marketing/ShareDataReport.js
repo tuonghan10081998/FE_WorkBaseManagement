@@ -25,7 +25,7 @@ const ShareDataReport = () => {
   const [isSearch, setSearch] = useState("");
   const [isDataNV, setDataNV] = useState([]);
   const [isShowS, setShowS] = useState(false);
-  const [isExport, setExport] = useState(false);
+  const [isExport, setExport] = useState(null);
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng

@@ -23,6 +23,7 @@ const GridShareReport = ({
   const [isDataF, setDataF] = useState([]);
   const [isNameKH, setNameKH] = useState("");
   const [isSortNgay, setSortNgay] = useState(false);
+  const [ispreBroker, setpreBroker] = useState(false);
   useEffect(() => {
     const dataF = listData?.filter((x) => {
       const matchChienDich =
@@ -38,10 +39,10 @@ const GridShareReport = ({
       const matchTrangThai =
         setTrangThai === "all" ? true : x.status === setTrangThai;
       const matchSearch =
-        x.name.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.phone.toUpperCase().includes(setTimKiem.toUpperCase()) ||
-        x.mail.toUpperCase().includes(setTimKiem.toUpperCase());
-
+        (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
+        (x.preBroker ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
       return matchChienDich && matchReceiver && matchTrangThai && matchSearch;
     });
 
@@ -69,14 +70,24 @@ const GridShareReport = ({
     });
     setDataF(dataSort);
   };
+  const handleSortPreBroker = (value) => {
+    const sortedData = [...isDataF].sort((a, b) =>
+      value
+        ? (a.preBroker || "").localeCompare(b.preBroker || "")
+        : (b.preBroker || "").localeCompare(a.preBroker || "")
+    );
+    setDataF(sortedData);
+  };
   useEffect(() => {
     if (!setIsExport) return;
     const result = ["Name|Phone|Mail|Country"];
 
     isDataF.forEach((row) => {
-      const combined = `${(row.name ?? "").trim()}|${(
-        row.phone ?? ""
-      ).trim()}|${(row.mail ?? "").trim()}|${(row.country ?? "").trim()}`;
+      const combined = `${(row.name ?? "").trim() || "null"}|${
+        (row.phone ?? "").trim() || "null"
+      }|${(row.mail ?? "").trim() || "null"}|${
+        (row.country ?? "").trim() || "null"
+      }`;
 
       result.push(combined);
     });
@@ -149,7 +160,16 @@ const GridShareReport = ({
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Ftd</td>
                         <td scope="col">MT4/MT5</td>
-                        <td scope="col">Sàn trước đây</td>
+                        <td scope="col">
+                          Sàn trước đây
+                          <i
+                            onClick={() => {
+                              setSortNgay(!ispreBroker);
+                              handleSortPreBroker(!ispreBroker);
+                            }}
+                            class="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
 
                         <td scope="col">Sàn đầu tư</td>
                         <td scope="col">Ngày chốt</td>
