@@ -59,6 +59,7 @@ const Project = () => {
   const [isRole, setRole] = useState("");
   const [isopera, setopera] = useState(true);
   const [isLeader, setLeader] = useState("");
+  const [isUserLeader, setUserLeader] = useState("");
   useEffect(() => {
     !isUser && navigate("/");
   }, [isUser]);
@@ -86,6 +87,18 @@ const Project = () => {
           .map((dep) => dep.dep_Code) // Lấy mã phòng ban
           .join(",");
         setLeader(selectedDepCodes);
+      }
+      if (currentHighestRole === "UnderLeader") {
+        const currentUserID = isUser;
+        const checkedUserIDs = data.lstUserLeader
+          .filter((x) => x.isChecked === 1)
+          .map((x) => x.userID);
+        const allUserIDs = [
+          currentUserID,
+          ...checkedUserIDs.filter((id) => id !== currentUserID),
+        ].join(",");
+
+        setUserLeader(allUserIDs);
       }
       currentHighestRole === "Member" && setopera(false);
       setRole(currentHighestRole);
@@ -130,7 +143,10 @@ const Project = () => {
 
       isRole === "Leader" &&
         (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
-
+      isRole === "UnderLeader" &&
+        (filteredData = staffData.filter((x) =>
+          isUserLeader.includes(x.userID)
+        ));
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -210,14 +226,26 @@ const Project = () => {
   useEffect(() => {
     let filteredData = data;
     if (isRole === "") return;
-    isRole !== "Administrator" &&
-      (filteredData = data.filter((x) => {
-        return (
-          x.idImplementer?.includes(isUser) ||
-          (isRole === "Leader" && x.idRequester?.includes(isUser)) ||
-          x.idResponsible?.includes(isUser)
-        );
-      }));
+    if (isRole === "Member") {
+      filteredData = filteredData.filter((x) =>
+        x.idImplementer?.includes(isUser)
+      );
+    }
+    if (isRole === "UnderLeader") {
+      let exactCodes = isUserLeader.split(",");
+      filteredData = filteredData.filter(
+        (x) =>
+          exactCodes.includes(x.idImplementer) ||
+          exactCodes.includes(x.idRequester) ||
+          exactCodes.includes(x.idResponsible)
+      );
+    }
+    if (isRole === "Leader") {
+      let exactCodes = isLeader.split(",");
+      filteredData = filteredData.filter((x) =>
+        exactCodes.includes(x.dep_Code)
+      );
+    }
 
     if (isPhongBanValue != "All")
       filteredData = filteredData.filter((x) =>
@@ -513,6 +541,7 @@ const Project = () => {
             setEdit={isEdit}
             setDataNV={isDataNVTT}
             setRole={isRole}
+            setisUserLeader={isUserLeader}
           />
         </Modal.Body>
       </Modal>

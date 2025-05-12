@@ -22,6 +22,7 @@ const AddTask = ({
   setDataAddTask,
   setEdit,
   setRole,
+  setisUserLeader,
 }) => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDepCode, setDepCode] = useState("");
@@ -70,6 +71,7 @@ const AddTask = ({
   const [messageTN, setMessageTN] = useState("");
   const [isFile, setFile] = useState("");
   const [fileName, setFileName] = useState("");
+  const [isUserLeader, setUserLeader] = useState("");
   const inputRef = useState(null);
   useEffect(() => {
     if (selectRef2.current) {
@@ -94,8 +96,12 @@ const AddTask = ({
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
-      setRole !== "Administrator" &&
+      setRole === "Leader" &&
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
+
+      setRole === "UnderLeader" &&
+        (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
+
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [
@@ -127,12 +133,10 @@ const AddTask = ({
       .split(" @") // Tách mảng theo dấu " @"
       .map((name) => name.replace(/^@/, "").trim()) // Loại bỏ dấu @ và khoảng trắng thừa
       .filter((name) => name !== "");
-    console.log(namesArrayTN);
     const dataNhanVienTN = setDataNV.filter((user) => {
       return namesArrayTN.includes(user.fullName);
     });
     const arrNvTN = dataNhanVienTN.map((user) => user.userID).join(", ");
-    console.log(arrNvTN);
     const arrPost = [];
     if (isWorkName == "") {
       handleNotifi("nhập tên công việc");
@@ -142,8 +146,9 @@ const AddTask = ({
       handleNotifi("nhập mã ticket");
       return;
     }
+    console.log(arrNv);
     const uniqueArray = [...new Set(arrNv.filter((item) => item !== ""))];
-
+    console.log(uniqueArray);
     if (uniqueArray == null || uniqueArray.length == 0) {
       handleNotifi("chọn nhân viên ");
       return;
@@ -195,10 +200,14 @@ const AddTask = ({
   const PostSave = async (arrPost, namePost) => {
     const formData = new FormData();
     for (const key in arrPost) {
-      formData.append(key, arrPost[key]);
+      if (key === "lstIDImplementer") {
+        let lstIDImplementerA = arrPost[key];
+        lstIDImplementerA.forEach((value, index) => {
+          formData.append(`lstIDImplementer[${index}]`, value);
+        });
+      } else formData.append(key, arrPost[key]);
     }
     formData.append("File", isFile);
-
     const request = new Request(
       `${process.env.REACT_APP_URL_API}Work/Post?action=${namePost}`,
       {
@@ -228,6 +237,7 @@ const AddTask = ({
         });
       }
     } catch (error) {
+      setDisable(false);
       iziToast.error({
         title: "Error",
         message: "Lỗi khi gọi API",

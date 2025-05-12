@@ -26,6 +26,7 @@ const ShareDataReport = () => {
   const [isDataNV, setDataNV] = useState([]);
   const [isShowS, setShowS] = useState(false);
   const [isExport, setExport] = useState(null);
+  const [isUserLeader, setUserLeader] = useState("");
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -58,6 +59,18 @@ const ShareDataReport = () => {
             (item) => item.roleID === roleID && item.isChecked === 1
           )
         ) || "Member";
+      if (currentHighestRole === "UnderLeader") {
+        const currentUserID = isUser;
+        const checkedUserIDs = data.lstUserLeader
+          .filter((x) => x.isChecked === 1)
+          .map((x) => x.userID);
+        const allUserIDs = [
+          currentUserID,
+          ...checkedUserIDs.filter((id) => id !== currentUserID),
+        ].join(",");
+
+        setUserLeader(allUserIDs);
+      }
       const priorityPage = data.lstUserPage.some(
         (item) => item.pageID === "MKT" && item.isChecked === 1
       );
@@ -128,7 +141,10 @@ const ShareDataReport = () => {
       (filteredData = filteredData.filter((x) =>
         isLeader.includes(x.dep_Code)
       ));
-
+    isRole === "UnderLeader" &&
+      (filteredData = filteredData.filter((x) =>
+        isUserLeader.includes(x.userID)
+      ));
     let formattedOptions = filteredData.map((x) => ({
       value: x.userID,
       label: x.fullName,
@@ -171,6 +187,7 @@ const ShareDataReport = () => {
   };
 
   const getData = async () => {
+    if (isRole === "") return;
     const url = `${process.env.REACT_APP_URL_API}MarketingData/Get?action=getview&para1=${dateRange.from}&para2=${dateRange.to}`;
     try {
       const response = await fetch(url);
@@ -179,14 +196,35 @@ const ShareDataReport = () => {
       }
 
       const getTable = await response.json();
-      setData(getTable);
+      let filteredData = getTable;
+      if (isRole === "Member") {
+        filteredData = filteredData.filter((x) =>
+          x.receiverID?.includes(isUser)
+        );
+      }
+      if (isRole === "UnderLeader") {
+        let exactCodes = isUserLeader.split(",");
+        filteredData = filteredData.filter(
+          (x) =>
+            exactCodes.includes(x.receiverID) ||
+            exactCodes.includes(x.oldReceiverID)
+        );
+      }
+      if (isRole === "Leader") {
+        let exactCodes = isLeader.split(",");
+        filteredData = filteredData.filter((x) =>
+          exactCodes.includes(x.dep_Code)
+        );
+      }
+
+      setData(filteredData);
     } catch (error) {
       console.error(error.message);
     }
   };
   useEffect(() => {
     getData();
-  }, [dateRange]);
+  }, [dateRange, isRole]);
   useEffect(() => {
     if (!isData?.length) return;
     var dataF = isData.filter((x) => {

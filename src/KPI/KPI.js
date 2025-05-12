@@ -43,6 +43,7 @@ const KPI = () => {
   const [isDataMonth, setDataMonth] = useState([]);
   const [isDataMonthF, setDataMonthF] = useState([]);
   const [trigger, setTrigger] = useState(false);
+  const [isUserLeader, setUserLeader] = useState("");
   const handleClickNKPI = (e) => {
     e.preventDefault();
     setTrigger((prev) => !prev); // Mỗi lần click đổi trạng thái
@@ -70,6 +71,18 @@ const KPI = () => {
           .map((dep) => dep.dep_Code) // Lấy mã phòng ban
           .join(",");
         setLeader(selectedDepCodes);
+      }
+      if (currentHighestRole === "UnderLeader") {
+        const currentUserID = isUser;
+        const checkedUserIDs = data.lstUserLeader
+          .filter((x) => x.isChecked === 1)
+          .map((x) => x.userID);
+        const allUserIDs = [
+          currentUserID,
+          ...checkedUserIDs.filter((id) => id !== currentUserID),
+        ].join(",");
+
+        setUserLeader(allUserIDs);
       }
       currentHighestRole === "Member" && setopera(false);
       setRole(currentHighestRole);
@@ -122,6 +135,10 @@ const KPI = () => {
       isRole === "Leader" &&
         (filteredData = staffData.filter((x) => isLeader.includes(x.dep_Code)));
 
+      isRole === "UnderLeader" &&
+        (filteredData = staffData.filter((x) =>
+          isUserLeader.includes(x.userID)
+        ));
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);

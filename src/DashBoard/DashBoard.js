@@ -108,6 +108,7 @@ const Dashboard = () => {
   const [isrevenue_Total, setrevenue_Total] = useState([]);
   const [isdeps_RevenueDetail, setdeps_RevenueDetail] = useState([]);
   const [isdep_Detail, setdep_Detail] = useState([]);
+  const [isUserLeader, setUserLeader] = useState("");
   const [dateRange, setDateRange] = useState({
     from: moment().startOf("month").format("YYYY-MM-DD"), // Ngày đầu tháng
     to: moment().endOf("month").format("YYYY-MM-DD"), // Ngày cuối tháng
@@ -143,6 +144,18 @@ const Dashboard = () => {
           .map((dep) => dep.dep_Code) // Lấy mã phòng ban
           .join(",");
         setLeader(selectedDepCodes);
+      }
+      if (currentHighestRole === "UnderLeader") {
+        const currentUserID = isUser;
+        const checkedUserIDs = data.lstUserLeader
+          .filter((x) => x.isChecked === 1)
+          .map((x) => x.userID);
+        const allUserIDs = [
+          currentUserID,
+          ...checkedUserIDs.filter((id) => id !== currentUserID),
+        ].join(",");
+
+        setUserLeader(allUserIDs);
       }
       currentHighestRole === "Member" && setopera(false);
       setRole(currentHighestRole);

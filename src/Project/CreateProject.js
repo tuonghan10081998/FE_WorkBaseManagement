@@ -22,6 +22,7 @@ const CreateProject = ({
   setDataAddTask,
   setEdit,
   setRole,
+  setisUserLeader,
 }) => {
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDepCode, setDepCode] = useState("");
@@ -93,8 +94,10 @@ const CreateProject = ({
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
-      setRole !== "Administrator" &&
+      setRole === "Leader" &&
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
+      setRole === "UnderLeader" &&
+        (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [

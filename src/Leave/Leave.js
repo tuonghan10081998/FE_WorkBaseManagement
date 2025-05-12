@@ -30,6 +30,7 @@ const Leave = () => {
   const [isdataF, setDataF] = useState([]);
   const [isopera, setopera] = useState(true);
   const [isLeader, setLeader] = useState("");
+  const [isUserLeader, setUserLeader] = useState("");
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -52,6 +53,18 @@ const Leave = () => {
           .map((dep) => dep.dep_Code) // Lấy mã phòng ban
           .join(",");
         setLeader(selectedDepCodes);
+      }
+      if (currentHighestRole === "UnderLeader") {
+        const currentUserID = isUser;
+        const checkedUserIDs = data.lstUserLeader
+          .filter((x) => x.isChecked === 1)
+          .map((x) => x.userID);
+        const allUserIDs = [
+          currentUserID,
+          ...checkedUserIDs.filter((id) => id !== currentUserID),
+        ].join(",");
+
+        setUserLeader(allUserIDs);
       }
       currentHighestRole === "Member" && setopera(false);
       setRole(currentHighestRole);
@@ -133,6 +146,10 @@ const Leave = () => {
           isLeader.includes(x.dep_Code)
         ));
 
+      isRole === "UnderLeader" &&
+        (filteredData = staffData.filter((x) =>
+          isUserLeader.includes(x.userID)
+        ));
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -185,6 +202,14 @@ const Leave = () => {
 
     isRole === "Leader" &&
       (filteredData = data.filter((x) => isDepCode?.includes(x.dep_Code)));
+
+    if (isRole === "UnderLeader") {
+      let exactCodes = isUserLeader.split(",");
+      filteredData = filteredData.filter(
+        (x) =>
+          exactCodes.includes(x.idRequester) || exactCodes.includes(x.idManager)
+      );
+    }
 
     if (isPhongBanValue != "All")
       filteredData = filteredData.filter((x) =>
