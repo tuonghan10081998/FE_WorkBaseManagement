@@ -59,6 +59,13 @@ const ShareDataReport = () => {
             (item) => item.roleID === roleID && item.isChecked === 1
           )
         ) || "Member";
+      if (currentHighestRole === "Leader") {
+        const selectedDepCodes = data.lstUserDep
+          .filter((dep) => dep.isChecked === 1) // Lọc những phòng ban được chọn
+          .map((dep) => dep.dep_Code) // Lấy mã phòng ban
+          .join(",");
+        setLeader(selectedDepCodes);
+      }
       if (currentHighestRole === "UnderLeader") {
         const currentUserID = isUser;
         const checkedUserIDs = data.lstUserLeader
@@ -71,6 +78,7 @@ const ShareDataReport = () => {
 
         setUserLeader(allUserIDs);
       }
+
       const priorityPage = data.lstUserPage.some(
         (item) => item.pageID === "MKT" && item.isChecked === 1
       );
@@ -202,6 +210,7 @@ const ShareDataReport = () => {
 
       const getTable = await response.json();
       let filteredData = getTable;
+      console.log(isRole);
       if (isRole === "Member") {
         filteredData = filteredData.filter((x) =>
           x.receiverID?.includes(isUser)
@@ -217,6 +226,7 @@ const ShareDataReport = () => {
       }
       if (isRole === "Leader") {
         let exactCodes = isLeader.split(",");
+        console.log(exactCodes);
         filteredData = filteredData.filter((x) =>
           exactCodes.includes(x.dep_Code)
         );
