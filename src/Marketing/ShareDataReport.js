@@ -101,10 +101,13 @@ const ShareDataReport = () => {
       }
 
       const data = await response.json();
-      const formattedOptions = data.map((dep) => ({
-        value: dep.dep_Code,
-        label: dep.dep_Name,
-      }));
+      const formattedOptions = [
+        { value: "all", label: " Tất cả " },
+        ...data.map((x) => ({
+          value: x.dep_Code,
+          label: x.dep_Name,
+        })),
+      ];
 
       setOption(formattedOptions);
     } catch (error) {
@@ -132,7 +135,9 @@ const ShareDataReport = () => {
 
   useEffect(() => {
     if (!isDataNV?.length || !selectedPB?.value) return;
-    let filteredData = isDataNV.filter((x) => x.dep_Code === selectedPB.value);
+    let filteredData = isDataNV;
+    if (selectedPB.value !== "all")
+      filteredData = isDataNV.filter((x) => x.dep_Code === selectedPB.value);
 
     isRole === "Member" &&
       (filteredData = filteredData.filter((x) => x.userID == isUser));
@@ -216,7 +221,6 @@ const ShareDataReport = () => {
           exactCodes.includes(x.dep_Code)
         );
       }
-
       setData(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -230,7 +234,9 @@ const ShareDataReport = () => {
     var dataF = isData.filter((x) => {
       const matchReceiver =
         selectedNV?.value === "all"
-          ? x.dep_Code === selectedPB?.value
+          ? selectedPB?.value === "all"
+            ? true
+            : x.dep_Code === selectedPB?.value
           : x.receiverID === selectedNV?.value;
 
       return matchReceiver;

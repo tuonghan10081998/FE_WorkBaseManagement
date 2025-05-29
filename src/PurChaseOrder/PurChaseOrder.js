@@ -30,6 +30,7 @@ const PurChaseOrder = () => {
   const [isCheckSave, setCheckSave] = useState(false);
   const [isPhongBanValue, setPhongBanValue] = useState("");
   const [isPhongBan, setPhongBan] = useState(null);
+  const [isUserLeader, setUserLeader] = useState("");
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {

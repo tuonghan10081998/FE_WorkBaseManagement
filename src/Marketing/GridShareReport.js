@@ -36,7 +36,9 @@ const GridShareReport = ({
 
       const matchReceiver =
         setNhanVien === "all"
-          ? x.dep_Code === setPhongBan
+          ? setPhongBan === "all"
+            ? true
+            : x.dep_Code === setPhongBan
           : x.receiverID === setNhanVien;
 
       const matchTrangThai =
@@ -161,6 +163,7 @@ const GridShareReport = ({
                         <td scope="col">Chiến dịch UTM</td>
                         <td scope="col">Quốc gia</td>
                         <td scope="col">Tên sales</td>
+                        <td scope="col">Ngày nhận</td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Ftd</td>
                         <td scope="col">MT4/MT5</td>
@@ -202,22 +205,10 @@ const GridShareReport = ({
                             }}
                           >
                             <td style={{ whiteSpace: "nowrap" }}>
-                              <p
-                                style={{
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {index + 1}
-                              </p>
+                              <p title={index + 1}>{index + 1}</p>
                             </td>
                             <td style={{ whiteSpace: "nowrap" }}>
-                              <p
-                                style={{
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {x.date}
-                              </p>
+                              <p title={x.date}>{x.date}</p>
                             </td>
                             <td
                               style={{
@@ -237,24 +228,16 @@ const GridShareReport = ({
                                   cursor: "pointer",
                                 }}
                                 className="d-flex  justify-content-around gap-2 px-2"
+                                title={x.name}
                               >
-                                <p>{x.name}</p>
+                                <p title={x.name}>{x.name}</p>
                                 <div
                                   style={{
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
                                   }}
-                                >
-                                  {/* <i
-                                    style={{
-                                      fontSize: "15px",
-                                      cursor: "pointer",
-                                      color: "#743abb",
-                                    }}
-                                    className="fa-solid fa-clock-rotate-left" // ⚠️ class -> className
-                                  ></i> */}
-                                </div>
+                                ></div>
                               </div>
                             </td>
                             <td
@@ -265,7 +248,7 @@ const GridShareReport = ({
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{x.phone}</p>
+                              <p title={x.phone}>{x.phone}</p>
                             </td>
                             <td
                               style={{
@@ -275,7 +258,7 @@ const GridShareReport = ({
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{x.mail}</p>
+                              <p title={x.mail}>{x.mail}</p>
                             </td>
 
                             <td
@@ -284,7 +267,7 @@ const GridShareReport = ({
                                 minWidth: "130px",
                               }}
                             >
-                              <p>{x.question}</p>
+                              <p title={x.question}>{x.question}</p>
                             </td>
                             <td
                               style={{
@@ -292,7 +275,7 @@ const GridShareReport = ({
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.utmSource}</p>
+                              <p title={x.utmSource}>{x.utmSource}</p>
                             </td>
                             <td
                               style={{
@@ -300,7 +283,7 @@ const GridShareReport = ({
                                 minWidth: "200px",
                               }}
                             >
-                              <p>{x.utmCampaign}</p>
+                              <p title={x.utmCampaign}>{x.utmCampaign}</p>
                             </td>
                             <td
                               style={{
@@ -308,7 +291,15 @@ const GridShareReport = ({
                                 minWidth: "80px",
                               }}
                             >
-                              <p>{x.country}</p>
+                              <p title={x.country}>{x.country}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "150px",
+                              }}
+                            >
+                              <p title={x.receiver}>{x.receiver}</p>
                             </td>
                             <td
                               style={{
@@ -316,18 +307,17 @@ const GridShareReport = ({
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.receiver}</p>
+                              <p title={x.receiveDate}>{x.receiveDate}</p>
                             </td>
-
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "120px",
+                                minWidth: "150px",
                                 color: x.status === 1 ? "green" : "orange",
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{x.statusName}</p>
+                              <p title={x.statusName}>{x.statusName}</p>
                             </td>
                             <td
                               style={{
@@ -337,7 +327,9 @@ const GridShareReport = ({
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{!x.ftd ? "" : x.ftd.toLocaleString()}</p>
+                              <p title={x.ftd?.toLocaleString() || ""}>
+                                {!x.ftd ? "" : x.ftd.toLocaleString()}
+                              </p>
                             </td>
                             <td
                               style={{
@@ -347,7 +339,7 @@ const GridShareReport = ({
                                 fontWeight: "bold",
                               }}
                             >
-                              <p>{x.account}</p>
+                              <p title={x.account}>{x.account}</p>
                             </td>
                             <td
                               style={{
@@ -355,7 +347,7 @@ const GridShareReport = ({
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.preBroker}</p>
+                              <p title={x.preBroker}>{x.preBroker}</p>
                             </td>
 
                             <td
@@ -364,7 +356,7 @@ const GridShareReport = ({
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.broker}</p>
+                              <p title={x.broker}>{x.broker}</p>
                             </td>
                             <td
                               style={{
@@ -372,7 +364,7 @@ const GridShareReport = ({
                                 minWidth: "100px",
                               }}
                             >
-                              <p>{x.dealDate || ""}</p>
+                              <p title={x.dealDate || ""}>{x.dealDate || ""}</p>
                             </td>
                             <td
                               style={{
@@ -380,7 +372,7 @@ const GridShareReport = ({
                                 minWidth: "150px",
                               }}
                             >
-                              <p>{x.note}</p>
+                              <p title={x.note}>{x.note}</p>
                             </td>
                             <td
                               style={{
@@ -399,13 +391,14 @@ const GridShareReport = ({
                                       justifyContent: "center",
                                       alignItems: "center",
                                     }}
+                                    title="Chỉnh sửa"
                                   >
                                     <i
                                       style={{
                                         fontSize: "18px",
                                         cursor: "pointer",
                                       }}
-                                      className="fa-solid fa-user-pen" // ⚠️ class -> className
+                                      className="fa-solid fa-user-pen"
                                     ></i>
                                   </div>
                                 )}

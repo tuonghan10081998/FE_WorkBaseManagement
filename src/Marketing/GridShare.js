@@ -545,6 +545,7 @@ const GridShare = ({
                         <td scope="col">Mail</td>
                         <td scope="col">Câu hỏi</td>
                         <td scope="col">Người nhận cũ</td>
+                        <td scope="col">Ngày nhận</td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
@@ -558,7 +559,7 @@ const GridShare = ({
                       {isDataF?.map((x, index) => {
                         return (
                           <tr key={x.id}>
-                            <td style={{ whiteSpace: "nowrap" }}>
+                            <td style={{ whiteSpace: "nowrap" }} title="Chọn">
                               <div style={{ marginTop: "8px" }}>
                                 <input
                                   style={{ width: "20px", height: "20px" }}
@@ -574,14 +575,8 @@ const GridShare = ({
                                 />
                               </div>
                             </td>
-                            <td style={{ whiteSpace: "nowrap" }}>
-                              <p
-                                style={{
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {x.date}
-                              </p>
+                            <td style={{ whiteSpace: "nowrap" }} title={x.date}>
+                              <p style={{ whiteSpace: "nowrap" }}>{x.date}</p>
                             </td>
                             <td
                               onClick={(e) => handleUpdateData(x.id)}
@@ -592,6 +587,7 @@ const GridShare = ({
                                 fontWeight: "bold",
                                 cursor: "pointer",
                               }}
+                              title={x.name}
                             >
                               <p>{x.name}</p>
                             </td>
@@ -602,6 +598,7 @@ const GridShare = ({
                                 color: "#0207F7",
                                 fontWeight: "bold",
                               }}
+                              title={x.phone}
                             >
                               <p>{x.phone}</p>
                             </td>
@@ -612,6 +609,7 @@ const GridShare = ({
                                 color: "#0207F7",
                                 fontWeight: "bold",
                               }}
+                              title={x.mail}
                             >
                               <p>{x.mail}</p>
                             </td>
@@ -620,24 +618,36 @@ const GridShare = ({
                                 whiteSpace: "nowrap",
                                 minWidth: "160px",
                               }}
+                              title={x.question}
                             >
                               <p>{x.question}</p>
                             </td>
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "140px",
+                                minWidth: "150px",
                               }}
+                              title={x.oldReceiver}
                             >
                               <p>{x.oldReceiver}</p>
                             </td>
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "120px",
+                                minWidth: "100px",
+                              }}
+                              title={x.receiveDate}
+                            >
+                              <p title={x.receiveDate}>{x.receiveDate}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "150px",
                                 color: x.status === 1 ? "green" : "orange",
                                 fontWeight: "bold",
                               }}
+                              title={x.statusName}
                             >
                               <p>{x.statusName}</p>
                             </td>
@@ -646,6 +656,7 @@ const GridShare = ({
                                 whiteSpace: "nowrap",
                                 minWidth: "140px",
                               }}
+                              title={x.utmSource}
                             >
                               <p>{x.utmSource}</p>
                             </td>
@@ -654,6 +665,7 @@ const GridShare = ({
                                 whiteSpace: "nowrap",
                                 minWidth: "250px",
                               }}
+                              title={x.utmCampaign}
                             >
                               <p>{x.utmCampaign}</p>
                             </td>
@@ -662,6 +674,7 @@ const GridShare = ({
                                 whiteSpace: "nowrap",
                                 minWidth: "80px",
                               }}
+                              title={x.country}
                             >
                               <p>{x.country}</p>
                             </td>
@@ -670,6 +683,7 @@ const GridShare = ({
                               <td
                                 className="text-center"
                                 style={{ whiteSpace: "nowrap" }}
+                                title="Xóa"
                               >
                                 <div style={{ marginTop: "8px" }}>
                                   <input
