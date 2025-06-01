@@ -84,10 +84,13 @@ const ShareData = () => {
       }
 
       const data = await response.json();
-      const formattedOptions = data.map((dep) => ({
-        value: dep.dep_Code,
-        label: dep.dep_Name,
-      }));
+      const formattedOptions = [
+        { value: "all", label: " Tất cả " },
+        ...data.map((x) => ({
+          value: x.dep_Code,
+          label: x.dep_Name,
+        })),
+      ];
 
       setOption(formattedOptions);
     } catch (error) {
@@ -117,7 +120,8 @@ const ShareData = () => {
   useEffect(() => {
     if (!isDataNV?.length || !selectedPB?.value) return;
     var dataNV = isDataNV;
-    dataNV = dataNV.filter((x) => x.dep_Code === selectedPB.value);
+    if (selectedPB.value !== "all")
+      dataNV = dataNV.filter((x) => x.dep_Code === selectedPB.value);
 
     setDataNVF(dataNV);
   }, [isDataNV, selectedPB, selectedNV]);

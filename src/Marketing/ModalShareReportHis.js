@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
   useEffect(() => {
-    setID && getHistory();
-  }, [setID]);
+    setIsShowH && getHistory();
+  }, [setID, setIsShowH]);
   const [isData, setData] = useState([]);
   const getHistory = async () => {
     const url = `${process.env.REACT_APP_URL_API}MarketingData/GetCustomerHistory?action=GetCustomerHistory&para1=${setID}`;
@@ -82,6 +82,7 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                               <td scope="col">Thời gian</td>
                               <td scope="col">Trạng thái</td>
                               <td scope="col">MT4/MT5</td>
+                              <td scope="col">Sales</td>
                               <td scope="col">FTD</td>
                               <td scope="col">Sàn trước đây</td>
                               <td scope="col">Sàn đầu tư</td>
@@ -126,6 +127,14 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                                     }}
                                   >
                                     <p>{x.account}</p>
+                                  </td>
+                                  <td
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      minWidth: "100px",
+                                    }}
+                                  >
+                                    <p>{x.createUser ?? ""}</p>
                                   </td>
                                   <td
                                     style={{

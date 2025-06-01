@@ -3,6 +3,7 @@ import Select from "react-select";
 import iziToast from "izitoast";
 import dayjs from "dayjs";
 const ModalUpdate = ({ setShowU, setIsShowU, data, setData, setID }) => {
+  const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isName, setName] = useState("");
   const [isPhone, setPhone] = useState("");
   const [isMail, setMail] = useState("");

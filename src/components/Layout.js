@@ -164,6 +164,21 @@ const Layout = () => {
               </div>
             </Link>
           </div>
+          {/* <div className="nav-item">
+            <Link
+              onClick={handleMenu}
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              to="/layout/Setting"
+            >
+              <div>
+                <i
+                  style={{ color: "rgb(185 255 123)" }}
+                  className="fa-solid fa-star"
+                ></i>
+                <span className="ms-2">Setting</span>
+              </div>
+            </Link>
+          </div> */}
           {/* {isKT && (
             <div className="nav-item">
               <Link

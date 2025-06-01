@@ -8,6 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
 import dayjs from "dayjs";
 const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
+  const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isdealdate, setdealdate] = useState(dayjs());
   const [isPrebroker, setPrebroker] = useState("");
   const [isBroker, setBroker] = useState("");
@@ -95,7 +96,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
       dealDate: isdealdate.format("YYYY-MM-DD"),
       note: isNote,
       account: isMT,
-      createUser: "string",
+      createUser: isUser,
       createDate: "2025-04-28T16:04:56.506Z",
       receiverID: "string",
       oldReceiverID: "string",
