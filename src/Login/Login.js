@@ -274,8 +274,7 @@ const Login = () => {
       confirmPassword == "" ||
       email == "" ||
       isPhongBanValue.value == undefined ||
-      isHoTen == "" ||
-      isTele == ""
+      isHoTen == ""
     ) {
       iziToast.warning({
         title: "Warning",
@@ -530,14 +529,14 @@ const Login = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="off"
                     />
-                    <input
+                    {/* <input
                       className="mt-4"
                       placeholder="Telegram"
                       value={isTele}
                       type="text"
                       onChange={(e) => setTele(e.target.value)}
                       autoComplete="off"
-                    />
+                    /> */}
                   </>
                 )}
 
@@ -580,7 +579,7 @@ const Login = () => {
                   <div className="list_getCode mt-4">
                     <input
                       style={{ height: "40px" }}
-                      placeholder="Nhập mã telegram"
+                      placeholder="Nhập mã "
                       value={isCodeTele}
                       type="text"
                       onChange={(e) => {
