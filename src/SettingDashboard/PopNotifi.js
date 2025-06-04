@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-
-const PopNotifi = ({ selectedYear, selectedMonth, data }) => {
+import { Modal, Button } from "react-bootstrap";
+import iziToast from "izitoast";
+const PopNotifi = ({
+  selectedYear,
+  selectedMonth,
+  data,
+  setShow,
+  setIsShow,
+  setAdd,
+}) => {
   const [formData, setFormData] = useState({
     id: 0,
     title1: "",
     title2: "",
     year: "",
     month: "",
-    image: "",
+    images: "",
     imageapi: "",
   });
-
+  const [isDisable, setDisable] = useState(false);
   const IMG_API = process.env.REACT_APP_URL_IMG;
 
   useEffect(() => {
@@ -19,7 +27,7 @@ const PopNotifi = ({ selectedYear, selectedMonth, data }) => {
         id: data[0].id || "",
         title1: data[0].title1 || "",
         title2: data[0].title2 || "",
-        image: data[0].image || "",
+        images: data[0].images || "",
         imageapi: data[0].imageapi || null,
         year: data[0].year,
         month: data[0].month,
@@ -29,7 +37,7 @@ const PopNotifi = ({ selectedYear, selectedMonth, data }) => {
         id: 0,
         title1: "",
         title2: "",
-        image: "",
+        images: "",
         imageapi: null,
         year: selectedYear,
         month: selectedMonth,
@@ -49,7 +57,7 @@ const PopNotifi = ({ selectedYear, selectedMonth, data }) => {
       reader.onload = (evt) => {
         setFormData((prev) => ({
           ...prev,
-          image: evt.target.result,
+          images: evt.target.result,
           imageapi: evt.target.result,
         }));
       };
@@ -63,95 +71,158 @@ const PopNotifi = ({ selectedYear, selectedMonth, data }) => {
       alert("Vui lòng nhập đầy đủ tiêu đề.");
       return;
     }
+    setDisable(true);
 
-    const updatedData = [
-      {
-        id: 2,
-        title1: formData.title1,
-        title2: formData.title2,
-        year: selectedYear,
-        month: selectedMonth,
-        image: formData.imageData,
-      },
-    ];
-    console.log(updatedData);
-    alert("Đã lưu dữ liệu thành công!");
+    var object = {
+      id: formData.id,
+      title1: formData.title1,
+      title2: formData.title2,
+      images: formData.images,
+      year: formData.year,
+      month: formData.month,
+    };
+    PostSave(object);
   };
-
+  const PostSave = async (arrPost) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Notification/Post`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arrPost),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+    setDisable(false);
+    if (data.status == "OK") {
+      iziToast.success({
+        title: "Success",
+        message: `Lưu thành công`,
+        position: "topRight",
+      });
+      setShow(false);
+      setAdd((x) => !x);
+    } else {
+      iziToast.warning({
+        title: "Warning",
+        message: `Lưu thất bại`,
+        position: "topRight",
+      });
+    }
+  };
   return (
-    <div className="w-100">
-      <div className="w-100">
-        <div className="px-2">
-          <form className="row g-3">
-            <div className="col-12 col-md-6">
-              <label className="form-label" htmlFor="title1">
-                Tiêu đề 1
-              </label>
-              <input
-                className="form-control"
-                id="title1"
-                type="text"
-                placeholder="Nhập tiêu đề 1"
-                value={formData.title1}
-                onChange={handleInputChange}
-                required
-              />
+    <Modal
+      show={setIsShow}
+      dialogClassName="modal-dialog-centered custom-modal-dialog"
+      aria-labelledby="popupModalHeader"
+      backdrop="static"
+      keyboard={false}
+      className="popupModalCreateLeave"
+    >
+      <Modal.Body>
+        {" "}
+        <div className="">
+          <div className="card">
+            <div className="card-body cardbody">
+              <div className="row headerDuAn">
+                <div className="col-8 p-0 m-0">
+                  <h2
+                    style={{ textAlign: "left", fontSize: "28px" }}
+                    className="card-title   font-weight-bold  "
+                  >
+                    Thông tin
+                  </h2>
+                </div>
+                <div className="col-4 p-0 m-0 d-flex justify-content-end">
+                  <button
+                    onClick={() => setShow(false)}
+                    class="btn-close-custom"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <form>
+                <div className="row">
+                  <div className="col-12 col-md-6 p-2">
+                    <label className="form-label" htmlFor="title1">
+                      Tiêu đề 1
+                    </label>
+                    <input
+                      className="form-control"
+                      id="title1"
+                      type="text"
+                      placeholder=""
+                      value={formData.title1}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 p-2">
+                    <label className="form-label" htmlFor="title2">
+                      Tiêu đề 2
+                    </label>
+                    <input
+                      className="form-control"
+                      id="title2"
+                      type="text"
+                      placeholder=""
+                      value={formData.title2}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 p-2">
+                    <label className="form-label" htmlFor="imageInput">
+                      Chọn hình ảnh
+                    </label>
+                    <input
+                      className="form-control"
+                      id="imageInput"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 p-2 d-flex align-items-center justify-content-center">
+                    <img
+                      src={formData.imageapi}
+                      className="img-fluid "
+                      style={{ height: "200px" }}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div
+                    className="d-flex  p-0 py-2"
+                    style={{
+                      background: "#Fff",
+                      paddingBottom: "4px",
+                    }}
+                  >
+                    <button
+                      disabled={isDisable}
+                      onClick={(e) => handleSave(e)}
+                      style={{ marginLeft: "auto" }}
+                      type="submit"
+                      className={`btn btn-primary  mt-3
+                 
+                          }`}
+                    >
+                      <i className="fas fa-paper-plane"></i>{" "}
+                      {data.length > 0 ? "Cập nhật" : "Lưu"}
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div className="col-12 col-md-6">
-              <label className="form-label" htmlFor="title2">
-                Tiêu đề 2
-              </label>
-              <input
-                className="form-control"
-                id="title2"
-                type="text"
-                placeholder="Nhập tiêu đề 2"
-                value={formData.title2}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-12 col-md-6">
-              <label className="form-label" htmlFor="imageInput">
-                Chọn hình ảnh
-              </label>
-              <input
-                className="form-control"
-                id="imageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </div>
-            <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-              <img
-                src={formData.imageSrc}
-                className="img-fluid border rounded"
-                style={{ maxHeight: "500px", maxWidth: "100%" }}
-              />
-            </div>
-          </form>
-
-          {/* {data.length > 0 && (
-        <div className="mt-4">
-          <h3>Dữ liệu đã lưu</h3>
-          <p>
-            <strong>Tiêu đề 1:</strong> {data[0].title1}
-          </p>
-          <p>
-            <strong>Tiêu đề 2:</strong> {data[0].title2}
-          </p>
-          <img
-            src={data[0].imageapi}
-            alt="Hình ảnh thông báo nổi bật đã lưu của công ty"
-            className="img-fluid border rounded"
-            style={{ maxHeight: "300px", maxWidth: "100%" }}
-          />
+          </div>
         </div>
-      )} */}
-        </div>
-      </div>
-    </div>
+      </Modal.Body>
+    </Modal>
   );
 };
 

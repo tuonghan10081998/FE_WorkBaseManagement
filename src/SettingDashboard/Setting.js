@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Notifi from "./Notifi";
+import BestSaler from "./BestSaler";
 import { TitleContext } from "../components/TitleContext";
 import { useNavigate } from "react-router-dom";
 const Setting = () => {
@@ -67,17 +68,6 @@ const Setting = () => {
                 ))}
               </select>
             </div>
-            {/* <div
-              className={`col-2 col-md-2 col-lg-6 col-xl-8 m-0 px-1  col_search ItemCV itemadd`}
-            >
-              <button
-                onClick={(e) => handleSave(e)}
-                style={{ marginTop: "26px" }}
-                class="btn btn-primary mr-2"
-              >
-                <i class="fas fa-plus"></i>Lưu
-              </button>
-            </div> */}
           </div>
         </div>
       </div>
@@ -110,10 +100,13 @@ const Setting = () => {
             </div>
           </div>
           <div className={` ${isTab == 1 ? "d-flex" : "d-none"}`}>
-            <Notifi />
+            <Notifi selectedYear={selectedYear} selectedMonth={selectedMonth} />
           </div>
           <div className={` ${isTab == 2 ? "d-flex" : "d-none"}`}>
-            {/* <PQModule isData={islstUserPage} onchange={handleCheckModule} /> */}
+            <BestSaler
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
           </div>
           <div className={` ${isTab == 3 ? "d-flex" : "d-none"}`}>
             {/* <PQRole

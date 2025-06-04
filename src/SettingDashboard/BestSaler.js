@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PopNotifi from "./PopNotifi";
+import PopBestSaler from "./PopBestSaler";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
-const Notifi = ({ selectedYear, selectedMonth }) => {
+const BestSaler = ({ selectedYear, selectedMonth }) => {
   const IMG_API = process.env.REACT_APP_URL_IMG;
   const [isData, setData] = useState([]);
   const [isID, setID] = useState(null);
@@ -11,7 +11,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   const [isAdd, setAdd] = useState(null);
   const [isShowDelete, setShowDelete] = useState(false);
   const getData = async (thang, nam) => {
-    const url = `${process.env.REACT_APP_URL_API}Notification/Get?month=${thang}&year=${nam}`;
+    const url = `${process.env.REACT_APP_URL_API}BestSaler/Get?month=${thang}&year=${nam}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -19,37 +19,60 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
       }
 
       const data = await response.json();
-      const withImageApi = data.map((item) => ({
-        ...item,
-        imageapi: `${IMG_API}${item.images}`,
-      }));
 
-      setData(withImageApi);
+      setData(data);
     } catch (error) {
       console.error(error.message);
     }
   };
+  // useEffect(() => {
+  //   getData(selectedMonth, selectedYear);
+  // }, [selectedMonth, selectedYear]);
+  // useEffect(() => {
+  //   // if (isAdd !== null) getData(selectedMonth, selectedYear);
+  // }, [isAdd]);
   useEffect(() => {
-    getData(selectedMonth, selectedYear);
-  }, [selectedMonth, selectedYear]);
-  useEffect(() => {
-    if (isAdd !== null) getData(selectedMonth, selectedYear);
-  }, [isAdd]);
+    const dataname = [
+      {
+        id: 1,
+        userID: "896d0b1e-ae82-4872-914b-d0a0207324d2",
+        userName: "Nguyễn Tường Hân",
+        depCode: "IT",
+        depName: "IT",
+        money: 100,
+        note: "AVD",
+        year: 2025,
+        month: 5,
+      },
+      {
+        id: 2,
+        userID: "0dfa4519-910f-4ffc-af9e-87023c152e89",
+        userName: "Võ Ngọc Mạnh",
+        depCode: "IT",
+        depName: "IT",
+        money: 200,
+        note: "Chi tiền",
+        year: 2025,
+        month: 5,
+      },
+    ];
+    setData(dataname);
+  }, []);
   const handleClick = (id) => {
     setID(id);
     setDataF(isData.filter((x) => x.id == id));
     setShow(true);
   };
   const handleClickDelete = (id) => {
-    var object = {
-      id: id,
-      title1: "string",
-      title2: "string",
-      images: "string",
-      year: 0,
-      month: 0,
-    };
-    PostDelete(object);
+    // var object = {
+    //   id: id,
+    //   title1: "string",
+    //   title2: "string",
+    //   images: "string",
+    //   year: 0,
+    //   month: 0,
+    // };
+    // PostDelete(object);
   };
   const PostDelete = async (arrPost) => {
     const request = new Request(
@@ -117,16 +140,12 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                       <tr className="trthdashboard">
                         <td scope="col">Stt</td>
 
-                        <td scope="col">Tiêu đề 1</td>
-                        <td scope="col">Tiêu đề 2</td>
+                        <td scope="col">Phòng ban</td>
+                        <td scope="col">Tên nhân viên</td>
                         <td scope="col">Tháng</td>
                         <td scope="col">Năm</td>
-                        <td scope="col">
-                          <div className="d-flex justify-content-between">
-                            <span> Hình ảnh</span>
-                          </div>
-                        </td>
-
+                        <td scope="col">Doanh thu</td>
+                        <td scope="col">Ghi chú</td>
                         <td style={{ width: "100px" }} scope="col">
                           Hành động
                         </td>
@@ -151,7 +170,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                                 minWidth: "150px",
                               }}
                             >
-                              <p title={x.title1}>{x.title1}</p>
+                              <p title={x.depName}>{x.depName}</p>
                             </td>
                             <td
                               style={{
@@ -159,7 +178,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                                 minWidth: "150px",
                               }}
                             >
-                              <p title={x.title2}>{x.title2}</p>
+                              <p title={x.userName}>{x.userName}</p>
                             </td>
                             <td
                               style={{
@@ -180,19 +199,18 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                             <td
                               style={{
                                 whiteSpace: "nowrap",
+                                minWidth: "100",
+                              }}
+                            >
+                              <p title={x.money}>{x.money}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
                                 minWidth: "200px",
                               }}
                             >
-                              <div className="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                <img
-                                  src={x.imageapi}
-                                  className="img-fluid border rounded"
-                                  style={{
-                                    height: "52px",
-                                    width: "100px",
-                                  }}
-                                />
-                              </div>
+                              <p title={x.note}>{x.note}</p>
                             </td>
                             <td
                               style={{
@@ -251,7 +269,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
           </div>
         </div>
       </div>
-      <PopNotifi
+      <PopBestSaler
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
         data={isDataF}
@@ -287,4 +305,4 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   );
 };
 
-export default Notifi;
+export default BestSaler;

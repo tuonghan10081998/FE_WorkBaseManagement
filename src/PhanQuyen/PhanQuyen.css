@@ -319,6 +319,14 @@
   font-size: 18px;
   cursor: pointer;
 }
+.addNoti {
+  color: #3632d5;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
 @media (max-width: 1400px) {
   .custom-modal-dialog {
     max-width: 70% !important;

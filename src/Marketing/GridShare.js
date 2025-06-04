@@ -18,7 +18,7 @@ const GridShare = ({
   setIsSelectData,
   setRole,
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
   const [isDataF, setDataF] = useState([]);
   const [listData, setListData] = useState([]);
@@ -32,7 +32,8 @@ const GridShare = ({
   const [isCheckAllData, setCheckAllData] = useState(false);
   const [isGGSheet, setGGSheet] = useState(false);
   const [isShowDelete, setShowDelete] = useState(false);
-  const [isSortNgay, setSortNgay] = useState(false);
+  const [isSortNgay, setSortNgay] = useState(true);
+  const [isSortNgayN, setSortNgayN] = useState(true);
   const [isSorCheck, setSortCheck] = useState(false);
   const [isIDU, setIDU] = useState("");
   const [isDisableDelete, setDisableDelete] = useState(false);
@@ -90,8 +91,8 @@ const GridShare = ({
     setID(userID);
   };
   useEffect(() => {
-    setActiveIndex(0);
-    setID(dataNV[0]?.userID);
+    // setActiveIndex(0);
+    // setID(dataNV[0]?.userID);
     const updatedNV = dataNV.map((item) => ({
       ...item,
       isChecked: 1, // hoặc 0 tùy bạn muốn kiểu gì
@@ -108,7 +109,9 @@ const GridShare = ({
               .includes(setChienDich.toUpperCase());
 
       const matchReceiver =
-        x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
+        isID === null
+          ? true
+          : x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
 
       const matchTrangThai =
         setTrangThai === "all" ? true : x.status === setTrangThai;
@@ -545,7 +548,16 @@ const GridShare = ({
                         <td scope="col">Mail</td>
                         <td scope="col">Câu hỏi</td>
                         <td scope="col">Người nhận cũ</td>
-                        <td scope="col">Ngày nhận</td>
+                        <td scope="col">
+                          Ngày nhận
+                          <i
+                            onClick={() => {
+                              setSortNgayN(!isSortNgayN);
+                              handleSortNgay(!isSortNgayN);
+                            }}
+                            class="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Nguồn UTM</td>
                         <td scope="col">Chiến dịch UTM</td>
@@ -744,8 +756,8 @@ const GridShare = ({
                         <td
                           colSpan={
                             isUser === "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db"
-                              ? 8
-                              : 7
+                              ? 9
+                              : 8
                           }
                         ></td>
                       </tr>

@@ -38,7 +38,7 @@ const ModalUpdate = ({ setShowU, setIsShowU, data, setData, setID }) => {
       mail: isMail,
       question: "string",
       utmSource: isNguonUTM,
-      utmCampaign: isNguonUTM,
+      utmCampaign: isCDUTM,
       country: isCountry,
       status: 0,
       preBroker: "string",
