@@ -127,7 +127,7 @@ const Login = () => {
     localStorage.setItem("userID", data2.data.userID);
     localStorage.setItem("fullName", data2.data.fullName);
     if (data2.data.lstPage?.includes("DB")) navigate("/layout/Dashboard");
-    else navigate("/layout/listcongviec");
+    else navigate("/layout/DashBoardUser");
   };
   const handleRememberMeChange = (e) => {
     setRememberMe(e.target.checked);

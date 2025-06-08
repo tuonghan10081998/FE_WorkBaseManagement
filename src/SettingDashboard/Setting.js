@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Notifi from "./Notifi";
 import BestSaler from "./BestSaler";
+import BestTeam from "./BestTeam";
+import Achivement from "./Achivement";
 import { TitleContext } from "../components/TitleContext";
 import { useNavigate } from "react-router-dom";
 const Setting = () => {
@@ -79,24 +81,32 @@ const Setting = () => {
               className={`item-table ${isTab == 1 ? "active" : ""}`}
             >
               {" "}
-              <i class="fa-solid fa-list-ol"></i>
-              Bảng thông báo
+              <i className="fa-solid fa-list-ol"></i>
+              Thông báo
             </div>
             <div
               onClick={() => setTab(2)}
               className={`item-table ${isTab == 2 ? "active" : ""}`}
             >
               {" "}
-              <i class="fa-solid fa-server"></i>
-              Nhân viên nổi bật
+              <i className="fa-solid fa-user"></i>
+              Best Saler
             </div>
             <div
               onClick={() => setTab(3)}
               className={`item-table ${isTab == 3 ? "active" : ""}`}
             >
               {" "}
-              <i class="fa-solid fa-gamepad"></i>
-              Các giải thưởng
+              <i className="fa-solid fa-gamepad"></i>
+              Thành tích
+            </div>
+            <div
+              onClick={() => setTab(4)}
+              className={`item-table ${isTab == 4 ? "active" : ""}`}
+            >
+              {" "}
+              <i className="fa-solid fa-users"></i>
+              Best Team
             </div>
           </div>
           <div className={` ${isTab == 1 ? "d-flex" : "d-none"}`}>
@@ -109,20 +119,16 @@ const Setting = () => {
             />
           </div>
           <div className={` ${isTab == 3 ? "d-flex" : "d-none"}`}>
-            {/* <PQRole
-              isData={islstUserRole}
-              onchange={handleCheckRole}
-              setIsDataLeader={isUserLeader}
-              setOptionPBLeader={isOptionPBLeader}
-              setID={isID}
-            /> */}
+            <Achivement
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
           </div>
           <div className={` ${isTab == 4 ? "d-flex" : "d-none"}`}>
-            {/* <PQIDGGSheet
-              data={isGGSheet}
-              setData={setGGSheet}
-              setCheckGGSheet={setCheckGGSheet}
-            /> */}
+            <BestTeam
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PopNotifi from "./PopNotifi";
+import PopAchivement from "./PopAchivement";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
-const Notifi = ({ selectedYear, selectedMonth }) => {
+const Achivement = ({ selectedYear, selectedMonth }) => {
   const IMG_API = process.env.REACT_APP_URL_IMG;
   const [isData, setData] = useState([]);
   const [isID, setID] = useState(null);
@@ -11,7 +11,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   const [isAdd, setAdd] = useState(null);
   const [isShowDelete, setShowDelete] = useState(false);
   const getData = async (thang, nam) => {
-    const url = `${process.env.REACT_APP_URL_API}Notification/Get?month=${thang}&year=${nam}`;
+    const url = `${process.env.REACT_APP_URL_API}Achivement/Get?month=${thang}&year=${nam}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -43,8 +43,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   const handleClickDelete = (id) => {
     var object = {
       id: id,
-      title1: "string",
-      title2: "string",
+      title: "string",
       images: "string",
       year: 0,
       month: 0,
@@ -53,7 +52,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   };
   const PostDelete = async (arrPost) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Notification/Delete`,
+      `${process.env.REACT_APP_URL_API}Achivement/Delete`,
       {
         method: "POST",
         headers: {
@@ -118,8 +117,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                       <tr className="trthdashboard">
                         <td scope="col">Stt</td>
 
-                        <td scope="col">Tiêu đề 1</td>
-                        <td scope="col">Tiêu đề 2</td>
+                        <td scope="col">Tiêu đề</td>
                         {/* <td scope="col">Tháng</td>
                         <td scope="col">Năm</td> */}
                         <td scope="col">
@@ -149,18 +147,10 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "150px",
+                                minWidth: "200px",
                               }}
                             >
-                              <p title={x.title1}>{x.title1}</p>
-                            </td>
-                            <td
-                              style={{
-                                whiteSpace: "nowrap",
-                                minWidth: "150px",
-                              }}
-                            >
-                              <p title={x.title2}>{x.title2}</p>
+                              <p title={x.title}>{x.title}</p>
                             </td>
                             {/* <td
                               style={{
@@ -181,7 +171,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "200px",
+                                minWidth: "150px",
                               }}
                             >
                               <div className="col-12 col-md-6 d-flex align-items-center justify-content-start">
@@ -252,7 +242,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
           </div>
         </div>
       </div>
-      <PopNotifi
+      <PopAchivement
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
         data={isDataF}
@@ -288,4 +278,4 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   );
 };
 
-export default Notifi;
+export default Achivement;

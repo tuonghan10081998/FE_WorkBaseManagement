@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import PopNotifi from "./PopNotifi";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
-const Notifi = ({ selectedYear, selectedMonth }) => {
-  const IMG_API = process.env.REACT_APP_URL_IMG;
+import PopBestTeam from "./PopBestTeam";
+const BestTeam = ({ selectedYear, selectedMonth }) => {
   const [isData, setData] = useState([]);
   const [isID, setID] = useState(null);
   const [isDataF, setDataF] = useState([]);
   const [isShow, setShow] = useState(false);
   const [isAdd, setAdd] = useState(null);
   const [isShowDelete, setShowDelete] = useState(false);
+  const IMG_API = process.env.REACT_APP_URL_IMG;
   const getData = async (thang, nam) => {
-    const url = `${process.env.REACT_APP_URL_API}Notification/Get?month=${thang}&year=${nam}`;
+    const url = `${process.env.REACT_APP_URL_API}BestTeam/Get?month=${thang}&year=${nam}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -21,7 +21,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
       const data = await response.json();
       const withImageApi = data.map((item) => ({
         ...item,
-        imageapi: `${IMG_API}${item.images}`,
+        imageapi: `${IMG_API}${item.images ?? "Default/UserDefault.png"}`,
       }));
 
       setData(withImageApi);
@@ -43,9 +43,9 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   const handleClickDelete = (id) => {
     var object = {
       id: id,
-      title1: "string",
-      title2: "string",
-      images: "string",
+      team: "string",
+      money: 0,
+      note: "string",
       year: 0,
       month: 0,
     };
@@ -53,7 +53,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   };
   const PostDelete = async (arrPost) => {
     const request = new Request(
-      `${process.env.REACT_APP_URL_API}Notification/Delete`,
+      `${process.env.REACT_APP_URL_API}BestTeam/Delete`,
       {
         method: "POST",
         headers: {
@@ -117,17 +117,12 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                     <thead>
                       <tr className="trthdashboard">
                         <td scope="col">Stt</td>
-
-                        <td scope="col">Tiêu đề 1</td>
-                        <td scope="col">Tiêu đề 2</td>
+                        <td scope="col">Tên team</td>
+                        <td scope="col">Avatar</td>
+                        <td scope="col">Số tiền</td>
                         {/* <td scope="col">Tháng</td>
                         <td scope="col">Năm</td> */}
-                        <td scope="col">
-                          <div className="d-flex justify-content-between">
-                            <span> Hình ảnh</span>
-                          </div>
-                        </td>
-
+                        <td scope="col">Ghi chú</td>
                         <td style={{ width: "100px" }} scope="col">
                           Hành động
                         </td>
@@ -149,18 +144,39 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "150px",
+                                minWidth: "80",
                               }}
                             >
-                              <p title={x.title1}>{x.title1}</p>
+                              <p title={x.team}>{x.team}</p>
                             </td>
                             <td
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "150px",
+                                minWidth: "80",
                               }}
                             >
-                              <p title={x.title2}>{x.title2}</p>
+                              <img
+                                src={x.imageapi}
+                                alt={`Logo ${x.imageapi}`}
+                                width={60}
+                                height={60}
+                                className="rounded-circle"
+                                style={{
+                                  objectFit: "cover",
+                                  boxShadow: "0 0 6px rgb(0 0 0 / 0.15)",
+                                }}
+                                loading="lazy"
+                              />
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "100px",
+                              }}
+                            >
+                              <p title={x.money.toLocaleString()}>
+                                {x.money.toLocaleString()}
+                              </p>
                             </td>
                             {/* <td
                               style={{
@@ -184,16 +200,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
                                 minWidth: "200px",
                               }}
                             >
-                              <div className="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                <img
-                                  src={x.imageapi}
-                                  className="img-fluid border rounded"
-                                  style={{
-                                    height: "52px",
-                                    width: "100px",
-                                  }}
-                                />
-                              </div>
+                              <p title={x.note}>{x.note}</p>
                             </td>
                             <td
                               style={{
@@ -252,7 +259,7 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
           </div>
         </div>
       </div>
-      <PopNotifi
+      <PopBestTeam
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
         data={isDataF}
@@ -288,4 +295,4 @@ const Notifi = ({ selectedYear, selectedMonth }) => {
   );
 };
 
-export default Notifi;
+export default BestTeam;

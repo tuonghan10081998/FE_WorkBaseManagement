@@ -17,62 +17,34 @@ const BestSaler = ({ selectedYear, selectedMonth }) => {
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-
       const data = await response.json();
-
       setData(data);
     } catch (error) {
       console.error(error.message);
     }
   };
-  // useEffect(() => {
-  //   getData(selectedMonth, selectedYear);
-  // }, [selectedMonth, selectedYear]);
-  // useEffect(() => {
-  //   // if (isAdd !== null) getData(selectedMonth, selectedYear);
-  // }, [isAdd]);
   useEffect(() => {
-    const dataname = [
-      {
-        id: 1,
-        userID: "896d0b1e-ae82-4872-914b-d0a0207324d2",
-        userName: "Nguyễn Tường Hân",
-        depCode: "IT",
-        depName: "IT",
-        money: 100,
-        note: "AVD",
-        year: 2025,
-        month: 5,
-      },
-      {
-        id: 2,
-        userID: "0dfa4519-910f-4ffc-af9e-87023c152e89",
-        userName: "Võ Ngọc Mạnh",
-        depCode: "IT",
-        depName: "IT",
-        money: 200,
-        note: "Chi tiền",
-        year: 2025,
-        month: 5,
-      },
-    ];
-    setData(dataname);
-  }, []);
+    getData(selectedMonth, selectedYear);
+  }, [selectedMonth, selectedYear]);
+  useEffect(() => {
+    if (isAdd !== null) getData(selectedMonth, selectedYear);
+  }, [isAdd]);
+
   const handleClick = (id) => {
     setID(id);
     setDataF(isData.filter((x) => x.id == id));
     setShow(true);
   };
   const handleClickDelete = (id) => {
-    // var object = {
-    //   id: id,
-    //   title1: "string",
-    //   title2: "string",
-    //   images: "string",
-    //   year: 0,
-    //   month: 0,
-    // };
-    // PostDelete(object);
+    var object = {
+      id: id,
+      userID: "string",
+      money: 0,
+      note: "string",
+      year: 0,
+      month: 0,
+    };
+    PostDelete(object);
   };
   const PostDelete = async (arrPost) => {
     const request = new Request(
@@ -112,7 +84,8 @@ const BestSaler = ({ selectedYear, selectedMonth }) => {
             style={{ fontSize: "20px", height: "38px" }}
           >
             Chi tiết{" "}
-            <div className="settingPQ">
+            <div className="settingPQ d-flex justify-content-center align-items-center">
+              <span style={{ fontSize: "16px" }}> Thêm</span>
               <i
                 onClick={() => {
                   setDataF([]);
@@ -142,8 +115,8 @@ const BestSaler = ({ selectedYear, selectedMonth }) => {
 
                         <td scope="col">Phòng ban</td>
                         <td scope="col">Tên nhân viên</td>
-                        <td scope="col">Tháng</td>
-                        <td scope="col">Năm</td>
+                        {/* <td scope="col">Tháng</td>
+                        <td scope="col">Năm</td> */}
                         <td scope="col">Doanh thu</td>
                         <td scope="col">Ghi chú</td>
                         <td style={{ width: "100px" }} scope="col">
@@ -178,9 +151,9 @@ const BestSaler = ({ selectedYear, selectedMonth }) => {
                                 minWidth: "150px",
                               }}
                             >
-                              <p title={x.userName}>{x.userName}</p>
+                              <p title={x.fullName}>{x.fullName}</p>
                             </td>
-                            <td
+                            {/* <td
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "50px",
@@ -195,14 +168,16 @@ const BestSaler = ({ selectedYear, selectedMonth }) => {
                               }}
                             >
                               <p title={x.year}>{x.year}</p>
-                            </td>
+                            </td> */}
                             <td
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "100",
                               }}
                             >
-                              <p title={x.money}>{x.money}</p>
+                              <p title={x.money.toLocaleString()}>
+                                {x.money.toLocaleString()}
+                              </p>
                             </td>
                             <td
                               style={{

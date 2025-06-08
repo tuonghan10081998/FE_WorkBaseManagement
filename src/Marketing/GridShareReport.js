@@ -23,6 +23,7 @@ const GridShareReport = ({
   const [isDataF, setDataF] = useState([]);
   const [isNameKH, setNameKH] = useState("");
   const [isSortNgay, setSortNgay] = useState(false);
+  const [isSortNgayN, setSortNgayN] = useState(true);
   const [ispreBroker, setpreBroker] = useState(false);
   const [isBroker, setBroker] = useState(false);
   useEffect(() => {
@@ -163,7 +164,16 @@ const GridShareReport = ({
                         <td scope="col">Chiến dịch UTM</td>
                         <td scope="col">Quốc gia</td>
                         <td scope="col">Tên sales</td>
-                        <td scope="col">Ngày nhận</td>
+                        <td scope="col">
+                          Ngày nhận
+                          <i
+                            onClick={() => {
+                              setSortNgayN(!isSortNgayN);
+                              handleSortNgay(!isSortNgayN);
+                            }}
+                            class="fa-solid fa-sort icon-sort"
+                          ></i>
+                        </td>
                         <td scope="col">Trạng thái</td>
                         <td scope="col">Ftd</td>
                         <td scope="col">MT4/MT5</td>

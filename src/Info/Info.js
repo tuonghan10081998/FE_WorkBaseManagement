@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 import moment from "moment";
 import Select from "react-select";
-const Info = ({ setCheck, setShowInfo }) => {
+const Info = ({ setCheck, setShowInfo, setSaveInfo }) => {
   const [isFullName, setFullName] = useState(localStorage.getItem("fullName"));
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
 
@@ -15,9 +15,13 @@ const Info = ({ setCheck, setShowInfo }) => {
   const [isEmail, setEmail] = useState("");
   const [isTele, setTele] = useState("");
   const [isData, setData] = useState("");
+  const [isAvatar, setAvatar] = useState("");
+  const [isAvatarS, setAvatarS] = useState("");
   const [isDisable, setDisable] = useState(false);
   const [isPhongBanValue, setPhongBanValue] = useState(null);
   const [options, setOption] = useState([]);
+  const inputRef = useState(null);
+  const IMG_API = process.env.REACT_APP_URL_IMG;
 
   const getPhongBan = async () => {
     const url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
@@ -50,6 +54,10 @@ const Info = ({ setCheck, setShowInfo }) => {
       setTele(d.telegram);
       setEmail(d.email);
       setPhongBan(d.dep_Code);
+      const imageUrl = `${IMG_API}${d.avatar ?? "Default/UserDefault.png"}`;
+      const imageWithTimestamp = `${imageUrl}?t=${Date.now()}`;
+      setAvatar(imageWithTimestamp);
+      setAvatarS(`${d.avartar ?? "Default/UserDefault.png"}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -93,6 +101,7 @@ const Info = ({ setCheck, setShowInfo }) => {
       telegram: isTele,
       department: isPhongBanValue.value,
       userID: isUser,
+      avartar: isAvatarS,
     };
     PostFB(object);
   };
@@ -113,6 +122,7 @@ const Info = ({ setCheck, setShowInfo }) => {
         position: "topRight",
       });
       setShowInfo((d) => !d);
+      setSaveInfo((x) => !x);
     } else {
       iziToast.warning({
         title: "Warning",
@@ -128,9 +138,40 @@ const Info = ({ setCheck, setShowInfo }) => {
       position: "topRight",
     });
   };
+  const handleFocusInput = (inputRef) => {
+    if (inputRef.current) {
+      console.log(1);
+      inputRef.current.click();
+    }
+  };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        setAvatar(evt.target.result);
+        setAvatarS(evt.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="">
       <div className="card px-2">
+        <div className="col-12 col-md-6 p-2 d-none">
+          <label className="form-label" htmlFor="imageInput">
+            Chọn hình ảnh
+          </label>
+          <input
+            ref={inputRef}
+            className="form-control"
+            id="imageInput"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </div>
         <div className="card-body  px-4 py-2">
           <form>
             <div className="col-12 m-0 p-0 my-2 ">
@@ -170,6 +211,7 @@ const Info = ({ setCheck, setShowInfo }) => {
                 <div className="form-group col-12 m-0 p-0 ">
                   <label htmlFor="projectName">Phòng ban</label>
                   <Select
+                    isDisabled={true}
                     options={options}
                     value={isPhongBanValue}
                     onChange={handleChange}
@@ -195,8 +237,44 @@ const Info = ({ setCheck, setShowInfo }) => {
                 </div>
               </div>
             </div>
-
             <div className="col-12 m-0 p-0 my-2 ">
+              <div className="row">
+                <div className="form-group col-12 m-0 p-0 ">
+                  <label
+                    htmlFor="projectName"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>Avatar</span>
+                    <div style={{ cursor: "pointer" }}>
+                      <i
+                        onClick={() => handleFocusInput(inputRef)}
+                        class="fa-solid fa-user-astronaut"
+                      ></i>
+                    </div>
+                  </label>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <img
+                      src={isAvatar}
+                      alt={`Logo ${isAvatar}`}
+                      width={80}
+                      height={80}
+                      className="rounded-circle"
+                      style={{
+                        objectFit: "cover",
+                        boxShadow: "0 0 6px rgb(0 0 0 / 0.15)",
+                      }}
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-12 m-0 p-0 my-2 d-none">
               <div className="row">
                 <div className="form-group col-12 m-0 p-0 ">
                   <label htmlFor="projectName">Telegram</label>

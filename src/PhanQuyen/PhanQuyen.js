@@ -16,7 +16,7 @@ const PhanQuyen = () => {
   const [showPopup, setshowPopup] = useState(false);
   const [isNhanVienP, setNhanVienP] = useState("");
   const { setTitle, setIcon } = useContext(TitleContext);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState("");
   const [isData, setData] = useState([]);
   const [isDataNV, setDataNV] = useState([]);
   const [isID, setID] = useState(null);
@@ -30,11 +30,11 @@ const PhanQuyen = () => {
   const [isPhongBanValue, setPhongBanValue] = useState("");
   const [isUserID, setUserID] = useState("");
   const [isPosition, setPosition] = useState("");
-  const [isPositionA, setPositionA] = useState(false);
+  const [isPositionA, setPositionA] = useState(null);
   const [isGGSheet, setGGSheet] = useState([]);
   const [isOptionPBLeader, setOptionPBLeader] = useState([]);
   const [isUserLeader, setUserLeader] = useState([]);
-
+  const [isPhongBanS, setPhongBanSave] = useState("");
   const [isCheckGGSheet, setCheckGGSheet] = useState(null);
   useEffect(() => {
     getPhongBan();
@@ -158,8 +158,11 @@ const PhanQuyen = () => {
       dataNV = dataNV.filter((x) => x.dep_Code === isPhongBanValue.value);
     }
     if (dataNV.length > 0) {
-      setID(dataNV[0].userID);
-      setActiveIndex(0);
+      if (isPositionA == null) {
+        setID(dataNV[0].userID);
+        setPhongBanSave(dataNV[0].dep_Code);
+        setActiveIndex(0);
+      }
     } else {
       setlstUserDep([]);
       setlstUserPage([]);
@@ -235,12 +238,16 @@ const PhanQuyen = () => {
     }
   };
   useEffect(() => {
+    setPhongBanSave(isPhongBanS);
     setData((prevData) =>
       prevData.map((d) =>
-        d.userID === isUserID ? { ...d, position: isPosition } : d
+        d.userID === isUserID
+          ? { ...d, position: isPosition, dep_Code: isPhongBanS }
+          : d
       )
     );
   }, [isPositionA]);
+
   useEffect(() => {
     if (isCheckGGSheet !== null) getIDGGSheet();
   }, [isCheckGGSheet]);
@@ -311,6 +318,7 @@ const PhanQuyen = () => {
                       setNhanVienP(account.fullName);
                       setUserID(account.userID);
                       setPosition(account.position);
+                      setPhongBanSave(account.dep_Code);
                     }}
                   >
                     <div className="sttPQ">{index + 1}</div>
@@ -449,6 +457,8 @@ const PhanQuyen = () => {
           setPosition={setPosition}
           setIsPosition={isPosition}
           setPositionA={setPositionA}
+          setPhongBanS={isPhongBanS}
+          setPhongBanSave={setPhongBanSave}
         />
       </div>
     </div>

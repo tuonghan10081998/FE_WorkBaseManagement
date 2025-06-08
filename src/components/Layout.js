@@ -4,9 +4,12 @@ import { TitleContext } from "../components/TitleContext";
 import "../components/index.css";
 import Info from "../Info/Info";
 const Layout = () => {
+  const IMG_API = process.env.REACT_APP_URL_IMG;
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHomeExpanded, setIsHomeExpanded] = useState(false);
   const [isMerketing, setMerketing] = useState(false);
+  const [isDashboard, setDashboard] = useState(false);
+  const [isSetting, setSetting] = useState(false);
   const { title, icon, iconAdd } = useContext(TitleContext);
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isfullName, setfullName] = useState(localStorage.getItem("fullName"));
@@ -18,6 +21,8 @@ const Layout = () => {
   const [isShowInfo, setShowInfo] = useState(false);
   const [isCheck, setCheck] = useState(false);
   const [isRole, setRole] = useState("");
+  const [isAvatar, setAvatar] = useState("");
+  const [isSaveInfo, setSaveInfo] = useState(null);
   const getPhanQuyen = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/GetRole?action=GEt&para1=${isUser}`;
     try {
@@ -48,8 +53,25 @@ const Layout = () => {
   };
   useEffect(() => {
     getPhanQuyen();
+    getData();
   }, [isUser, isPQDuyen]);
+  const getData = async () => {
+    if (isUser == "") return;
+    const url = `${process.env.REACT_APP_URL_API}User/Get?action=get&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
+      const data = await response.json();
+      const d = data[0];
+      setAvatar(`${IMG_API}${d.avatar ?? "Default/UserDefault.png"}`);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, [isSaveInfo]);
   useEffect(() => {
     const handleResize = () => {
       setIsCollapsed(window.innerWidth <= 800);
@@ -87,7 +109,7 @@ const Layout = () => {
           </span>
         </div>
         <nav className="nav flex-column">
-          {isDB && (
+          {/* {isDB && (
             <div className="nav-item">
               <Link
                 onClick={handleMenu}
@@ -103,7 +125,50 @@ const Layout = () => {
                 </div>
               </Link>
             </div>
-          )}{" "}
+          )}{" "} */}
+          <div className="nav-item">
+            <div
+              className="nav-link text-white d-flex justify-content-between align-items-center"
+              href="#"
+            >
+              <div onClick={() => setDashboard(!isDashboard)}>
+                <i
+                  style={{ color: "#78baeb" }}
+                  className="fa-solid fa-gauge"
+                ></i>
+                <span className="ms-2">Dashboard</span>
+              </div>
+            </div>
+            {isDashboard && (
+              <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
+                {isDB && (
+                  <Link
+                    onClick={handleMenu}
+                    className="nav-link text-white"
+                    to="/layout/Dashboard"
+                  >
+                    <i
+                      style={{ color: "rgb(207 72 249)" }}
+                      className="fa-solid fa-desktop"
+                    ></i>
+                    <span className="ms-2">Tổng quan</span>
+                  </Link>
+                )}
+                <Link
+                  onClick={handleMenu}
+                  className="nav-link text-white"
+                  to="/layout/DashBoardUser"
+                >
+                  <i
+                    style={{ color: "#f3b705" }}
+                    className="fa-solid fa-users"
+                  ></i>
+
+                  <span className="ms-2">Nhân viên</span>
+                </Link>
+              </div>
+            )}
+          </div>
           <div className="nav-item">
             <Link
               onClick={handleMenu}
@@ -165,32 +230,46 @@ const Layout = () => {
             </Link>
           </div>
           {/* <div className="nav-item">
-            <Link
-              onClick={handleMenu}
+            <div
               className="nav-link text-white d-flex justify-content-between align-items-center"
-              to="/layout/Setting"
+              href="#"
             >
-              <div>
+              <div onClick={() => setIsHomeExpanded(!isHomeExpanded)}>
                 <i
-                  style={{ color: "rgb(185 255 123)" }}
-                  className="fa-solid fa-star"
+                  style={{ color: "rgb(249 237 72)" }}
+                  className="fas fa-fire text-lg"
                 ></i>
-                <span className="ms-2">Setting</span>
+                <span className="ms-2">Thông báo</span>
               </div>
-            </Link>
+            </div>
+            {isHomeExpanded && (
+              <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
+                <Link
+                  onClick={handleMenu}
+                  className="nav-link text-white"
+                  to="/layout/Setting"
+                >
+                  <i
+                    style={{ color: "rgb(207 72 249)" }}
+                    className="fa-solid fa-circle-dollar-to-slot"
+                  ></i>
+                  <span className="ms-2">Cài đặt </span>
+                </Link>
+                <Link
+                  onClick={handleMenu}
+                  className="nav-link text-white"
+                  to="/layout/DashBoardUser"
+                >
+                  <i
+                    style={{ color: "#f3b705" }}
+                    className="fa-solid fa-comments-dollar"
+                  ></i>
+
+                  <span className="ms-2">Xem</span>
+                </Link>
+              </div>
+            )}
           </div> */}
-          {/* {isKT && (
-            <div className="nav-item">
-              <Link
-                className="nav-link text-white d-flex justify-content-between align-items-center"
-                to="/layout/PurChase"
-              >
-                <div>
-                  <span className="ms-2">Kế toán</span>
-                </div>
-              </Link>
-            </div>  
-          )} */}
           {isKT && (
             <div className="nav-item">
               <div
@@ -281,19 +360,47 @@ const Layout = () => {
           </div>
           {isPagePQ && (
             <div className="nav-item">
-              <Link
-                onClick={handleMenu}
+              <div
                 className="nav-link text-white d-flex justify-content-between align-items-center"
-                to="/layout/phanquyen"
+                href="#"
               >
-                <div>
+                <div onClick={() => setSetting(!isSetting)}>
                   <i
-                    style={{ color: "green" }}
-                    className="fa-solid fa-shapes"
+                    style={{ color: "rgb(249 237 72)" }}
+                    className="fa-solid fa-sliders"
                   ></i>
-                  <span className="ms-2">Phân quyền</span>
+                  <span className="ms-2">Cài đặt</span>
                 </div>
-              </Link>
+              </div>
+              {isSetting && (
+                <div className={`${!isCollapsed ? "ms-4" : "ms-0"}`}>
+                  {isPagePQ && (
+                    <Link
+                      onClick={handleMenu}
+                      className="nav-link text-white"
+                      to="/layout/phanquyen"
+                    >
+                      <i
+                        style={{ color: "green" }}
+                        className="fa-solid fa-shapes"
+                      ></i>
+                      <span className="ms-2">Phân quyền</span>
+                    </Link>
+                  )}
+                  <Link
+                    onClick={handleMenu}
+                    className="nav-link text-white"
+                    to="/layout/Setting"
+                  >
+                    <i
+                      style={{ color: "#f3b705" }}
+                      className="fa-solid fa-comments-dollar"
+                    ></i>
+
+                    <span className="ms-2">Cài đặt Dashboard</span>
+                  </Link>
+                </div>
+              )}
             </div>
           )}
           <div className="nav-item">
@@ -351,7 +458,18 @@ const Layout = () => {
             }}
             className="d-flex align-items-center icon-userName"
           >
-            <i className="fas fa-user user-iconLayout"></i>
+            <img
+              src={`${isAvatar}?${new Date().getTime()}`}
+              alt={`Logo ${isAvatar}`}
+              width={45}
+              height={40}
+              className="rounded-circle"
+              style={{
+                objectFit: "cover",
+                boxShadow: "0 0 6px rgb(0 0 0 / 0.15)",
+              }}
+              loading="lazy"
+            />
             <span className="user-name">{isfullName}</span>
           </div>
         </div>
@@ -384,7 +502,11 @@ const Layout = () => {
                 ></button>
               </div>
               <div className="modal-body cardleave" style={{ padding: "2px" }}>
-                <Info setCheck={isCheck} setShowInfo={setShowInfo} />
+                <Info
+                  setSaveInfo={setSaveInfo}
+                  setCheck={isCheck}
+                  setShowInfo={setShowInfo}
+                />
               </div>
             </div>
           </div>

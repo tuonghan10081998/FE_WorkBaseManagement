@@ -25,7 +25,6 @@ const PopBestSaler = ({
   const [selectedNV, setSelectedNV] = useState(null);
   const [isDataNV, setDataNV] = useState(null);
 
-  // Load phòng ban
   const getPhongBan = async () => {
     const url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
     try {
@@ -46,7 +45,6 @@ const PopBestSaler = ({
     }
   };
 
-  // Load nhân viên
   const getNhanVien = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=Get`;
     try {
@@ -132,47 +130,41 @@ const PopBestSaler = ({
       });
       return;
     }
-
-    // setDisable(true);
-
+    setDisable(true);
     const object = {
       id,
       userID: selectedNV.value,
-      userName: selectedNV.label,
-      depID: selectedNV.dep_Code,
-      depName: selectedNV.dep_Name,
       money,
       note,
       year,
       month,
     };
-    console.log(object);
-    // const response = await fetch(
-    //   `${process.env.REACT_APP_URL_API}BestSaler/Post`,
-    //   {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(object),
-    //   }
-    // );
-    // const result = await response.json();
-    // setDisable(false);
+    const response = await fetch(
+      `${process.env.REACT_APP_URL_API}BestSaler/Post`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(object),
+      }
+    );
+    const result = await response.json();
+    setDisable(false);
 
-    // if (result.status === "OK") {
-    //   iziToast.success({
-    //     title: "Thành công",
-    //     message: "Lưu thành công",
-    //     position: "topRight",
-    //   });
-    //   setShow(false);
-    //   setAdd((prev) => !prev);
-    // } else {
-    //   iziToast.error({
-    //     title: "Lỗi",
-    //     message: "Lưu thất bại",
-    //     position: "topRight",
-    //   });
-    // }
+    if (result.status === "OK") {
+      iziToast.success({
+        title: "Thành công",
+        message: "Lưu thành công",
+        position: "topRight",
+      });
+      setShow(false);
+      setAdd((prev) => !prev);
+    } else {
+      iziToast.error({
+        title: "Lỗi",
+        message: "Lưu thất bại",
+        position: "topRight",
+      });
+    }
   };
 
   return (

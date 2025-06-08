@@ -1,6 +1,7 @@
-import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 const PQPositon = ({
   setNhanVien,
   setShowPopup,
@@ -9,7 +10,11 @@ const PQPositon = ({
   setUserID,
   setPosition,
   setPositionA,
+  setPhongBanS,
+  setPhongBanSave,
 }) => {
+  const [optionsPB, setOptionsPB] = useState([]);
+  const [selectedPB, setSelectedPB] = useState(null);
   const handleSave = (e) => {
     e.preventDefault();
     const object = {
@@ -18,7 +23,7 @@ const PQPositon = ({
       passWord: "",
       email: "",
       telegram: "",
-      department: "",
+      department: selectedPB.value,
       userID: setUserID,
       position: setIsPosition,
     };
@@ -43,7 +48,7 @@ const PQPositon = ({
         message: data.message,
         position: "topRight",
       });
-
+      setPhongBanSave(selectedPB.value);
       setShowPopup((x) => !x);
       setPositionA((x) => !x);
     } else {
@@ -54,6 +59,33 @@ const PQPositon = ({
       });
     }
   };
+  const getPhongBan = async () => {
+    const url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+
+      const data = await response.json();
+      const formattedOptions = data.map((dep) => ({
+        value: dep.dep_Code,
+        label: dep.dep_Name,
+      }));
+      setOptionsPB(formattedOptions);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getPhongBan();
+  }, []);
+  useEffect(() => {
+    if (optionsPB.length > 0) {
+      const selected = optionsPB.find((x) => x.value === setPhongBanS);
+      if (selected) setSelectedPB(selected);
+    } else {
+      setSelectedPB(optionsPB[0]);
+    }
+  }, [optionsPB, setPhongBanS]);
   return (
     <div>
       <Modal
@@ -90,9 +122,19 @@ const PQPositon = ({
                   autoComplete="off"
                 />
               </div>
+
+              <div className="mb-3">
+                <label>Phòng ban</label>
+                <Select
+                  options={optionsPB}
+                  value={selectedPB}
+                  onChange={setSelectedPB}
+                  isSearchable
+                />
+              </div>
               <div className="mb-3">
                 <label htmlFor="dep_Name" className="form-label">
-                  Chức vục
+                  Chức vụ
                 </label>
                 <input
                   type="text"
