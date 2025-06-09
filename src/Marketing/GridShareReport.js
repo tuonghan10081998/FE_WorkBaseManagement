@@ -143,8 +143,10 @@ const GridShareReport = ({
                   <table className="task-table">
                     <thead>
                       <tr className="trthdashboard">
-                        <td scope="col">Stt</td>
-                        <td scope="col">
+                        <td scope="col" className="sticky-col sticky-col-0">
+                          Stt
+                        </td>
+                        <td scope="col" className="sticky-col sticky-col-1">
                           Ngày{" "}
                           <i
                             onClick={() => {
@@ -154,9 +156,15 @@ const GridShareReport = ({
                             class="fa-solid fa-sort icon-sort"
                           ></i>
                         </td>
-                        <td scope="col">Tên</td>
-                        <td scope="col">SĐT</td>
-                        <td scope="col">Mail</td>
+                        <td scope="col" className="sticky-col sticky-col-2">
+                          Tên
+                        </td>
+                        <td scope="col" className="sticky-col sticky-col-3">
+                          SĐT
+                        </td>
+                        <td scope="col" className="sticky-col sticky-col-4">
+                          Mail
+                        </td>
 
                         <td scope="col">Câu hỏi</td>
 
@@ -214,18 +222,35 @@ const GridShareReport = ({
                               background: index % 2 == 0 ? "#fff" : "#f3f3f3",
                             }}
                           >
-                            <td style={{ whiteSpace: "nowrap" }}>
+                            <td
+                              className="sticky-col sticky-col-0"
+                              style={{
+                                whiteSpace: "nowrap",
+                                maxWidth: "60px",
+                                minWidth: "60px",
+                              }}
+                            >
                               <p title={index + 1}>{index + 1}</p>
                             </td>
-                            <td style={{ whiteSpace: "nowrap" }}>
+                            <td
+                              className="sticky-col sticky-col-1"
+                              style={{
+                                whiteSpace: "nowrap",
+                                maxWidth: "90px",
+                                minWidth: "90px",
+                              }}
+                            >
                               <p title={x.date}>{x.date}</p>
                             </td>
                             <td
+                              className="sticky-col sticky-col-2"
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "150px",
+                                minWidth: "160px",
+                                maxWidth: "160px",
                                 color: "#F40925",
                                 fontWeight: "bold",
+                                cursor: "pointer",
                               }}
                             >
                               <div
@@ -251,16 +276,20 @@ const GridShareReport = ({
                               </div>
                             </td>
                             <td
+                              className="sticky-col sticky-col-3"
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "120px",
+                                minWidth: "130px",
+                                maxWidth: "130px",
                                 color: "#0207F7",
                                 fontWeight: "bold",
                               }}
+                              title={x.phone}
                             >
                               <p title={x.phone}>{x.phone}</p>
                             </td>
                             <td
+                              className="sticky-col sticky-col-4"
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "150px",
@@ -419,8 +448,9 @@ const GridShareReport = ({
                       })}
                     </tbody>
                     <tfoot>
-                      <tr className="trtfdashboard">
+                      <tr className="trtfdashboard ">
                         <td
+                          className="sticky-col sticky-col-0"
                           style={{
                             whiteSpace: "nowrap",
                             fontWeight: "700",
@@ -444,7 +474,7 @@ const GridShareReport = ({
                           }}
                           colSpan="1"
                         ></td>
-                        <td colSpan="14"></td>
+                        <td colSpan="15"></td>
                       </tr>
                     </tfoot>
                   </table>

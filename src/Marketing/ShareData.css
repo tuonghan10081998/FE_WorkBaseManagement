@@ -112,6 +112,27 @@
   font-size: 13px;
   padding: 6px 5px;
 }
+.sticky-col {
+  position: sticky;
+  background: white;
+  z-index: 2;
+}
+.sticky-col-0 {
+  left: 0px;
+  z-index: 3;
+} /* Checkbox */
+.sticky-col-1 {
+  left: 60px;
+} /* Ngày */
+.sticky-col-2 {
+  left: 150px;
+} /* Tên */
+.sticky-col-3 {
+  left: 310px;
+} /* SĐT */
+.sticky-col-4 {
+  left: 440px;
+}
 @media (max-width: 800px) {
   #mainContent {
     width: 100vw !important;

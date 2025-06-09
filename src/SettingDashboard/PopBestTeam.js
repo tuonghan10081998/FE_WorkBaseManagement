@@ -182,7 +182,7 @@ const PopBestTeam = ({
                 </div>
                 <div className="col-12 col-md-6 p-2">
                   <label className="form-label" htmlFor="money">
-                    Thưởng (VNĐ)
+                    Doanh số
                   </label>
                   <input
                     className="form-control"

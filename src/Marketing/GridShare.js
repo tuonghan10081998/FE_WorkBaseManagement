@@ -505,7 +505,7 @@ const GridShare = ({
                   <table className="task-table">
                     <thead>
                       <tr className="trthdashboard">
-                        <td scope="col">
+                        <td scope="col" className="sticky-col sticky-col-0">
                           {" "}
                           <div
                             style={{
@@ -533,7 +533,7 @@ const GridShare = ({
                             ></i>
                           </div>{" "}
                         </td>
-                        <td scope="col">
+                        <td scope="col" className="sticky-col sticky-col-1">
                           Ngày{" "}
                           <i
                             onClick={() => {
@@ -543,9 +543,15 @@ const GridShare = ({
                             class="fa-solid fa-sort icon-sort"
                           ></i>
                         </td>
-                        <td scope="col">Tên</td>
-                        <td scope="col">SĐT</td>
-                        <td scope="col">Mail</td>
+                        <td scope="col" className="sticky-col sticky-col-2">
+                          Tên
+                        </td>
+                        <td scope="col" className="sticky-col sticky-col-3">
+                          SĐT
+                        </td>
+                        <td scope="col" className="sticky-col sticky-col-4">
+                          Mail
+                        </td>
                         <td scope="col">Câu hỏi</td>
                         <td scope="col">Người nhận cũ</td>
                         <td scope="col">
@@ -571,7 +577,15 @@ const GridShare = ({
                       {isDataF?.map((x, index) => {
                         return (
                           <tr key={x.id}>
-                            <td style={{ whiteSpace: "nowrap" }} title="Chọn">
+                            <td
+                              className="sticky-col sticky-col-0"
+                              style={{
+                                whiteSpace: "nowrap",
+                                maxWidth: "60px",
+                                minWidth: "60px",
+                              }}
+                              title="Chọn"
+                            >
                               <div style={{ marginTop: "8px" }}>
                                 <input
                                   style={{ width: "20px", height: "20px" }}
@@ -587,14 +601,24 @@ const GridShare = ({
                                 />
                               </div>
                             </td>
-                            <td style={{ whiteSpace: "nowrap" }} title={x.date}>
+                            <td
+                              className="sticky-col sticky-col-1"
+                              style={{
+                                whiteSpace: "nowrap",
+                                maxWidth: "90px",
+                                minWidth: "90px",
+                              }}
+                              title={x.date}
+                            >
                               <p style={{ whiteSpace: "nowrap" }}>{x.date}</p>
                             </td>
                             <td
+                              className="sticky-col sticky-col-2"
                               onClick={(e) => handleUpdateData(x.id)}
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "160px",
+                                maxWidth: "160px",
                                 color: "#F40925",
                                 fontWeight: "bold",
                                 cursor: "pointer",
@@ -604,9 +628,11 @@ const GridShare = ({
                               <p>{x.name}</p>
                             </td>
                             <td
+                              className="sticky-col sticky-col-3"
                               style={{
                                 whiteSpace: "nowrap",
-                                minWidth: "160px",
+                                minWidth: "130px",
+                                maxWidth: "130px",
                                 color: "#0207F7",
                                 fontWeight: "bold",
                               }}
@@ -615,6 +641,7 @@ const GridShare = ({
                               <p>{x.phone}</p>
                             </td>
                             <td
+                              className="sticky-col sticky-col-4"
                               style={{
                                 whiteSpace: "nowrap",
                                 minWidth: "200px",
@@ -720,6 +747,7 @@ const GridShare = ({
                     <tfoot>
                       <tr className="trtfdashboard">
                         <td
+                          className="sticky-col sticky-col-0"
                           style={{
                             whiteSpace: "nowrap",
                             fontWeight: "700",
@@ -730,6 +758,7 @@ const GridShare = ({
                           <span className="text-danger">{isDataF.length}</span>
                         </td>
                         <td
+                          className="sticky-col sticky-col-2"
                           style={{
                             whiteSpace: "nowrap",
                             fontWeight: "700",
@@ -742,6 +771,7 @@ const GridShare = ({
                           </span>
                         </td>
                         <td
+                          className="sticky-col sticky-col-3"
                           style={{
                             whiteSpace: "nowrap",
                             fontWeight: "700",

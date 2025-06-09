@@ -40,12 +40,14 @@
   top: 0;
   background: #fff;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  z-index: 5;
 }
 .trtfdashboard {
   position: sticky;
   bottom: 0;
   background: #fff;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  z-index: 5;
 }
 #mainContent .dashboard .card-body {
   width: calc(100vw - 272px);
