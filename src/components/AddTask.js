@@ -101,10 +101,10 @@ const AddTask = ({
 
       setRole === "UnderLeader" &&
         (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
-
+      console.log(nhanvien);
       setRole === "Member" &&
-        (nhanvien = nhanvien.filter((x) => x.UserID === isUser));
-
+        (nhanvien = nhanvien.filter((x) => x.userID === isUser));
+      console.log(nhanvien);
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [
