@@ -400,20 +400,20 @@ const ListCV = () => {
         <div
           style={{ display: "flex", whiteSpace: "nowrap", marginRight: "5px" }}
         >
-          {isRole !== "Member" && (
-            <>
-              <button
-                style={{ marginTop: "2px" }}
-                onClick={() => {
-                  setShowPopup(!showPopup);
-                  setWorkItem([]);
-                }}
-                className="btn btn-primary mr-2"
-              >
-                <i className="fas fa-plus"></i> Thêm công việc
-              </button>
-            </>
-          )}
+          {/* {isRole !== "Member" && ( */}
+          <>
+            <button
+              style={{ marginTop: "2px" }}
+              onClick={() => {
+                setShowPopup(!showPopup);
+                setWorkItem([]);
+              }}
+              className="btn btn-primary mr-2"
+            >
+              <i className="fas fa-plus"></i> Thêm công việc
+            </button>
+          </>
+          {/* )} */}
         </div>
       </div>
       <div

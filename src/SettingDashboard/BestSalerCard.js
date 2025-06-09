@@ -27,7 +27,7 @@ const BestSalerCard = ({ saler }) => {
           {saler.depName}
           <br />
           <span className="fw-semibold text-dark">Doanh số:</span>{" "}
-          {saler.money.toLocaleString()} VNĐ
+          {saler.money.toLocaleString()}
           <br />
           <span className="fw-semibold text-dark">Ghi chú:</span> {saler.note}
         </div>

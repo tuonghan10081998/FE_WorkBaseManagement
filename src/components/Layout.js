@@ -64,7 +64,9 @@ const Layout = () => {
 
       const data = await response.json();
       const d = data[0];
-      setAvatar(`${IMG_API}${d.avatar ?? "Default/UserDefault.png"}`);
+      setAvatar(
+        `${IMG_API}${d.avatar?.trim() ? d.avatar : "Default/UserDefault.png"}`
+      );
     } catch (error) {
       console.error(error.message);
     }

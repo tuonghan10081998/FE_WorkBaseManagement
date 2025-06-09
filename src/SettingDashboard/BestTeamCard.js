@@ -24,7 +24,7 @@ const BestTeamCard = ({ team }) => {
           style={{ fontSize: "0.9rem" }}
         >
           <span className="fw-semibold text-dark">Doanh số:</span>{" "}
-          {team.money.toLocaleString()} VNĐ
+          {team.money.toLocaleString()}
           <br />
           <span className="fw-semibold text-dark">Ghi chú:</span> {team.note}
         </div>

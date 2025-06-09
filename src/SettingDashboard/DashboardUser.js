@@ -63,7 +63,9 @@ const DashBoardUser = () => {
       const data = await response.json();
       const withImageApi = data.map((item) => ({
         ...item,
-        imageapi: `${IMG_API}${item.avartar ?? "Default/UserDefault.png"}`,
+        imageapi: `${IMG_API}${
+          item.avartar?.trim() ? item.avartar : "Default/UserDefault.png"
+        }`,
       }));
       setBestSalers(withImageApi);
     } catch (error) {
@@ -87,9 +89,10 @@ const DashBoardUser = () => {
       const data = await response.json();
       const withImageApi = data.map((item) => ({
         ...item,
-        imageapi: `${IMG_API}${item.images ?? "Default/UserDefault.png"}`,
+        imageapi: `${IMG_API}${
+          item.images?.trim() ? item.images : "Default/UserDefault.png"
+        }`,
       }));
-
       setbestTeams(withImageApi);
     } catch (error) {
       console.error(error.message);

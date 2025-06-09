@@ -54,7 +54,9 @@ const Info = ({ setCheck, setShowInfo, setSaveInfo }) => {
       setTele(d.telegram);
       setEmail(d.email);
       setPhongBan(d.dep_Code);
-      const imageUrl = `${IMG_API}${d.avatar ?? "Default/UserDefault.png"}`;
+      const imageUrl = `${IMG_API}${
+        d.avatar?.trim() ? d.avatar : "Default/UserDefault.png"
+      }`;
       const imageWithTimestamp = `${imageUrl}?t=${Date.now()}`;
       setAvatar(imageWithTimestamp);
       setAvatarS(`${d.avartar ?? "Default/UserDefault.png"}`);
