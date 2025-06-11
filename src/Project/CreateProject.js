@@ -71,6 +71,7 @@ const CreateProject = ({
   const [filteredUsersTN, setFilteredUsersTN] = useState([]);
   const [isPopupVisibleTN, setIsPopupVisibleTN] = useState(false);
   const [messageTN, setMessageTN] = useState("");
+  const [isNVMKT, setNVMKT] = useState(false);
   useEffect(() => {
     if (selectRef2.current) {
       $(selectRef2.current).select2();
@@ -91,6 +92,9 @@ const CreateProject = ({
   useEffect(() => {
     if (setDataNV?.length > 0) {
       let nhanvien = setDataNV;
+
+      var dataNVMKT = nhanvien.find((x) => x.userID == isUser);
+
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
@@ -98,6 +102,10 @@ const CreateProject = ({
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
       setRole === "UnderLeader" &&
         (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
+
+      if (dataNVMKT.dep_Code == "MKT")
+        nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code));
+
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [

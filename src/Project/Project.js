@@ -55,6 +55,7 @@ const Project = () => {
 
   const [isTicketValue, setTicketValue] = useState("All");
   const [isTicket, setTicket] = useState([]);
+  const [isNVMKT, setNVMKT] = useState(false);
 
   const [isRole, setRole] = useState("");
   const [isopera, setopera] = useState(true);
@@ -73,7 +74,6 @@ const Project = () => {
       }
 
       const data = await response.json();
-
       const priorityRoles = data.lstUserRole.map((item) => item.roleID);
       const currentHighestRole =
         priorityRoles.find((roleID) =>
@@ -136,7 +136,8 @@ const Project = () => {
       const staffData = await response.json();
       let filteredData = staffData;
       setDataNVTt(staffData);
-
+      var dataNVMKT = filteredData.find((x) => x.userID == isUser);
+      if (dataNVMKT.dep_Code == "MKT") setNVMKT(true);
       isRole !== "Administrator" &&
         isRole !== "Leader" &&
         (filteredData = staffData.filter((x) => x.userID == isUser));
@@ -147,6 +148,7 @@ const Project = () => {
         (filteredData = staffData.filter((x) =>
           isUserLeader.includes(x.userID)
         ));
+
       setDataNV(filteredData);
     } catch (error) {
       console.error(error.message);
@@ -401,7 +403,7 @@ const Project = () => {
         <div
           style={{ display: "flex", whiteSpace: "nowrap", marginRight: "5px" }}
         >
-          {isRole !== "Member" && (
+          {(isRole !== "Member" || isNVMKT) && (
             <>
               <button
                 style={{ marginTop: "2px" }}
