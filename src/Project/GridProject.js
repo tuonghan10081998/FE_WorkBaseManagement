@@ -13,7 +13,9 @@ const GridTask = ({
   setIDDeleteColumn,
   setCheckAdd,
   setPQDuyen,
+  setisNVMKT,
 }) => {
+  console.log(setisNVMKT);
   const elementRef = useRef([]);
   const [isTop, setTop] = useState(null);
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
@@ -272,6 +274,7 @@ const GridTask = ({
       { Header: "Ghi chú", accessor: "completeDate" },
       { Header: "Trạng thái", accessor: "status" },
       { Header: "Người giao việc", accessor: "implementer" },
+      { Header: "Người giao việc", accessor: "idRequester" },
       { Header: "Trách nhiệm", accessor: "responsible" },
       { Header: "Người thực hiện", accessor: "requester" },
       { Header: "Deadline", accessor: "toDate" },
@@ -314,6 +317,7 @@ const GridTask = ({
         "fromDate",
         "completeDate",
         "remindDate",
+        "idRequester",
       ].includes(column.id)
     ) {
       return {
@@ -568,7 +572,8 @@ const GridTask = ({
                             <i class="fa-solid fa-eye me-1"></i>
                             <span> Xem </span>
                           </div>
-                          {setPQDuyen !== "Member" && (
+                          {(setPQDuyen !== "Member" ||
+                            row.values.idRequester === isUser) && (
                             <div
                               onClick={(e) => {
                                 if (handleSetting) {

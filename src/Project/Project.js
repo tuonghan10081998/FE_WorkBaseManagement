@@ -229,9 +229,17 @@ const Project = () => {
   useEffect(() => {
     let filteredData = data;
     if (isRole === "") return;
-    if (isRole === "Member" && !isNVMKT) {
-      filteredData = filteredData.filter((x) =>
-        x.idImplementer?.includes(isUser)
+    // if (isRole === "Member" && !isNVMKT) {
+    //   filteredData = filteredData.filter((x) =>
+    //     x.idImplementer?.includes(isUser)
+    //   );
+    // }
+    if (isRole === "Member") {
+      filteredData = filteredData.filter(
+        (x) =>
+          x.idImplementer?.includes(isUser) ||
+          x.idRequester === isUser ||
+          x.idResponsible === isUser
       );
     }
     if (isRole === "UnderLeader") {
@@ -411,20 +419,20 @@ const Project = () => {
         <div
           style={{ display: "flex", whiteSpace: "nowrap", marginRight: "5px" }}
         >
-          {(isRole !== "Member" || isNVMKT) && (
-            <>
-              <button
-                style={{ marginTop: "2px" }}
-                onClick={() => {
-                  setShowPopup(!showPopup);
-                  setWorkItem([]);
-                }}
-                className="btn btn-primary mr-2"
-              >
-                <i className="fas fa-plus"></i> Thêm dự án
-              </button>
-            </>
-          )}
+          {/* {(isRole !== "Member" || isNVMKT) && ( */}
+          <>
+            <button
+              style={{ marginTop: "2px" }}
+              onClick={() => {
+                setShowPopup(!showPopup);
+                setWorkItem([]);
+              }}
+              className="btn btn-primary mr-2"
+            >
+              <i className="fas fa-plus"></i> Thêm dự án
+            </button>
+          </>
+          {/* )} */}
         </div>
       </div>
       <div
@@ -532,6 +540,7 @@ const Project = () => {
           setIDDeleteColumn={setDelete}
           setCheckAdd={setCheckAdd}
           setPQDuyen={isRole}
+          setisNVMKT={isNVMKT}
         />
       </div>
       <Modal

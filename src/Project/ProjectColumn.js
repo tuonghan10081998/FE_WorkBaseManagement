@@ -316,7 +316,8 @@ const ProjectColumn = ({
                       <i class="fa-solid fa-eye me-1"></i>
                       <span> Xem </span>
                     </div>
-                    {setPQDuyen !== "Member" && (
+                    {(setPQDuyen !== "Member" ||
+                      task.idRequester === isUser) && (
                       <div
                         onClick={(e) => {
                           if (handleSetting) {
@@ -368,7 +369,7 @@ const ProjectColumn = ({
                       style={{ color: "#8ec311" }}
                       className="fas fa-user me-1"
                     ></i>
-                    Quản lý: {task.requester}
+                    Giao việc: {task.requester}
                   </p>
                 </div>
               </div>

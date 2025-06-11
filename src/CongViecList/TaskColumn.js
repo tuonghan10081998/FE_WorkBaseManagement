@@ -401,7 +401,8 @@ const TaskColumn = ({
                       <i class="fa-solid fa-eye me-1"></i>
                       <span> Xem </span>
                     </div>
-                    {setPQDuyen !== "Member" && (
+                    {(setPQDuyen !== "Member" ||
+                      task.idRequester === isUser) && (
                       <div
                         onClick={(e) => {
                           if (handleSetting) {

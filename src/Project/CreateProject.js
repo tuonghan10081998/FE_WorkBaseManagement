@@ -100,8 +100,13 @@ const CreateProject = ({
       }
       setRole === "Leader" &&
         (nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code)));
+
       setRole === "UnderLeader" &&
         (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
+
+      setRole === "Member" &&
+        dataNVMKT.dep_Code !== "MKT" &&
+        (nhanvien = nhanvien.filter((x) => x.userID === isUser));
 
       if (dataNVMKT.dep_Code == "MKT")
         nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code));

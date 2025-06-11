@@ -322,6 +322,7 @@ const GridWork = ({
       { Header: "Trạng thái", accessor: "status" },
       { Header: "Người giao việc", accessor: "implementer" },
       { Header: "Trách nhiệm", accessor: "responsible" },
+      { Header: "Người giao việc", accessor: "idRequester" },
       { Header: "Người thực hiện", accessor: "requester" },
       { Header: "Deadline", accessor: "toDate" },
       { Header: "Hành động", accessor: "complete" },
@@ -368,6 +369,7 @@ const GridWork = ({
         ,
         "feedback",
         "requestFile",
+        "idRequester",
       ].includes(column.id)
     ) {
       return {
@@ -649,7 +651,8 @@ const GridWork = ({
                             <i class="fa-solid fa-eye me-1"></i>
                             <span> Xem </span>
                           </div>
-                          {setPQDuyen !== "Member" && (
+                          {(setPQDuyen !== "Member" ||
+                            row.values.idRequester === isUser) && (
                             <div
                               onClick={(e) => {
                                 if (handleSetting) {

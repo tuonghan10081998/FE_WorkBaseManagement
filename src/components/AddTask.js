@@ -72,6 +72,7 @@ const AddTask = ({
   const [isFile, setFile] = useState("");
   const [fileName, setFileName] = useState("");
   const [isUserLeader, setUserLeader] = useState("");
+  const [isNVMKT, setNVMKT] = useState(false);
   const inputRef = useState(null);
   useEffect(() => {
     if (selectRef2.current) {
@@ -93,6 +94,7 @@ const AddTask = ({
   useEffect(() => {
     if (setDataNV?.length > 0) {
       let nhanvien = setDataNV;
+      var dataNVMKT = nhanvien.find((x) => x.userID == isUser);
       if (selectedDepartment != "") {
         nhanvien = nhanvien.filter((x) => x.dep_Code == selectedDepartment);
       }
@@ -101,10 +103,13 @@ const AddTask = ({
 
       setRole === "UnderLeader" &&
         (nhanvien = nhanvien.filter((x) => setisUserLeader.includes(x.userID)));
-      console.log(nhanvien);
+
       setRole === "Member" &&
+        dataNVMKT.dep_Code !== "MKT" &&
         (nhanvien = nhanvien.filter((x) => x.userID === isUser));
-      console.log(nhanvien);
+
+      if (dataNVMKT.dep_Code == "MKT")
+        nhanvien = nhanvien.filter((x) => isDepCode.includes(x.dep_Code));
       const nhanvienNew = Array.from(
         new Map(
           nhanvien.map((item) => [

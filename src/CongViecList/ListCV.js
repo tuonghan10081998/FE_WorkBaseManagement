@@ -227,8 +227,11 @@ const ListCV = () => {
     let filteredData = data;
     if (isRole === "") return;
     if (isRole === "Member") {
-      filteredData = filteredData.filter((x) =>
-        x.idImplementer?.includes(isUser)
+      filteredData = filteredData.filter(
+        (x) =>
+          x.idImplementer?.includes(isUser) ||
+          x.idRequester === isUser ||
+          x.idResponsible === isUser
       );
     }
     if (isRole === "UnderLeader") {
