@@ -100,6 +100,7 @@ const Project = () => {
 
         setUserLeader(allUserIDs);
       }
+
       currentHighestRole === "Member" && setopera(false);
       setRole(currentHighestRole);
     } catch (error) {
@@ -228,7 +229,7 @@ const Project = () => {
   useEffect(() => {
     let filteredData = data;
     if (isRole === "") return;
-    if (isRole === "Member") {
+    if (isRole === "Member" && !isNVMKT) {
       filteredData = filteredData.filter((x) =>
         x.idImplementer?.includes(isUser)
       );
@@ -242,13 +243,20 @@ const Project = () => {
           exactCodes.includes(x.idResponsible)
       );
     }
+
     if (isRole === "Leader") {
       let exactCodes = isLeader.split(",");
       filteredData = filteredData.filter((x) =>
         exactCodes.includes(x.dep_Code)
       );
     }
-
+    if (isNVMKT)
+      filteredData = filteredData.filter(
+        (x) =>
+          x.idImplementer === isUser ||
+          x.idRequester === isUser ||
+          x.idResponsible === isUser
+      );
     if (isPhongBanValue != "All")
       filteredData = filteredData.filter((x) =>
         x.dep_Code?.includes(isPhongBanValue)
@@ -274,7 +282,7 @@ const Project = () => {
     );
     setdataFilter(filteredData);
     setDataF(filteredData);
-  }, [data, isRole]);
+  }, [data, isRole, isNVMKT]);
 
   useEffect(() => {
     let ticketFilter = isdataF;
