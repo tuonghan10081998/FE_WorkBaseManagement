@@ -16,9 +16,14 @@ const AchievementCard = ({ achievement }) => {
         <img
           src={achievement.imageapi}
           alt={achievement.title}
-          width="300"
-          height="200"
-          style={{ objectFit: "cover", borderRadius: "0.5rem" }}
+          style={{
+            objectFit: "cover",
+            borderRadius: "0.5rem",
+            width: "100%",
+            height: "100%",
+            maxHeight: "200px",
+            maxWidth: "300px",
+          }}
           loading="lazy"
         />
         <div className="achievement-title mt-2 text-center fw-semibold">

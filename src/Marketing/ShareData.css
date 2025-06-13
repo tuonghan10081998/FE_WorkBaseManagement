@@ -133,6 +133,10 @@
 .sticky-col-4 {
   left: 440px;
 }
+.css-1nmdiq5-menu {
+  z-index: 9999 !important;
+}
+
 @media (max-width: 800px) {
   #mainContent {
     width: 100vw !important;

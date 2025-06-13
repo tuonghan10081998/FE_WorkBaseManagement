@@ -20,13 +20,19 @@ const Banner = ({ img }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          maxHeight: "350px",
         }}
       >
         <img
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "conver",
+          }}
           src={img}
           alt="Banner thông báo"
-          width="1600"
-          height="350"
+          // width="1600"
+          // height="350"
           loading="lazy"
         />
       </div>
