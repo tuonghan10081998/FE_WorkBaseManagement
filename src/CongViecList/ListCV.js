@@ -526,7 +526,39 @@ const ListCV = () => {
           setPQDuyen={isRole}
         />
       </div>
-      <Modal
+      <>
+        {showPopup && (
+          <div className="modal-backdrop fade show"></div> // Thêm lớp backdrop khi modal mở
+        )}
+        <div
+          className={`modal  ${showPopup ? "d-block" : "d-none"}`} // Điều khiển modal mở hay đóng
+          tabIndex={-1}
+          role="dialog"
+          id="customModal"
+          aria-labelledby="popupModalHeader"
+        >
+          <div
+            // style={{ width: "60%", maxWidth: "80%" }}
+            className="modal-dialog modal-dialog-centered custom-modal-dialog"
+            role="document"
+          >
+            <div className="modal-content">
+              <div className="modal-body cardleave" style={{ padding: "2px" }}>
+                <AddTask
+                  setShowPopup={setShowPopup}
+                  setCheckAdd={setCheckAdd}
+                  setDataAddTask={isWorkItem}
+                  setEdit={isEdit}
+                  setDataNV={isDataNVTT}
+                  setRole={isRole}
+                  setisUserLeader={isUserLeader}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+      {/* <Modal
         show={showPopup}
         //   onHide={handleClose}
         dialogClassName="modal-dialog-centered custom-modal-dialog"
@@ -536,17 +568,9 @@ const ListCV = () => {
         className="popupModalCreateLeave"
       >
         <Modal.Body>
-          <AddTask
-            setShowPopup={setShowPopup}
-            setCheckAdd={setCheckAdd}
-            setDataAddTask={isWorkItem}
-            setEdit={isEdit}
-            setDataNV={isDataNVTT}
-            setRole={isRole}
-            setisUserLeader={isUserLeader}
-          />
+          
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

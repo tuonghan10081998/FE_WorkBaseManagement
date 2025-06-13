@@ -473,10 +473,14 @@ const GridWork = ({
                       <p>{row.values.implementer}</p>
                     </td>
                     <td style={{ maxWidth: "70px" }} className="">
-                      {moment(row.values.fromDate, "DD/MM/YYYY").format(
-                        "DD/MM"
+                      {moment(
+                        row.values.fromDate,
+                        "DD/MM/YYYY HH:mm:ss"
+                      ).format("DD/MM/YY HH:mm")}
+                      -
+                      {moment(row.values.toDate, "DD/MM/YYYY HH:mm:ss").format(
+                        "DD/MM/YY HH:mm"
                       )}
-                      -{moment(row.values.toDate, "DD/MM/YYYY").format("DD/MM")}
                     </td>
                     <td style={{ maxWidth: "50px" }} className="box-wrap">
                       <div
@@ -586,15 +590,24 @@ const GridWork = ({
 
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
-                              <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${
-                                row.values.fromDate
-                              } - ${row.values.toDate}
+                             <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${moment(
+                               row.values.fromDate,
+                               "DD/MM/YYYY HH:mm:ss"
+                             ).format("DD/MM/YY HH:mm")} - ${moment(
+                                row.values.toDate,
+                                "DD/MM/YYYY HH:mm:ss"
+                              ).format("DD/MM/YY HH:mm")}
                             </div>
                           </div>
                            <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                             <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: ${
-                              row.values.remindDate || ""
+                              row.values.remindDate
+                                ? moment(
+                                    row.values.remindDate,
+                                    "DD/MM/YYYY HH:mm:ss"
+                                  ).format("DD/MM/YY HH:mm")
+                                : ""
                             }
                             </div>
                           </div>
@@ -620,14 +633,19 @@ const GridWork = ({
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                              <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
-                               row.values.completeDate || ""
+                               row.values.completeDate
+                                 ? moment(
+                                     row.values.completeDate,
+                                     "DD/MM/YYYY HH:mm:ss"
+                                   ).format("DD/MM/YY HH:mm")
+                                 : ""
                              }
                             </div>
                           </div>
                            <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                               <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : 
-                              <div style="margin-left: 20px;">${
+                              <div style="margin-left: 20px;word-break: break-all;">${
                                 row.values.note || ""
                               }</div> 
                             </div>
@@ -668,7 +686,8 @@ const GridWork = ({
                               <span>Sửa</span>
                             </div>
                           )}
-                          {setPQDuyen === "Administrator" && (
+                          {(setPQDuyen === "Administrator" ||
+                            row.values.idRequester === isUser) && (
                             <div
                               data-id={row.values.id}
                               onClick={(e) => {

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useContext } from "react";
 import { InitDate } from "./DatePicker";
+import { InitDateH } from "../components/DatePickerHour";
 import TextEditor from "./TextEdit";
 import { TitleContext } from "../components/TitleContext";
 import $, { data } from "jquery";
@@ -189,10 +190,16 @@ const AddTask = ({
       note: isGhiChu,
       idRequester: isUser,
       createDate: moment().format("YYYY-MM-DD"),
-      fromDate: moment(isThoiGianBD, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      toDate: moment(isThoiGianKT, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      remindDate: moment(isThoiGianBao, "DD/MM/YYYY").format("YYYY-MM-DD"),
-      completeDate: moment().format("YYYY-MM-DD"),
+      fromDate: moment(isThoiGianBD, "DD/MM/YYYY HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss.SSS"
+      ),
+      toDate: moment(isThoiGianKT, "DD/MM/YYYY HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss.SSS"
+      ),
+      remindDate: moment(isThoiGianBao, "DD/MM/YYYY HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss.SSS"
+      ),
+      completeDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS"),
       idResponsible: arrNvTN,
       idApprover: "",
       statusHT: value,
@@ -268,7 +275,7 @@ const AddTask = ({
     setIcon(<i className="fa-solid fa-plus icontitle"></i>);
   }, []);
   useEffect(() => {
-    InitDate(".thoigian", setThoiGianBD, setThoiGianKT, setThoiGianBao);
+    InitDateH(".thoigian", setThoiGianBD, setThoiGianKT, setThoiGianBao);
   }, []);
   const getPhongBan = async () => {
     var url = `${process.env.REACT_APP_URL_API}Department/Get?action=get`;

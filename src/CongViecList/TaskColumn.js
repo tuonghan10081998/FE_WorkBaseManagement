@@ -335,22 +335,39 @@ const TaskColumn = ({
 
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
-                              <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${
-                                task.fromDate
-                              } - ${task.toDate}
+
+                             <i style="color: #C16262;" class="fas fa-clock"></i> Ngày: ${moment(
+                               task.fromDate,
+                               "DD/MM/YYYY HH:mm:ss"
+                             ).format("DD/MM/YY HH:mm")} - ${moment(
+                          task.toDate,
+                          "DD/MM/YYYY HH:mm:ss"
+                        ).format("DD/MM/YY HH:mm")}
                             </div>
                           </div>
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
-                            <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: ${
-                              task.remindDate || ""
+                            <i style="color:#768d1e" class="fa-solid fa-bell"></i> Ngày báo deadline: 
+                            ${
+                              task.remindDate
+                                ? moment(
+                                    task.remindDate,
+                                    "DD/MM/YYYY HH:mm:ss"
+                                  ).format("DD/MM/YY HH:mm")
+                                : ""
                             }
+                           
                             </div>
                           </div>
                           <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                              <i style="color: #354b8b;" class="fa-solid fa-calendar-plus"></i> Ngày hoàn thành: ${
-                               task.completeDate || ""
+                               task.completeDate
+                                 ? moment(
+                                     task.completeDate,
+                                     "DD/MM/YYYY HH:mm:ss"
+                                   ).format("DD/MM/YY HH:mm")
+                                 : ""
                              }
                             </div>
                           </div>
@@ -373,7 +390,7 @@ const TaskColumn = ({
                            <div class="task_item item_detail" style="gap: 2px;">
                             <div>
                               <i  style="color:#2746bb" class="fa-solid fa-snowflake"></i> Chi tiết : 
-                              <div style="margin-left: 20px;">${
+                              <div style="margin-left: 20px;word-break: break-all;">${
                                 task.note || ""
                               }</div> 
                             </div>
@@ -418,7 +435,8 @@ const TaskColumn = ({
                         <span>Sửa</span>
                       </div>
                     )}
-                    {setPQDuyen === "Administrator" && (
+                    {(setPQDuyen === "Administrator" ||
+                      task.idRequester === isUser) && (
                       <div
                         data-id={task.id}
                         onClick={(e) => {
@@ -482,9 +500,11 @@ const TaskColumn = ({
               <div className="task_item" style={{ gap: "2px" }}>
                 <p>
                   <i className="fas fa-clock "></i> Ngày:{" "}
-                  {`${moment(task.fromDate, "DD/MM/YYYY").format(
-                    "DD/MM"
-                  )} - ${moment(task.toDate, "DD/MM/YYYY").format("DD/MM")}`}
+                  {`${moment(task.fromDate, "DD/MM/YYYY HH:mm:ss").format(
+                    "DD/MM/YY HH:mm"
+                  )} - ${moment(task.toDate, "DD/MM/YYYY HH:mm:ss").format(
+                    "DD/MM/YY HH:mm"
+                  )}`}
                 </p>
                 {status === 3 && (
                   <div>

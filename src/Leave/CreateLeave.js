@@ -95,10 +95,6 @@ const Createleave = ({
     arrLeave.push(object);
     await PostSave(object, namePost);
   };
-  useEffect(() => {
-    console.log(isThoiGianBD);
-    console.log();
-  }, [isThoiGianBD]);
   const handleNotifi = (value) => {
     iziToast.warning({
       title: "Warning",
