@@ -34,7 +34,7 @@ const DashBoardUser = () => {
     setIconAdd();
   }, [setTitle, setIcon]);
   const getData = async (thang, nam) => {
-    const url = `${process.env.REACT_APP_URL_API}Notification/Get?month=${thang}&year=${nam}`;
+    const url = `${process.env.REACT_APP_URL_API}DashBoard/GetEmployeeDB?month=${thang}&year=${nam}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -42,13 +42,38 @@ const DashBoardUser = () => {
       }
 
       const data = await response.json();
-      const withImageApi = data.map((item) => ({
+
+      const withImageApi = data.notification?.map((item) => ({
         ...item,
         imageapi: `${IMG_API}${item.images ?? "Default/UserDefault.png"}`,
       }));
       const ImageThongBao =
         withImageApi.length > 0 ? withImageApi[0].imageapi : "";
+
       setImageNoti(ImageThongBao);
+
+      const withImageApiS = data.bestSaler?.map((item) => ({
+        ...item,
+        imageapi: `${IMG_API}${
+          item.avartar?.trim() ? item.avartar : "Default/UserDefault.png"
+        }`,
+      }));
+      setBestSalers(withImageApiS);
+
+      const withImageApiBT = data.bestTeam?.map((item) => ({
+        ...item,
+        imageapi: `${IMG_API}${
+          item.images?.trim() ? item.images : "Default/UserDefault.png"
+        }`,
+      }));
+      setbestTeams(withImageApiBT);
+
+      const withImageApiA = data.achivement?.map((item) => ({
+        ...item,
+        imageapi: `${IMG_API}${item.images}`,
+      }));
+
+      setAchievements(withImageApiA);
     } catch (error) {
       console.error(error.message);
     }
@@ -74,9 +99,9 @@ const DashBoardUser = () => {
   };
   useEffect(() => {
     getData(selectedMonth, selectedYear);
-    getDataBestSaler(selectedMonth, selectedYear);
-    getDataBestTeam(selectedMonth, selectedYear);
-    getDataAchievements(selectedMonth, selectedYear);
+    // getDataBestSaler(selectedMonth, selectedYear);
+    // getDataBestTeam(selectedMonth, selectedYear);
+    // getDataAchievements(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
   const getDataBestTeam = async (thang, nam) => {
     const url = `${process.env.REACT_APP_URL_API}BestTeam/Get?month=${thang}&year=${nam}`;
