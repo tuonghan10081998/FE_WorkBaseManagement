@@ -328,6 +328,14 @@ const GridShare = ({
     });
     setDataF(dataSort);
   };
+  const handleSortNgayN = (value) => {
+    const dataSort = isDataF.sort((a, b) => {
+      const dateA = moment(a.receiveDate, "DD/MM/YYYY");
+      const dateB = moment(b.receiveDate, "DD/MM/YYYY");
+      return value ? dateB - dateA : dateA - dateB; // Sắp xếp giảm dần
+    });
+    setDataF(dataSort);
+  };
   const handleSortCheck = (value) => {
     const sortedData = isDataF.sort((a, b) =>
       value ? a.isChecked - b.isChecked : b.isChecked - a.isChecked
@@ -559,7 +567,7 @@ const GridShare = ({
                           <i
                             onClick={() => {
                               setSortNgayN(!isSortNgayN);
-                              handleSortNgay(!isSortNgayN);
+                              handleSortNgayN(!isSortNgayN);
                             }}
                             class="fa-solid fa-sort icon-sort"
                           ></i>

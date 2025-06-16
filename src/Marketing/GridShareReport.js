@@ -77,6 +77,14 @@ const GridShareReport = ({
     });
     setDataF(dataSort);
   };
+  const handleSortNgayN = (value) => {
+    const dataSort = isDataF.sort((a, b) => {
+      const dateA = moment(a.receiveDate, "DD/MM/YYYY");
+      const dateB = moment(b.receiveDate, "DD/MM/YYYY");
+      return value ? dateB - dateA : dateA - dateB; // Sắp xếp giảm dần
+    });
+    setDataF(dataSort);
+  };
   const handleSortPreBroker = (value, valueSort) => {
     const sortedData = [...isDataF].sort((a, b) =>
       value
@@ -177,7 +185,7 @@ const GridShareReport = ({
                           <i
                             onClick={() => {
                               setSortNgayN(!isSortNgayN);
-                              handleSortNgay(!isSortNgayN);
+                              handleSortNgayN(!isSortNgayN);
                             }}
                             class="fa-solid fa-sort icon-sort"
                           ></i>
@@ -420,27 +428,27 @@ const GridShareReport = ({
                               }}
                             >
                               <div className="d-flex justify-content-around gap-2 px-2">
-                                {(x.status !== 1 ||
+                                {/* {(x.status !== 1 ||
                                   setIsRole ===
-                                    "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db") && (
-                                  <div
-                                    onClick={(e) => handleClick(x.id)}
+                                    "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db") && ( */}
+                                <div
+                                  onClick={(e) => handleClick(x.id)}
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  title="Chỉnh sửa"
+                                >
+                                  <i
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
+                                      fontSize: "18px",
+                                      cursor: "pointer",
                                     }}
-                                    title="Chỉnh sửa"
-                                  >
-                                    <i
-                                      style={{
-                                        fontSize: "18px",
-                                        cursor: "pointer",
-                                      }}
-                                      className="fa-solid fa-user-pen"
-                                    ></i>
-                                  </div>
-                                )}
+                                    className="fa-solid fa-user-pen"
+                                  ></i>
+                                </div>
+                                {/* )} */}
                               </div>
                             </td>
                           </tr>

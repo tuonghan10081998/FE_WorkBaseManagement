@@ -18,7 +18,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
   const [isDisable, setDisable] = useState(false);
   const [optionS, setOptionS] = useState([]);
   const [isStatusV, setStatusV] = useState(null);
-
+  const [isDisableS, setDisableS] = useState(false);
   useEffect(() => {
     getStatus();
   }, []);
@@ -159,6 +159,9 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
     setNote(dataF.note || "");
     setPrebroker(dataF.preBroker || "");
     setMT("");
+    isUser !== "a640ab6a-30d6-40bc-8bd2-7ecd1534e0db" &&
+      dataF.status === 1 &&
+      setDisableS(true);
   }, [setIsShow, setID]);
 
   return (
@@ -209,6 +212,7 @@ const ModalShareReport = ({ setShow, setIsShow, data, setData, setID }) => {
                           <div className="form-group col-6 m-0 p-0 ps-1 ">
                             <label htmlFor="projectName">Trạng thái</label>
                             <Select
+                              isDisabled={isDisableS}
                               options={optionS}
                               value={isStatusV}
                               onChange={handleChange}
