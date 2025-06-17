@@ -43,7 +43,11 @@ const GridShareReport = ({
           : x.receiverID === setNhanVien;
 
       const matchTrangThai =
-        setTrangThai === "all" ? true : x.status === setTrangThai;
+        setTrangThai === "all"
+          ? true
+          : setTrangThai === 8
+          ? x.status === 8 || x.status === 0
+          : x.status === setTrangThai;
       const matchSearch =
         (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
@@ -229,6 +233,7 @@ const GridShareReport = ({
                             style={{
                               background: index % 2 == 0 ? "#fff" : "#f3f3f3",
                             }}
+                            data-status={x.status}
                           >
                             <td
                               className="sticky-col sticky-col-0"

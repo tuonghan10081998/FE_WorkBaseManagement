@@ -32,7 +32,11 @@ const ModalShare = ({
         (item) =>
           item.isChecked !== 1 &&
           (setChienDich === "all" || item.utmCampaign === setChienDich) &&
-          (setTrangThai === "all" ? true : item.status === setTrangThai) &&
+          (setTrangThai === "all"
+            ? true
+            : setTrangThai === 8
+            ? item.status === 8 || item.status === 0
+            : item.status === setTrangThai) &&
           ((item.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
             (item.phone ?? "")
               .toUpperCase()
@@ -82,7 +86,11 @@ const ModalShare = ({
       (x) =>
         x.isChecked === 1 &&
         (setChienDich === "all" || x.utmCampaign === setChienDich) &&
-        (setTrangThai === "all" ? true : x.status === setTrangThai) &&
+        (setTrangThai === "all"
+          ? true
+          : setTrangThai === 8
+          ? x.status === 8 || x.status === 0
+          : x.status === setTrangThai) &&
         ((x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
           (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
           (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase())) &&
@@ -154,7 +162,11 @@ const ModalShare = ({
         (item) =>
           item.isChecked !== 1 &&
           (setChienDich === "all" || item.utmCampaign === setChienDich) &&
-          (setTrangThai === "all" ? true : item.status === setTrangThai) &&
+          (setTrangThai === "all"
+            ? true
+            : setTrangThai === 8
+            ? item.status === 8 || item.status === 0
+            : item.status === setTrangThai) &&
           ((item.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
             (item.phone ?? "")
               .toUpperCase()
@@ -243,6 +255,8 @@ const ModalShare = ({
                                       item.utmCampaign === setChienDich) &&
                                     (setTrangThai === "all"
                                       ? true
+                                      : setTrangThai === 8
+                                      ? item.status === 8 || item.status === 0
                                       : item.status === setTrangThai) &&
                                     ((item.name ?? "")
                                       .toUpperCase()

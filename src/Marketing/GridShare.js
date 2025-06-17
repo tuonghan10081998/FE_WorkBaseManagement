@@ -114,7 +114,11 @@ const GridShare = ({
           : x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
 
       const matchTrangThai =
-        setTrangThai === "all" ? true : x.status === setTrangThai;
+        setTrangThai === "all"
+          ? true
+          : setTrangThai === 8
+          ? x.status === 8 || x.status === 0
+          : x.status === setTrangThai;
       const matchSearch =
         (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
@@ -143,7 +147,11 @@ const GridShare = ({
               .includes(setChienDich.toUpperCase());
 
       const matchTrangThai =
-        setTrangThai === "all" ? true : x.status === setTrangThai;
+        setTrangThai === "all"
+          ? true
+          : setTrangThai === 8
+          ? x.status === 8 || x.status === 0
+          : x.status === setTrangThai;
       const matchSearch =
         (x.name ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.phone ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
