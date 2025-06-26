@@ -12,6 +12,7 @@ const ModalShare = ({
   setTrangThai,
   setTimKiem,
   setIsSelectData,
+  setCheckDub,
 }) => {
   const [isShareData, setShareData] = useState(null);
   const [isDisable, setDisable] = useState(false);
@@ -46,7 +47,9 @@ const ModalShare = ({
               .includes(setTimKiem.toUpperCase())) &&
           (setIsSelectData.toString() === "1"
             ? true
-            : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
+            : item.isChecked ===
+              (setIsSelectData.toString() === "3" ? 0 : 1)) &&
+          (setCheckDub ? item.isDup === 1 : true)
       )
       .slice(0, isShareData);
     distributeTasks(
@@ -96,7 +99,8 @@ const ModalShare = ({
           (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase())) &&
         (setIsSelectData.toString() === "1"
           ? true
-          : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
+          : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1)) &&
+        (setCheckDub ? x.isDup === 1 : true)
     );
     var arrSave = [];
     dataSave.map((x) => {
@@ -176,7 +180,9 @@ const ModalShare = ({
               .includes(setTimKiem.toUpperCase())) &&
           (setIsSelectData.toString() === "1"
             ? true
-            : item.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1))
+            : item.isChecked ===
+              (setIsSelectData.toString() === "3" ? 0 : 1)) &&
+          (setCheckDub ? item.isDup === 1 : true)
       ).length
     );
   }, [data, setIsClick]);
@@ -272,7 +278,8 @@ const ModalShare = ({
                                       : item.isChecked ===
                                         (setIsSelectData.toString() === "3"
                                           ? 0
-                                          : 1))
+                                          : 1)) &&
+                                    (setCheckDub ? item.isDup === 1 : true)
                                 ).length
                               }
                               autoComplete="off"

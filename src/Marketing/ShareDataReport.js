@@ -25,6 +25,7 @@ const ShareDataReport = () => {
   const [isSearch, setSearch] = useState("");
   const [isDataNV, setDataNV] = useState([]);
   const [isShowS, setShowS] = useState(false);
+  const [isCheckDub, setCheckDub] = useState(false);
   const [isExport, setExport] = useState(null);
   const [isUserLeader, setUserLeader] = useState("");
   const [dateRange, setDateRange] = useState({
@@ -198,6 +199,9 @@ const ShareDataReport = () => {
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
+  const handleOnCheckDub = (value) => {
+    setCheckDub(value);
+  };
 
   const getData = async () => {
     if (isRole === "") return;
@@ -345,6 +349,8 @@ const ShareDataReport = () => {
         OnChangeSearch={OnChangeSearch}
         OnClickView={OnClickView}
         OnChangeExport={OnChangeExport}
+        setCheckDub={isCheckDub}
+        handleOnCheckDub={handleOnCheckDub}
       />
       <GridShareReport
         data={isData}
@@ -357,6 +363,7 @@ const ShareDataReport = () => {
         setShowS={setShowS}
         setIsRole={isUser}
         setIsExport={isExport}
+        setCheckDub={isCheckDub}
       />
     </div>
   );

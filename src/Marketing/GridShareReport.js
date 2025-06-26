@@ -15,6 +15,7 @@ const GridShareReport = ({
   setShowS,
   setIsRole,
   setIsExport,
+  setCheckDub,
 }) => {
   const [listData, setListData] = useState([]);
   const [isID, setID] = useState(null);
@@ -41,7 +42,7 @@ const GridShareReport = ({
             ? true
             : x.dep_Code === setPhongBan
           : x.receiverID === setNhanVien;
-
+      const matchIsDub = setCheckDub ? x.isDup === 1 : true;
       const matchTrangThai =
         setTrangThai === "all"
           ? true
@@ -54,7 +55,13 @@ const GridShareReport = ({
         (x.mail ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.preBroker ?? "").toUpperCase().includes(setTimKiem.toUpperCase()) ||
         (x.broker ?? "").toUpperCase().includes(setTimKiem.toUpperCase());
-      return matchChienDich && matchReceiver && matchTrangThai && matchSearch;
+      return (
+        matchChienDich &&
+        matchReceiver &&
+        matchTrangThai &&
+        matchSearch &&
+        matchIsDub
+      );
     });
 
     setDataF(dataF);
@@ -65,7 +72,9 @@ const GridShareReport = ({
     setPhongBan,
     setTrangThai,
     setTimKiem,
+    setCheckDub,
   ]);
+
   useEffect(() => {
     data && setListData(data);
   }, [data]);

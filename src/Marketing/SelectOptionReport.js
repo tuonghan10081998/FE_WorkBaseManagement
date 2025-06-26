@@ -19,6 +19,8 @@ const SelectOptionReport = ({
   OnChangeSearch,
   OnClickView,
   OnChangeExport,
+  setCheckDub,
+  handleOnCheckDub,
 }) => {
   return (
     <div
@@ -92,7 +94,24 @@ const SelectOptionReport = ({
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-lg-4 px-0">
+              <div className="col-12 col-lg-4 d-flex justify-content-between px-0">
+                <div>
+                  <label style={{ whiteSpace: "nowrap" }}>Trùng data</label>{" "}
+                  <div
+                    style={{
+                      height: "38px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      style={{ width: "30px" }}
+                      value={setCheckDub}
+                      onChange={(e) => handleOnCheckDub(!setCheckDub)}
+                      type="checkbox"
+                    />
+                  </div>
+                </div>
                 <div className="d-flex justify-content-end">
                   <button
                     onClick={OnClickView}

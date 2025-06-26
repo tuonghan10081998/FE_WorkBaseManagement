@@ -5,6 +5,7 @@ import iziToast from "izitoast";
 import { Modal, Button } from "react-bootstrap";
 import ModalUpdate from "./ModalUpdate";
 import moment from "moment";
+import { fontSize } from "@mui/system";
 const GridShare = ({
   dataNV,
   data,
@@ -37,6 +38,7 @@ const GridShare = ({
   const [isSorCheck, setSortCheck] = useState(false);
   const [isIDU, setIDU] = useState("");
   const [isDisableDelete, setDisableDelete] = useState(false);
+  const [isCheckDub, setCheckDub] = useState(false);
   const handleChangeCheck = (e, id, isChecked) => {
     e.preventDefault();
     const newData = listData.map((x) => {
@@ -112,7 +114,7 @@ const GridShare = ({
         isID === null
           ? true
           : x.isChecked !== 1 || (x.isChecked === 1 && x.receiverID === isID);
-
+      const matchIsDub = isCheckDub ? x.isDup === 1 : true;
       const matchTrangThai =
         setTrangThai === "all"
           ? true
@@ -132,7 +134,8 @@ const GridShare = ({
         matchReceiver &&
         matchSearch &&
         matchTrangThai &&
-        matchShareData
+        matchShareData &&
+        matchIsDub
       );
     });
     setDataF(dataF);
@@ -145,7 +148,7 @@ const GridShare = ({
           : (x.utmCampaign ?? "")
               .toUpperCase()
               .includes(setChienDich.toUpperCase());
-
+      const matchIsDub = isCheckDub ? x.isDup === 1 : true;
       const matchTrangThai =
         setTrangThai === "all"
           ? true
@@ -161,12 +164,19 @@ const GridShare = ({
           ? true
           : x.isChecked === (setIsSelectData.toString() === "3" ? 0 : 1);
 
-      return matchChienDich && matchTrangThai && matchSearch && matchShareData;
+      return (
+        matchChienDich &&
+        matchTrangThai &&
+        matchSearch &&
+        matchShareData &&
+        matchIsDub
+      );
     });
     setDataF(dataF);
 
     setDataF(dataF);
-  }, [setTimKiem, setTrangThai, setIsSelectData]);
+  }, [setTimKiem, setTrangThai, setIsSelectData, isCheckDub]);
+
   useEffect(() => {
     if (data && Array.isArray(data)) {
       setListData(data);
@@ -385,6 +395,9 @@ const GridShare = ({
     setIDU(value);
     setShowU(true);
   };
+  const handleOnCheckDub = (value) => {
+    setCheckDub(value);
+  };
   return (
     <div className="py-2 px-2 ">
       <div className="row g-2">
@@ -482,6 +495,24 @@ const GridShare = ({
                 )}
               </div>
               <div className="d-flex " style={{ gap: "10px" }}>
+                <div className="d-flex justify-content-start align-items-center  gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      style={{ width: "20px", height: "20px" }}
+                      value={isCheckDub}
+                      onChange={(e) => handleOnCheckDub(!isCheckDub)}
+                      type="checkbox"
+                    />
+                  </div>
+                  <label style={{ whiteSpace: "nowrap", fontSize: "18px" }}>
+                    Trùng data
+                  </label>{" "}
+                </div>
                 <button
                   onClick={(e) => ExportCsv(e)}
                   type="button"
@@ -826,6 +857,7 @@ const GridShare = ({
         setTrangThai={setTrangThai}
         setTimKiem={setTimKiem}
         setIsSelectData={setIsSelectData}
+        setCheckDub={isCheckDub}
       />
       <GoogleSheetForm
         setIsShow={isShow}
