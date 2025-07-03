@@ -600,6 +600,7 @@ const GridShare = ({
                           Mail
                         </td>
                         <td scope="col">Câu hỏi</td>
+                        <td scope="col">Người nhận </td>
                         <td scope="col">Người nhận cũ</td>
                         <td scope="col">
                           Ngày nhận
@@ -707,6 +708,15 @@ const GridShare = ({
                               title={x.question}
                             >
                               <p>{x.question}</p>
+                            </td>
+                            <td
+                              style={{
+                                whiteSpace: "nowrap",
+                                minWidth: "150px",
+                              }}
+                              title={x.receiver}
+                            >
+                              <p>{x.receiver}</p>
                             </td>
                             <td
                               style={{

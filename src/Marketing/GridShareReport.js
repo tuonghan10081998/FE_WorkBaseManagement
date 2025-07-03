@@ -23,6 +23,7 @@ const GridShareReport = ({
   const [isShowH, setShowH] = useState(false);
   const [isDataF, setDataF] = useState([]);
   const [isNameKH, setNameKH] = useState("");
+  const [isUrl, setUrl] = useState("");
   const [isSortNgay, setSortNgay] = useState(false);
   const [isSortNgayN, setSortNgayN] = useState(true);
   const [ispreBroker, setpreBroker] = useState(false);
@@ -243,6 +244,7 @@ const GridShareReport = ({
                               background: index % 2 == 0 ? "#fff" : "#f3f3f3",
                             }}
                             data-status={x.status}
+                            data-url={x.url}
                           >
                             <td
                               className="sticky-col sticky-col-0"
@@ -279,6 +281,7 @@ const GridShareReport = ({
                                 onClick={(e) => {
                                   setID(x.id);
                                   setNameKH(x.name);
+                                  setUrl(x.url);
                                   setShowH(true);
                                 }}
                                 style={{
@@ -519,6 +522,7 @@ const GridShareReport = ({
         setShowH={setShowH}
         setID={isID}
         setTenKH={isNameKH}
+        setUrl={isUrl}
       />
     </div>
   );

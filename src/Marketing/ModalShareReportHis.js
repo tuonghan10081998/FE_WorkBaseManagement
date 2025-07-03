@@ -1,6 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
-const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
+const ModalShareReportHis = ({
+  setShowH,
+  setIsShowH,
+  setID,
+  setTenKH,
+  setUrl,
+}) => {
   useEffect(() => {
     setIsShowH && getHistory();
   }, [setID, setIsShowH]);
@@ -55,7 +61,7 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
               <form>
                 <div className="col-lg-12 col-xl-12 m-0 p-0 my-2">
                   <div className="row">
-                    <div className="form-group col-6 m-0 p-0">
+                    <div className="form-group col-6 m-0 p-0 pe-1">
                       <label htmlFor="endDate">Khách hàng</label>
                       <input
                         readOnly={true}
@@ -65,6 +71,12 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                         value={setTenKH}
                         autoComplete="off"
                       />
+                    </div>
+                    <div className="form-group col-6 m-0 p-0 ps-1">
+                      <label htmlFor="endDate">URL</label>
+                      <div className="wrapperUrl">
+                        <div className="text-contentUrl">{setUrl}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -118,7 +130,7 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                                       fontWeight: "bold",
                                     }}
                                   >
-                                    <p>{x.statusName}</p>
+                                    <p title={x.statusName}>{x.statusName}</p>
                                   </td>
                                   <td
                                     style={{
@@ -169,7 +181,7 @@ const ModalShareReportHis = ({ setShowH, setIsShowH, setID, setTenKH }) => {
                                       minWidth: "200px",
                                     }}
                                   >
-                                    <p>{x.note}</p>
+                                    <p title={x.note}>{x.note}</p>
                                   </td>
                                 </tr>
                               );

@@ -10,6 +10,7 @@ const ModalUpdate = ({ setShowU, setIsShowU, data, setData, setID }) => {
   const [isCountry, setCountry] = useState("");
   const [isNguonUTM, setNguonUTM] = useState("");
   const [isCDUTM, setCDUTM] = useState("");
+  const [isUrl, setUrl] = useState("");
   const [isDisable, setDisable] = useState(false);
 
   const handleSave = (e) => {
@@ -97,6 +98,7 @@ const ModalUpdate = ({ setShowU, setIsShowU, data, setData, setID }) => {
     setCountry(dataF?.country || "");
     setNguonUTM(dataF?.utmSource || "");
     setCDUTM(dataF?.utmCampaign || "");
+    setUrl(dataF?.url || "");
   }, [setIsShowU, setID]);
 
   return (
@@ -220,6 +222,16 @@ const ModalUpdate = ({ setShowU, setIsShowU, data, setData, setID }) => {
                               value={isCDUTM}
                               autoComplete="off"
                             />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-12 m-0 p-0 my-2 ">
+                        <div className="row">
+                          <div className="form-group col-12 m-0 p-0 ">
+                            <label htmlFor="projectName">URL</label>
+                            <div className="wrapperUrl">
+                              <div className="text-contentUrl">{isUrl}</div>
+                            </div>
                           </div>
                         </div>
                       </div>

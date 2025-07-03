@@ -136,7 +136,21 @@
 .css-1nmdiq5-menu {
   z-index: 9999 !important;
 }
+.wrapperUrl {
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 5px;
+  padding: 2px 5px;
+  min-height: 38px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
 
+.text-contentUrl {
+  max-width: 100%; /* Giới hạn chiều rộng nội dung */
+  white-space: normal; /* Cho phép xuống dòng */
+  word-wrap: break-word; /* Bắt buộc xuống dòng khi từ quá dài */
+}
 @media (max-width: 800px) {
   #mainContent {
     width: 100vw !important;
