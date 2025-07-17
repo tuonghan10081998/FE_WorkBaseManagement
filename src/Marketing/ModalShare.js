@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import iziToast from "izitoast";
+import { zhCN } from "@mui/x-date-pickers/locales";
 const ModalShare = ({
   data,
   setIsClick,
@@ -26,6 +27,7 @@ const ModalShare = ({
         message: `Vui lòng chọn nhân viên`,
         position: "topRight",
       });
+      setDisable(true);
       return;
     }
     const tasksToAssign = data
@@ -78,16 +80,17 @@ const ModalShare = ({
             data[indexInData].isChecked = 1;
             data[indexInData].receiverID = user.userID;
             data[indexInData].receiver = user.fullName;
+            data[indexInData].isChange = 1;
           }
           taskIndex++;
         }
       }
     });
-
     var dataSave = [...data];
     dataSave = dataSave.filter(
       (x) =>
         x.isChecked === 1 &&
+        x.isChange === 1 &&
         (setChienDich === "all" || x.utmCampaign === setChienDich) &&
         (setTrangThai === "all"
           ? true

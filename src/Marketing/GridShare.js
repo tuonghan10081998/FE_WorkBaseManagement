@@ -189,9 +189,10 @@ const GridShare = ({
     e.preventDefault();
 
     var arrSave = [];
-    console.log(listData);
-    var dataSave = listData.filter((x) => x.isChecked === 1);
-    console.log(dataSave);
+
+    var dataSave = listData.filter(
+      (x) => x.isChecked === 1 && x.isChange === 1
+    );
     dataSave.map((x) => {
       let object = {
         id: x.id,
@@ -242,7 +243,9 @@ const GridShare = ({
       // setData(dataF);
       setClick(false);
       setChange((x) => !x);
-      const updated = listData.map((item) => item.isChange === 0);
+      const updated = listData.map((item) => {
+        return { ...item, isChange: 0 }; // cập nhật isChange
+      });
       setListData(updated);
     } else {
       iziToast.warning({
