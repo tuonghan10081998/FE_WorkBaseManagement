@@ -131,7 +131,7 @@ const ModalShare = ({
       arrSave.push(object);
     });
     if (arrSave.length == 0) {
-      setDisable(true);
+      setDisable(false);
       return;
     }
     PostSave(arrSave, ...data);

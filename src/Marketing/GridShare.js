@@ -217,8 +217,9 @@ const GridShare = ({
       };
       arrSave.push(object);
     });
+    console.log(arrSave);
     if (arrSave.length === 0) {
-      setDisable(true);
+      setDisable(false);
       return;
     }
     arrSave && PostSave(arrSave, ...data);
