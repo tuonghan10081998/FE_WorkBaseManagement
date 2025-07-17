@@ -130,6 +130,10 @@ const ModalShare = ({
       };
       arrSave.push(object);
     });
+    if (arrSave.length == 0) {
+      setDisable(true);
+      return;
+    }
     PostSave(arrSave, ...data);
   };
   const PostSave = async (arrPost, dataF) => {

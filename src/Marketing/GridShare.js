@@ -217,6 +217,10 @@ const GridShare = ({
       };
       arrSave.push(object);
     });
+    if (arrSave.length === 0) {
+      setDisable(true);
+      return;
+    }
     arrSave && PostSave(arrSave, ...data);
   };
   const PostSave = async (arrPost, dataF) => {
