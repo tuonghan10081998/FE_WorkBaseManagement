@@ -46,7 +46,7 @@ const GridShare = ({
         x.id === id &&
         !x.oldReceiverID?.split(",").includes(isID.toString())
       ) {
-        return { ...x, isChecked: isChecked, receiverID: isID };
+        return { ...x, isChecked: isChecked, receiverID: isID, isChange: 1 };
       }
       return x;
     });
@@ -189,7 +189,9 @@ const GridShare = ({
     e.preventDefault();
 
     var arrSave = [];
+    console.log(listData);
     var dataSave = listData.filter((x) => x.isChecked === 1);
+    console.log(dataSave);
     dataSave.map((x) => {
       let object = {
         id: x.id,
@@ -240,6 +242,8 @@ const GridShare = ({
       // setData(dataF);
       setClick(false);
       setChange((x) => !x);
+      const updated = listData.map((item) => item.isChange === 0);
+      setListData(updated);
     } else {
       iziToast.warning({
         title: "Warning",
