@@ -242,6 +242,22 @@ const Info = ({ setCheck, setShowInfo, setSaveInfo }) => {
             <div className="col-12 m-0 p-0 my-2 ">
               <div className="row">
                 <div className="form-group col-12 m-0 p-0 ">
+                  <label htmlFor="projectName">Telegram</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="projectName"
+                    placeholder=""
+                    onChange={(e) => setTele(e.currentTarget.value)}
+                    value={isTele}
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-12 m-0 p-0 my-2 ">
+              <div className="row">
+                <div className="form-group col-12 m-0 p-0 ">
                   <label
                     htmlFor="projectName"
                     style={{
@@ -272,23 +288,6 @@ const Info = ({ setCheck, setShowInfo, setSaveInfo }) => {
                       loading="lazy"
                     />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-12 m-0 p-0 my-2 d-none">
-              <div className="row">
-                <div className="form-group col-12 m-0 p-0 ">
-                  <label htmlFor="projectName">Telegram</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="projectName"
-                    placeholder=""
-                    onChange={(e) => setTele(e.currentTarget.value)}
-                    value={isTele}
-                    autoComplete="off"
-                  />
                 </div>
               </div>
             </div>
