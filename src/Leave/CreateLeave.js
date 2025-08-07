@@ -79,12 +79,16 @@ const Createleave = ({
       id: isID,
       title: isTitle,
       reason: reason.toString(),
-      fromDate: moment(isThoiGianBD, "DD/MM/YYYY HH:mm:ss").format(
-        "YYYY-MM-DDTHH:mm:ss.SSSZ"
-      ),
-      toDate: moment(isThoiGianKT, "DD/MM/YYYY HH:mm:ss").format(
-        "YYYY-MM-DDTHH:mm:ss.SSSZ"
-      ),
+      fromDate: moment(
+        isThoiGianBD,
+        "DD/MM/YYYY HH:mm:ss",
+        "Asia/Ho_Chi_Minh"
+      ).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      toDate: moment(
+        isThoiGianKT,
+        "DD/MM/YYYY HH:mm:ss",
+        "Asia/Ho_Chi_Minh"
+      ).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       status: isSave.toString(),
       createDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       idRequester: checkSave == 0 ? isUser : "",

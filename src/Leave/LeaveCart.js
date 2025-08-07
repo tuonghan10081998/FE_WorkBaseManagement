@@ -79,19 +79,22 @@ const LeaveCart = ({
   };
   const handleSave = (NamePort) => {
     const data = tasks.filter((x) => x.id == isIDData);
-    console.log(isCheckPhieu);
     const d = data[0];
     let arrLeave = [];
     const object = {
       id: d.id,
       title: d.title,
       reason: d.reason.toString(),
-      fromDate: moment(d.fromDate, "DD/MM/YYYY HH:mm:ss")
-        .utc() // Chuyển thời gian về UTC
-        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
-      toDate: moment(d.toDate, "DD/MM/YYYY HH:mm:ss")
-        .utc() // Chuyển thời gian về UTC
-        .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      fromDate: moment(
+        d.fromDate,
+        "DD/MM/YYYY HH:mm:ss",
+        "Asia/Ho_Chi_Minh"
+      ).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      toDate: moment(
+        d.toDate,
+        "DD/MM/YYYY HH:mm:ss",
+        "Asia/Ho_Chi_Minh"
+      ).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       status: isCheckPhieu.toString(),
       createDate: moment().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
       idRequester: "",
