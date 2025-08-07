@@ -10,8 +10,133 @@ const TaskColumn = ({
   setPQDuyen,
   setCheckAdd,
 }) => {
+  const IMG_API = process.env.REACT_APP_URL_IMG;
   const [isIDLogin, setIDLogin] = useState(localStorage.getItem("usernameID"));
   const [isUser, setUser] = useState(localStorage.getItem("userID"));
+  const [messages, setMessages] = useState([]);
+  const [isAvatar, setAvatar] = useState("");
+  const [isWord, setWord] = useState(null);
+  const getMess = async (idWord) => {
+    var url = `${process.env.REACT_APP_URL_API}Work/GetFeedbackV2?IDWork=${idWord}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setMessages(data);
+      getData();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const getData = async () => {
+    if (isUser == "") return;
+    const url = `${process.env.REACT_APP_URL_API}User/Get?action=get&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+
+      const data = await response.json();
+      const d = data[0];
+      console.log(d);
+      setAvatar(`${d.avatar ?? "Default/UserDefault.png"}`);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const renderMessages = () => {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML = "";
+
+    messages.forEach((msg) => {
+      const isCurrentUser = msg.userID === isUser;
+      const userInfo = msg.userName;
+      const imageUrl = `${IMG_API}${
+        msg.avatar?.trim() ? msg.avatar : "Default/UserDefault.png"
+      }`;
+
+      const messageHTML = `
+        <div class="mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            ${
+              isCurrentUser
+                ? `<p class="text-secondary small mb-0">${msg.createDate}</p>
+                 <p class="fw-semibold mb-0 text-dark">${userInfo}</p>`
+                : `<p class="fw-semibold mb-0 text-dark">${userInfo}</p>
+                 <p class="text-secondary small mb-0">${msg.createDate}</p>`
+            }
+          </div>
+          <div class="d-flex align-items-start gap-3 ${
+            isCurrentUser ? "justify-content-end" : ""
+          }">
+            ${
+              !isCurrentUser
+                ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+                : ""
+            }
+            <p class="mb-0 ${isCurrentUser ? "msg-right" : "msg-left"}">${
+        msg.message
+      }</p>
+            ${
+              isCurrentUser
+                ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+
+      chatBox.insertAdjacentHTML("beforeend", messageHTML);
+    });
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  window.handleSend = () => {
+    const input = document.getElementById("chat-input");
+    const text = input.innerText.trim();
+    if (!text) return;
+
+    const newMessage = {
+      id: 0,
+      idWork: isWord.toString(),
+      message: text,
+      files: "",
+      userID: isUser,
+      userName: isIDLogin,
+      avatar: isAvatar,
+      createDate: moment().format("DD/MM/YY HH:mm:ss"),
+    };
+    const Save = {
+      id: 0,
+      idWork: isWord.toString(),
+      message: text,
+      file: "",
+      userID: isUser,
+      createDate: "2025-08-07T17:34:50.513Z",
+    };
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages); // ✅ Cập nhật đúng cách
+    input.innerText = "";
+    SaveMess(Save);
+  };
+  const SaveMess = async (arr) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Work/PostFeedbackV2`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arr),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+  };
   const [show, setShow] = useState(false);
   const [isIDData, setIDDate] = useState(null);
   const [isShowHT, setShowHT] = useState(false);
@@ -143,6 +268,7 @@ const TaskColumn = ({
     isCheckView == 1 && handleClickDelete();
     isCheckView == 2 && handleFeedBack();
   };
+
   const handleFeedBack = () => {
     const object = {
       id: isIDData,
@@ -231,6 +357,12 @@ const TaskColumn = ({
       console.error("Lỗi khi tải file:", error.message);
     }
   };
+  useEffect(() => {
+    const chatBox = document.getElementById("chat-box");
+    if (chatBox) {
+      renderMessages();
+    }
+  }, [IsLableBody, messages]);
   return (
     <div className="col-md-6 col-lg-3" style={{ padding: "0 10px" }}>
       <div className="task-column">
@@ -290,6 +422,8 @@ const TaskColumn = ({
                     <div
                       data-id={task.id}
                       onClick={(e) => {
+                        getMess(task.id);
+                        setWord(task.id);
                         handleShow(e);
                         setLableBody(`
                         <div>
@@ -399,13 +533,30 @@ const TaskColumn = ({
                            <div class="task_item item_detail" style="gap: 2px;">
                       <div style="width: 100%;">
                         <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:
-                        <textarea 
-                          style="width: 100%; margin-top: 5px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;outline: none;" 
-                          placeholder="" 
-                          oninput="handleFeedbackChange(this.value)"
-                        >${task.feedback}</textarea>
+                       
                       </div>
                     </div>
+                     <!-- Chat UI HTML -->
+                   <div class="bg-white d-flex justify-content-center align-items-center ">
+                    <div class="border border-secondary rounded shadow-sm w-100" style="max-width: 28rem;">
+                      <div class="p-3" style="max-height: 400px; overflow-y: auto;" id="chat-box">
+                        <!-- Tin nhắn sẽ được render động ở đây -->
+                      </div>
+                      <div class="border-top border-secondary d-flex align-items-center px-3 py-2">
+                         <div
+                          id="chat-input"
+                          class="form-control input-message text-secondary small"
+                          contenteditable="true"
+                          style="max-width: 350px;min-height: 38px; border: 1px solid #ccc; border-radius: 5px; padding: 6px; overflow-wrap: break-word; flex: 1;"
+                        ></div>
+                        <button aria-label="Gửi tin nhắn" class="btn btn-primary ms-4" onclick="handleSend()" type="submit">
+                        <i class="fas fa-paper-plane">
+                        </i>
+                        </button>
+                      
+                      </div>
+                    </div>
+                  </div>
                         </div>
                       `);
 
@@ -530,21 +681,23 @@ const TaskColumn = ({
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header closeButton={!show}>
+        <Modal.Header closeButton onHide={handleClose}>
           <Modal.Title id="popupModalLabel">{isLable}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div dangerouslySetInnerHTML={{ __html: IsLableBody }}></div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            {isCheckView == 1 ? "Hủy" : "Đóng"}
-          </Button>
+        {isCheckView == 1 && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              {isCheckView == 1 ? "Hủy" : "Đóng"}
+            </Button>
 
-          <Button onClick={() => handleCliCk()} variant="primary">
-            {isCheckView == 1 ? "Đồng ý" : "Lưu FeedBack"}
-          </Button>
-        </Modal.Footer>
+            <Button onClick={() => handleCliCk()} variant="primary">
+              {isCheckView == 1 ? "Đồng ý" : "Lưu FeedBack"}
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
       <Modal
         show={isShowHT}

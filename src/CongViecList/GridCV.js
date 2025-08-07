@@ -29,6 +29,131 @@ const GridWork = ({
   const [isLable, setLable] = useState(null);
   const [isFeedBack, setFeedBack] = useState("");
   const handleClose = () => setShow(false);
+  const IMG_API = process.env.REACT_APP_URL_IMG;
+  const [messages, setMessages] = useState([]);
+  const [isAvatar, setAvatar] = useState("");
+  const [isWord, setWord] = useState(null);
+  const getMess = async (idWord) => {
+    var url = `${process.env.REACT_APP_URL_API}Work/GetFeedbackV2?IDWork=${idWord}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setMessages(data);
+      getData();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const getData = async () => {
+    if (isUser == "") return;
+    const url = `${process.env.REACT_APP_URL_API}User/Get?action=get&para1=${isUser}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+
+      const data = await response.json();
+      const d = data[0];
+      console.log(d);
+      setAvatar(`${d.avatar ?? "Default/UserDefault.png"}`);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const renderMessages = () => {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML = "";
+
+    messages.forEach((msg) => {
+      const isCurrentUser = msg.userID === isUser;
+      const userInfo = msg.userName;
+      const imageUrl = `${IMG_API}${
+        msg.avatar?.trim() ? msg.avatar : "Default/UserDefault.png"
+      }`;
+
+      const messageHTML = `
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              ${
+                isCurrentUser
+                  ? `<p class="text-secondary small mb-0">${msg.createDate}</p>
+                   <p class="fw-semibold mb-0 text-dark">${userInfo}</p>`
+                  : `<p class="fw-semibold mb-0 text-dark">${userInfo}</p>
+                   <p class="text-secondary small mb-0">${msg.createDate}</p>`
+              }
+            </div>
+            <div class="d-flex align-items-start gap-3 ${
+              isCurrentUser ? "justify-content-end" : ""
+            }">
+              ${
+                !isCurrentUser
+                  ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+                  : ""
+              }
+              <p class="mb-0 ${isCurrentUser ? "msg-right" : "msg-left"}">${
+        msg.message
+      }</p>
+              ${
+                isCurrentUser
+                  ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+                  : ""
+              }
+            </div>
+          </div>
+        `;
+
+      chatBox.insertAdjacentHTML("beforeend", messageHTML);
+    });
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  window.handleSend = () => {
+    const input = document.getElementById("chat-input");
+    const text = input.innerText.trim();
+    if (!text) return;
+
+    const newMessage = {
+      id: 0,
+      idWork: isWord.toString(),
+      message: text,
+      files: "",
+      userID: isUser,
+      userName: isIDLogin,
+      avatar: isAvatar,
+      createDate: moment().format("DD/MM/YY HH:mm:ss"),
+    };
+    const Save = {
+      id: 0,
+      idWork: isWord.toString(),
+      message: text,
+      file: "",
+      userID: isUser,
+      createDate: "2025-08-07T17:34:50.513Z",
+    };
+    const updatedMessages = [...messages, newMessage];
+    setMessages(updatedMessages); // ✅ Cập nhật đúng cách
+    input.innerText = "";
+    SaveMess(Save);
+  };
+  const SaveMess = async (arr) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Work/PostFeedbackV2`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arr),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+  };
   const handleShow = (e) => {
     let ID = e.currentTarget.dataset.id;
     setIDDate(ID);
@@ -285,6 +410,12 @@ const GridWork = ({
     const file = dataF[0].requestFile;
     downLoad(thoigian, file);
   };
+  useEffect(() => {
+    const chatBox = document.getElementById("chat-box");
+    if (chatBox) {
+      renderMessages();
+    }
+  }, [messages]);
   const downLoad = async (thoigian, file) => {
     const url = `${process.env.REACT_APP_URL_API}Work/Download?thoiGian=${thoigian}&fileName=${file}`;
 
@@ -546,6 +677,8 @@ const GridWork = ({
                           <div
                             data-id={row.values.id}
                             onClick={(e) => {
+                              getMess(row.values.id);
+                              setWord(row.values.id);
                               handleShow(e);
                               setTiTleBody(`<div>
                           <p class="duan" style="font-size: 17px;font-weight: bold;">
@@ -654,11 +787,27 @@ const GridWork = ({
                             <div class="task_item item_detail" style="gap: 2px;">
                       <div style="width: 100%;">
                         <i style="color:#f39c12;" class="fa-solid fa-comment-dots"></i> Phản hồi:
-                        <textarea 
-                          style="width: 100%; margin-top: 5px; padding: 5px; border-radius: 5px; border: 1px solid #ccc;outline: none;" 
-                          placeholder="" 
-                          oninput="handleFeedbackChange(this.value)"
-                        >${row.values.feedback}</textarea>  
+                         <!-- Chat UI HTML -->
+                   <div class="bg-white d-flex justify-content-center align-items-center ">
+                    <div class="border border-secondary rounded shadow-sm w-100" style="max-width: 28rem;">
+                      <div class="p-3" style="max-height: 400px; overflow-y: auto;" id="chat-box">
+                        <!-- Tin nhắn sẽ được render động ở đây -->
+                      </div>
+                      <div class="border-top border-secondary d-flex align-items-center px-3 py-2">
+                         <div
+                          id="chat-input"
+                          class="form-control input-message text-secondary small"
+                          contenteditable="true"
+                          style="max-width: 350px;min-height: 38px; border: 1px solid #ccc; border-radius: 5px; padding: 6px; overflow-wrap: break-word; flex: 1;"
+                        ></div>
+                        <button aria-label="Gửi tin nhắn" class="btn btn-primary ms-4" onclick="handleSend()" type="submit">
+                        <i class="fas fa-paper-plane">
+                        </i>
+                        </button>
+                      
+                      </div>
+                    </div>
+                  </div>
                         </div>
                       `);
                               setLable("Xem chi tiết công việc");
@@ -724,21 +873,23 @@ const GridWork = ({
         aria-labelledby="popupModalLabel"
         className="modalHT"
       >
-        <Modal.Header>
+        <Modal.Header closeButton onHide={handleClose}>
           <Modal.Title id="popupModalLabel">{isLable}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div dangerouslySetInnerHTML={{ __html: isTitleBody }}></div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Hủy
-          </Button>
+        {isLable == "Thông báo" && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Hủy
+            </Button>
 
-          <Button onClick={() => handlesSubmit()} variant="primary">
-            {isLable == "Thông báo" ? "Đồng ý " : "Lưu FeedBack"}
-          </Button>
-        </Modal.Footer>
+            <Button onClick={() => handlesSubmit()} variant="primary">
+              {isLable == "Thông báo" ? "Đồng ý " : "Lưu FeedBack"}
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </div>
   );
