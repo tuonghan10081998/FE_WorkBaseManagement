@@ -16,6 +16,7 @@ const TaskColumn = ({
   const [messages, setMessages] = useState([]);
   const [isAvatar, setAvatar] = useState("");
   const [isWord, setWord] = useState(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const getMess = async (idWord) => {
     var url = `${process.env.REACT_APP_URL_API}Work/GetFeedbackV2?IDWork=${idWord}`;
 
@@ -27,11 +28,11 @@ const TaskColumn = ({
 
       const data = await response.json();
       setMessages(data);
-      getData();
     } catch (error) {
       console.error(error.message);
     }
   };
+
   const getData = async () => {
     if (isUser == "") return;
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=get&para1=${isUser}`;
@@ -41,12 +42,87 @@ const TaskColumn = ({
 
       const data = await response.json();
       const d = data[0];
-      console.log(d);
       setAvatar(`${d.avatar ?? "Default/UserDefault.png"}`);
     } catch (error) {
       console.error(error.message);
     }
   };
+  useEffect(() => {
+    // Tạo menu context chỉ một lần
+    let menu = document.createElement("div");
+    menu.id = "context-menu";
+    menu.style.position = "fixed";
+    menu.style.background = "#fff";
+    menu.style.border = "1px solid #ccc";
+    menu.style.padding = "5px 10px";
+    menu.style.borderRadius = "5px";
+    menu.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+    menu.style.zIndex = "9999999";
+    menu.style.display = "none";
+    menu.innerHTML = `<div id="delete-btn" style="cursor:pointer; color:red;">🗑 Xoá tin nhắn</div>`;
+    document.body.appendChild(menu);
+
+    // Sự kiện click ra ngoài
+    const handleClickOutside = (ev) => {
+      if (!menu.contains(ev.target)) {
+        menu.style.display = "none";
+        const modal = document.querySelector(".modalHT ");
+        if (modal) modal.style.overflow = "auto";
+        const chatBox = document.getElementById("chat-box");
+        if (chatBox) chatBox.style.overflow = "auto";
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      menu.remove();
+    };
+  }, []);
+  const handleDeleteClick = (selectedMsg) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((x) => x.id != selectedMsg.id)
+    );
+    const object = {
+      id: selectedMsg.id,
+      idWork: selectedMsg.idWork,
+      message: "string",
+      file: "string",
+      userID: "string",
+      createDate: "2025-08-08T16:11:04.511Z",
+    };
+    DeleteMess(object);
+  };
+  // Hàm xử lý chuột phải
+  window.handleRightClick = (e) => {
+    e.preventDefault();
+    const target = e.target.closest(".message-text");
+    if (!target) return;
+
+    const id = target.getAttribute("data-id");
+    const msgData = messages.find((m) => m.id == id);
+    if (!msgData || msgData.userID !== isUser) return;
+    console.log(1);
+    const menu = document.getElementById("context-menu");
+    if (!menu) return;
+    const modal = document.querySelector(".modalHT ");
+    if (modal) modal.style.overflow = "hidden";
+    const chatBox = document.getElementById("chat-box");
+    if (chatBox) chatBox.style.overflow = "hidden";
+    // Vị trí chuột
+    const x = Math.min(e.clientX, window.innerWidth - menu.offsetWidth - 5);
+    const y = Math.min(e.clientY, window.innerHeight - menu.offsetHeight - 5);
+
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+    menu.style.display = "block";
+
+    menu.querySelector("#delete-btn").onclick = () => {
+      handleDeleteClick(msgData);
+      menu.style.display = "none";
+    };
+  };
+
   const renderMessages = () => {
     const chatBox = document.getElementById("chat-box");
     chatBox.innerHTML = "";
@@ -59,40 +135,45 @@ const TaskColumn = ({
       }`;
 
       const messageHTML = `
-        <div class="mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            ${
-              isCurrentUser
-                ? `<p class="text-secondary small mb-0">${msg.createDate}</p>
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          ${
+            isCurrentUser
+              ? `<p class="text-secondary small mb-0">${msg.createDate}</p>
                  <p class="fw-semibold mb-0 text-dark">${userInfo}</p>`
-                : `<p class="fw-semibold mb-0 text-dark">${userInfo}</p>
+              : `<p class="fw-semibold mb-0 text-dark">${userInfo}</p>
                  <p class="text-secondary small mb-0">${msg.createDate}</p>`
-            }
-          </div>
-          <div class="d-flex align-items-start gap-3 ${
-            isCurrentUser ? "justify-content-end" : ""
-          }">
-            ${
-              !isCurrentUser
-                ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
-                : ""
-            }
-            <p class="mb-0 ${isCurrentUser ? "msg-right" : "msg-left"}">${
-        msg.message
-      }</p>
-            ${
-              isCurrentUser
-                ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
-                : ""
-            }
-          </div>
+          }
         </div>
-      `;
+        <div class="d-flex align-items-start gap-3 ${
+          isCurrentUser ? "justify-content-end" : ""
+        }">
+          ${
+            !isCurrentUser
+              ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+              : ""
+          }
+          <p data-id="${msg.id}" class="mb-0 ${
+        isCurrentUser ? "msg-right" : "msg-left"
+      } message-text">
+            ${msg.message}
+          </p>
+          ${
+            isCurrentUser
+              ? `<img src="${imageUrl}" class="rounded-circle flex-shrink-0" width="40" height="40" alt=""/>`
+              : ""
+          }
+        </div>
+      </div>
+    `;
 
       chatBox.insertAdjacentHTML("beforeend", messageHTML);
     });
 
-    chatBox.scrollTop = chatBox.scrollHeight;
+    // Gắn sự kiện chuột phải cho tất cả tin nhắn
+    chatBox.querySelectorAll(".message-text").forEach((el) => {
+      el.addEventListener("contextmenu", window.handleRightClick);
+    });
   };
 
   window.handleSend = () => {
@@ -137,6 +218,20 @@ const TaskColumn = ({
     let response = await fetch(request);
     let data = await response.json();
   };
+  const DeleteMess = async (arr) => {
+    const request = new Request(
+      `${process.env.REACT_APP_URL_API}Work/DeleteFeedbackV2`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(arr),
+      }
+    );
+    let response = await fetch(request);
+    let data = await response.json();
+  };
   const [show, setShow] = useState(false);
   const [isIDData, setIDDate] = useState(null);
   const [isShowHT, setShowHT] = useState(false);
@@ -145,6 +240,10 @@ const TaskColumn = ({
   const [IsLableBody, setLableBody] = useState(null);
   const [isCheckView, setCheckView] = useState("");
   const [isFeedBack, setFeedBack] = useState("");
+  useEffect(() => {
+    if (isCheckView !== 2) return;
+    getData();
+  }, [isCheckView]);
   const handleClickScroll = (e) => {
     const parent = e.currentTarget.closest(".task-column");
     const child = parent.querySelector(".overColumn");
@@ -357,12 +456,24 @@ const TaskColumn = ({
       console.error("Lỗi khi tải file:", error.message);
     }
   };
+
   useEffect(() => {
     const chatBox = document.getElementById("chat-box");
-    if (chatBox) {
-      renderMessages();
+    if (!chatBox) return;
+    renderMessages();
+    if (isFirstLoad) {
+      chatBox.scrollTop = chatBox.scrollHeight;
+      setIsFirstLoad(false); // ✅ Sau lần đầu thì tắt
     }
-  }, [IsLableBody, messages]);
+  }, [messages, isFirstLoad]);
+  useEffect(() => {
+    if (isCheckView !== 2) return;
+    const interval = setInterval(() => {
+      if (show) getMess(isWord);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isCheckView, isWord, show]);
   return (
     <div className="col-md-6 col-lg-3" style={{ padding: "0 10px" }}>
       <div className="task-column">
@@ -422,7 +533,6 @@ const TaskColumn = ({
                     <div
                       data-id={task.id}
                       onClick={(e) => {
-                        getMess(task.id);
                         setWord(task.id);
                         handleShow(e);
                         setLableBody(`
