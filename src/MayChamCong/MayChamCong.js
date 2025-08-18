@@ -68,6 +68,7 @@ const MayChamCong = () => {
         { value: "all", label: "Tất cả" },
         ...formattedOptions,
       ];
+      console.log(formattedOptions);
       setNhanVien(formattedOptions);
     } catch (error) {
       console.error(error.message);
