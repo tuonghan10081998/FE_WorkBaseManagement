@@ -6,7 +6,7 @@ const GridMayChamCong = ({ data, setNhanVien }) => {
   useEffect(() => {
     let dataFilter = data;
 
-    if (setNhanVien?.value !== "all") {
+    if (setNhanVien && setNhanVien?.value !== "all") {
       dataFilter = data.filter((x) => x.maNV === setNhanVien.value.toString());
     }
 
