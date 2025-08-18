@@ -18,6 +18,7 @@ import Revenue from "./Revenue/Revenue";
 import ShareDataReport from "./Marketing/ShareDataReport";
 import Setting from "./SettingDashboard/Setting";
 import DashBoardUser from "./SettingDashboard/DashboardUser";
+import MayChamCong from "./MayChamCong/MayChamCong";
 export default function App() {
   return (
     <BrowserRouter>
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/layout/Marketing" element={<ShareData />} />
             <Route path="/layout/Setting" element={<Setting />} />
             <Route path="/layout/DashBoardUser" element={<DashBoardUser />} />
+            <Route path="/layout/MayChamCong" element={<MayChamCong />} />
             <Route
               path="/layout/MarketingReport"
               element={<ShareDataReport />}

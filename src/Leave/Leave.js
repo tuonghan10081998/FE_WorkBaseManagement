@@ -11,7 +11,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
 
 import "./Leave.css";
-import $ from "jquery";
 import moment from "moment";
 
 const Leave = () => {

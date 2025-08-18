@@ -360,6 +360,23 @@ const Layout = () => {
               </div>
             )}
           </div>
+          {isRole === "Administrator" && (
+            <div className="nav-item">
+              <Link
+                onClick={handleMenu}
+                className="nav-link text-white d-flex justify-content-between align-items-center"
+                to="/layout/MayChamCong"
+              >
+                <div>
+                  <i
+                    style={{ color: "#65ff40" }}
+                    className="fa-solid fa-clock text-lg"
+                  ></i>
+                  <span className="ms-2">Danh sách chấm công</span>
+                </div>
+              </Link>
+            </div>
+          )}
           {isPagePQ && (
             <div className="nav-item">
               <div

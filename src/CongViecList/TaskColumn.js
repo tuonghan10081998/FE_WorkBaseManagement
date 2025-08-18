@@ -102,7 +102,6 @@ const TaskColumn = ({
     const id = target.getAttribute("data-id");
     const msgData = messages.find((m) => m.id == id);
     if (!msgData || msgData.userID !== isUser) return;
-    console.log(1);
     const menu = document.getElementById("context-menu");
     if (!menu) return;
     const modal = document.querySelector(".modalHT ");

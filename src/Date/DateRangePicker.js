@@ -4,7 +4,11 @@ import moment from "moment";
 import "daterangepicker/daterangepicker.css";
 import "daterangepicker";
 
-const DateRangePicker = ({ onDateChange, setCheckALl = true }) => {
+const DateRangePicker = ({
+  onDateChange,
+  setCheckALl = true,
+  setCheckVal = true,
+}) => {
   const dateRangeRef = useRef(null);
 
   useEffect(() => {
@@ -70,12 +74,16 @@ const DateRangePicker = ({ onDateChange, setCheckALl = true }) => {
       }
     );
 
-    // Set giá trị mặc định hiển thị trên input
-    $datePicker.val(
-      `${startOfMonth.format("DD/MM/YYYY")} - ${endOfMonth.format(
-        "DD/MM/YYYY"
-      )}`
-    );
+    setCheckVal &&
+      $datePicker.val(
+        `${startOfMonth.format("DD/MM/YYYY")} - ${endOfMonth.format(
+          "DD/MM/YYYY"
+        )}`
+      );
+    !setCheckVal &&
+      $datePicker.val(
+        `${today.format("DD/MM/YYYY")} - ${today.format("DD/MM/YYYY")}`
+      );
 
     return () => {
       $datePicker.data("daterangepicker").remove();
