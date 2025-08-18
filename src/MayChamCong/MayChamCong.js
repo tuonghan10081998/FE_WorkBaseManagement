@@ -63,11 +63,11 @@ const MayChamCong = () => {
         value: x.maNV,
         label: x.name,
       }));
-      isRole !== "Member" &&
-        (formattedOptions = [
-          { value: "all", label: "Tất cả" },
-          ...formattedOptions,
-        ]);
+
+      formattedOptions = [
+        { value: "all", label: "Tất cả" },
+        ...formattedOptions,
+      ];
       setNhanVien(formattedOptions);
     } catch (error) {
       console.error(error.message);
