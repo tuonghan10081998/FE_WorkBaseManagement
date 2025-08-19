@@ -22,12 +22,12 @@ const GridMayChamCong = ({ data, setNhanVien }) => {
           <div className="card" style={{ height: "50px" }}>
             <div>
               <div
-                className="item-table"
-                style={{ height: "calc(100vh - 155px)" }}
+                className="item-table "
+                style={{ height: "calc(100vh - 155px)", overflow: "auto" }}
               >
-                <table className="task-table">
+                <table className="task-table table-striped">
                   <thead>
-                    <tr>
+                    <tr className="trthdashboard">
                       <td scope="col">Tên nhân viên</td>
                       <td scope="col">Ngày làm việc</td>
                       <td scope="col">Giờ vào</td>

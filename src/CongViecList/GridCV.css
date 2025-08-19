@@ -31,8 +31,8 @@ h1 {
 }
 
 /* Row Styling */
-.task-table tr:nth-child(even) {
-  /* background-color: #f9f9f9; */
+.table-striped tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 .task-table tr:nth-child(odd) {
