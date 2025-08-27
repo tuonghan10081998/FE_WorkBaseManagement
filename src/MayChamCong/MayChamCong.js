@@ -100,7 +100,7 @@ const MayChamCong = () => {
   }, [isNhanVien]);
   useEffect(() => {
     let dataFilter = isData;
-    if (setNhanVien && selectedNV?.value !== "all") {
+    if (selectedNV && selectedNV?.value !== "all") {
       dataFilter = isData.filter((x) => x.maNV === selectedNV.value.toString());
     }
     console.log(dataFilter);
