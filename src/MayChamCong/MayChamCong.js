@@ -217,6 +217,7 @@ const MayChamCong = () => {
                 onDateChange={handleDateChange}
                 setCheckALl={true}
                 setCheckVal={false}
+                setCheckToDay={false}
               />
             </div>
             <div className="col-5 col-md-5 col-lg-3 col-xl-2 m-0 px-1  ">

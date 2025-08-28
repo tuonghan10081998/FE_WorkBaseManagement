@@ -8,6 +8,7 @@ const DateRangePicker = ({
   onDateChange,
   setCheckALl = true,
   setCheckVal = true,
+  setCheckToDay = true,
 }) => {
   const dateRangeRef = useRef(null);
 
@@ -21,8 +22,8 @@ const DateRangePicker = ({
 
     $datePicker.daterangepicker(
       {
-        startDate: startOfMonth, // Mặc định từ ngày đầu tháng
-        endDate: endOfMonth, // Đến ngày cuối tháng
+        startDate: setCheckToDay ? startOfMonth : today, // Mặc định từ ngày đầu tháng
+        endDate: setCheckToDay ? endOfMonth : today, // Đến ngày cuối tháng
         opens: "center",
         showDropdowns: true,
         autoUpdateInput: false,
