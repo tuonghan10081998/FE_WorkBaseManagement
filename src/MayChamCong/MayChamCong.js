@@ -23,6 +23,7 @@ const MayChamCong = () => {
   const [isData, setData] = useState([]);
   const [isDataF, setDataF] = useState([]);
   const [isNhanVien, setNhanVien] = useState([]);
+  const [isDataNV, setDataNV] = useState([]);
   const [isKhuVuc, setKhuVuc] = useState([]);
   const [isRole, setRole] = useState("");
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
@@ -89,20 +90,25 @@ const MayChamCong = () => {
       }
 
       const Table = await response.json();
-      let formattedOptions = Table.map((x) => ({
-        value: x.maNV,
-        label: x.name,
-      }));
-
-      formattedOptions = [
-        { value: "all", label: "Tất cả" },
-        ...formattedOptions,
-      ];
-      setNhanVien(formattedOptions);
+      setDataNV(Table);
     } catch (error) {
       console.error(error.message);
     }
   };
+  useEffect(() => {
+    let dataNV = isDataNV;
+    if (selectedKV && selectedKV?.value !== "all") {
+      dataNV = dataNV.filter((x) => x.khuVuc === selectedKV.value.toString());
+    }
+    console.log(dataNV);
+    let formattedOptions = dataNV.map((x) => ({
+      value: x.maNV,
+      label: x.name,
+    }));
+
+    formattedOptions = [{ value: "all", label: "Tất cả" }, ...formattedOptions];
+    setNhanVien(formattedOptions);
+  }, [selectedKV, isDataNV]);
   useEffect(() => {
     getData();
   }, [dateRange]);
@@ -144,10 +150,12 @@ const MayChamCong = () => {
   useEffect(() => {
     let dataFilter = isData;
     if (selectedNV && selectedNV?.value !== "all") {
-      dataFilter = isData.filter((x) => x.maNV === selectedNV.value.toString());
+      dataFilter = dataFilter.filter(
+        (x) => x.maNV === selectedNV.value.toString()
+      );
     }
     if (selectedKV && selectedKV?.value !== "all") {
-      dataFilter = isData.filter(
+      dataFilter = dataFilter.filter(
         (x) => x.khuVuc === selectedKV.value.toString()
       );
     }
