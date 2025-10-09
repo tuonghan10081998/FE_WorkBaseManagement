@@ -272,7 +272,7 @@ const MayChamCong = () => {
                 className=""
                 style={{ marginBottom: "5px", fontWeight: "bold" }}
               >
-                Khu vực
+                Văn phòng
               </label>{" "}
               <Select
                 options={isKhuVuc}
