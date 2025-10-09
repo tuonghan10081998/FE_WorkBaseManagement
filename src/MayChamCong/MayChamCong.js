@@ -23,9 +23,11 @@ const MayChamCong = () => {
   const [isData, setData] = useState([]);
   const [isDataF, setDataF] = useState([]);
   const [isNhanVien, setNhanVien] = useState([]);
+  const [isKhuVuc, setKhuVuc] = useState([]);
   const [isRole, setRole] = useState("");
   const { setTitle, setIcon, setIconAdd } = useContext(TitleContext);
   const [selectedNV, setSelectedNV] = useState(null);
+  const [selectedKV, setSelectedKV] = useState(null);
   const handleDateChange = async (from, to) => {
     await setDateRange({ from, to });
   };
@@ -48,7 +50,32 @@ const MayChamCong = () => {
       }
 
       const getTable = await response.json();
+
       setData(getTable);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const getDataVanPhong = async () => {
+    const url = `${process.env.REACT_APP_URL_API}MCC/GetKhuVuc`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const getTable = await response.json();
+
+      let formattedOptions = getTable.map((x) => ({
+        value: x.khuVuc, // x là string như "VPA"
+        label: x.khuVuc,
+      }));
+
+      formattedOptions = [
+        ...formattedOptions,
+        { value: "all", label: "Tất cả" },
+      ];
+      setKhuVuc(formattedOptions);
     } catch (error) {
       console.error(error.message);
     }
@@ -71,7 +98,6 @@ const MayChamCong = () => {
         { value: "all", label: "Tất cả" },
         ...formattedOptions,
       ];
-      console.log(formattedOptions);
       setNhanVien(formattedOptions);
     } catch (error) {
       console.error(error.message);
@@ -82,6 +108,7 @@ const MayChamCong = () => {
   }, [dateRange]);
   useEffect(() => {
     GetNV();
+    getDataVanPhong();
   }, []);
   const OnChangeNV = (selectedOption) => {
     setSelectedNV(selectedOption);
@@ -98,14 +125,34 @@ const MayChamCong = () => {
       setSelectedNV(null);
     }
   }, [isNhanVien]);
+  const OnChangeKV = (selectedOption) => {
+    setSelectedKV(selectedOption);
+  };
+  useEffect(() => {
+    if (isKhuVuc.length > 0 && !selectedKV) {
+      setSelectedKV(isKhuVuc[0]);
+    }
+  }, [isKhuVuc, selectedKV]);
+  useEffect(() => {
+    if (isKhuVuc.length > 0) {
+      setSelectedKV(isKhuVuc[0]);
+    } else {
+      setSelectedKV(null);
+    }
+  }, [isKhuVuc]);
+
   useEffect(() => {
     let dataFilter = isData;
     if (selectedNV && selectedNV?.value !== "all") {
       dataFilter = isData.filter((x) => x.maNV === selectedNV.value.toString());
     }
-    console.log(dataFilter);
+    if (selectedKV && selectedKV?.value !== "all") {
+      dataFilter = isData.filter(
+        (x) => x.khuVuc === selectedKV.value.toString()
+      );
+    }
     setDataF(dataFilter);
-  }, [isData, selectedNV]);
+  }, [isData, selectedNV, selectedKV]);
   const exportExcel = () => {
     const header = ["Tên nhân viên", "Ngày làm việc", "Giờ vào", "Giờ ra"];
     const rows = isDataF.map((x) => [x.name, x.date, x.checkIn, x.checkOut]);
@@ -211,7 +258,7 @@ const MayChamCong = () => {
       >
         <div className="d-flex flex-wrap w-100" style={{ gap: "5px" }}>
           <div className="row  w-100 m-0 p-0" style={{}}>
-            <div className="col-5 col-md-5 col-lg-3 col-xl-2 m-0  col_search ItemCV">
+            <div className="col-4 col-md-4 col-lg-3 col-xl-2 m-0  col_search ItemCV">
               <label>Thời gian </label>{" "}
               <DateRangePicker
                 onDateChange={handleDateChange}
@@ -220,7 +267,22 @@ const MayChamCong = () => {
                 setCheckToDay={false}
               />
             </div>
-            <div className="col-5 col-md-5 col-lg-3 col-xl-2 m-0 px-1  ">
+            <div className="col-3 col-md-3 col-lg-3 col-xl-2 m-0 px-1  ">
+              <label
+                className=""
+                style={{ marginBottom: "5px", fontWeight: "bold" }}
+              >
+                Khu vực
+              </label>{" "}
+              <Select
+                options={isKhuVuc}
+                value={selectedKV}
+                onChange={OnChangeKV}
+                placeholder="Tất cả"
+                isSearchable
+              />
+            </div>
+            <div className="col-3 col-md-3 col-lg-3 col-xl-2 m-0 px-1  ">
               <label
                 className=""
                 style={{ marginBottom: "5px", fontWeight: "bold" }}
@@ -235,7 +297,8 @@ const MayChamCong = () => {
                 isSearchable
               />
             </div>
-            <div className="col-2 col-md-2 col-lg-6 col-xl-8 m-0 px-1">
+
+            <div className="col-2 col-md-2 col-lg-3 col-xl-6 m-0 px-1">
               <div
                 className="d-flex justify-content-end align-items-center mt-2"
                 style={{ marginTop: "15px" }}
