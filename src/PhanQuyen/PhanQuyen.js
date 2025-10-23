@@ -36,6 +36,8 @@ const PhanQuyen = () => {
   const [isUserLeader, setUserLeader] = useState([]);
   const [isPhongBanS, setPhongBanSave] = useState("");
   const [isCheckGGSheet, setCheckGGSheet] = useState(null);
+  const [isActiveUser, setActiveUser] = useState(false);
+
   useEffect(() => {
     getPhongBan();
   }, []);
@@ -90,6 +92,9 @@ const PhanQuyen = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    isActiveUser && handleActiveUser();
+  }, [isActiveUser]);
   const fetchData = async () => {
     const url = `${process.env.REACT_APP_URL_API}User/Get?action=Get`;
     try {
@@ -124,6 +129,7 @@ const PhanQuyen = () => {
       console.error(error.message);
     }
   };
+
   const handleCheckPB = (dep_Code, isChecked) => {
     const updatedData = islstUserDep.map((item) =>
       item.dep_Code == dep_Code ? { ...item, isChecked: isChecked } : item
@@ -171,6 +177,7 @@ const PhanQuyen = () => {
 
     setDataNV(dataNV);
   }, [isNhanVien, isData, isPhongBanValue]);
+
   const handleSave = async () => {
     let arrUserDep = [];
     let arrUserPage = [];
@@ -247,7 +254,10 @@ const PhanQuyen = () => {
       )
     );
   }, [isPositionA]);
-
+  const handleActiveUser = () => {
+    fetchData();
+    setActiveUser(false);
+  };
   useEffect(() => {
     if (isCheckGGSheet !== null) getIDGGSheet();
   }, [isCheckGGSheet]);
@@ -333,7 +343,9 @@ const PhanQuyen = () => {
                       <span className="pqul  col-4">
                         {account.position || ""}
                         <i
-                          onClick={() => setshowPopup(true)}
+                          onClick={() => {
+                            setshowPopup(true);
+                          }}
                           class="fa-solid fa-circle-plus"
                         ></i>
                       </span>
@@ -448,6 +460,7 @@ const PhanQuyen = () => {
           </div>
         </div>
       </div>
+
       <div>
         <PQPositon
           setNhanVien={isNhanVienP}
@@ -459,6 +472,8 @@ const PhanQuyen = () => {
           setPositionA={setPositionA}
           setPhongBanS={isPhongBanS}
           setPhongBanSave={setPhongBanSave}
+          setActive={1}
+          setActiveUser={setActiveUser}
         />
       </div>
     </div>

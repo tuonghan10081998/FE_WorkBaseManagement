@@ -12,9 +12,12 @@ const PQPositon = ({
   setPositionA,
   setPhongBanS,
   setPhongBanSave,
+  setActive,
+  setActiveUser,
 }) => {
   const [optionsPB, setOptionsPB] = useState([]);
   const [selectedPB, setSelectedPB] = useState(null);
+  const [activeStatus, setActiveStatus] = useState(setActive == 1);
   const handleSave = (e) => {
     e.preventDefault();
     const object = {
@@ -26,7 +29,9 @@ const PQPositon = ({
       department: selectedPB.value,
       userID: setUserID,
       position: setIsPosition,
+      isActive: activeStatus ? 1 : 0,
     };
+
     PostSave(object);
   };
   const PostSave = async (arrPost) => {
@@ -51,6 +56,8 @@ const PQPositon = ({
       setPhongBanSave(selectedPB.value);
       setShowPopup((x) => !x);
       setPositionA((x) => !x);
+      setActiveUser(!activeStatus);
+      setActiveStatus(true);
     } else {
       iziToast.warning({
         title: "Warning",
@@ -145,6 +152,28 @@ const PQPositon = ({
                   onChange={(e) => setPosition(e.currentTarget.value)}
                   autoComplete="off"
                 />
+              </div>
+              {/* ✅ Trạng thái Active */}
+              <div className="mb-3 d-flex align-items-center justify-content-between">
+                <label className="form-label mb-0">Kích hoạt tài khoản</label>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="activeSwitch"
+                    checked={activeStatus}
+                    onChange={(e) => {
+                      setActiveStatus(e.target.checked);
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="activeSwitch"
+                    style={{ cursor: "pointer" }}
+                  >
+                    {activeStatus ? "Bật" : "Tắt"}
+                  </label>
+                </div>
               </div>
               <div className="d-flex justify-content-end">
                 <button
